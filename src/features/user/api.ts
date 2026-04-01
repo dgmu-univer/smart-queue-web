@@ -1,7 +1,16 @@
+import { cache } from "react";
 import { api, ApiError } from "@/lib/api";
 import type { User } from "@/features/auth/types";
 
-export async function getMe(): Promise<User | null> {
+/**
+ * Returns the current authenticated user, or `null` if the session
+ * is missing / expired.
+ *
+ * Wrapped with React `cache()` so that multiple Server Components
+ * calling `getMe()` during the same request (layout → page → nested)
+ * only trigger **one** actual fetch to the backend.
+ */
+export const getMe = cache(async (): Promise<User | null> => {
   try {
     return await api.server<User>("/user/me");
   } catch (err) {
@@ -10,4 +19,4 @@ export async function getMe(): Promise<User | null> {
     }
     return null;
   }
-}
+});
