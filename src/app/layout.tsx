@@ -4,7 +4,7 @@ import { QueryProvider } from "@/components/providers/query-provider";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "OptPrice — B2B маркетплейс",
+  title: "Price05 — B2B маркетплейс",
   description: "B2B маркетплейс для поставщиков и магазинов",
 };
 

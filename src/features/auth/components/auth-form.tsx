@@ -1,19 +1,23 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { PhoneStep } from "./phone-step";
 import { RoleStep } from "./role-step";
 import { OtpStep } from "./otp-step";
 import { authApi } from "../api";
-import { ApiError } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
 import { CURRENT_USER_QUERY_KEY } from "@/features/user/hooks/use-current-user";
 import type { UserRole } from "../types";
 
 type AuthStep = "phone" | "role" | "otp";
 
-export function AuthForm() {
+interface AuthFormProps {
+  redirectTo?: string;
+}
+
+export function AuthForm({ redirectTo = "/dashboard" }: AuthFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -78,7 +82,7 @@ export function AuthForm() {
 
         if (res.status === "SUCCESS") {
           await queryClient.setQueryData(CURRENT_USER_QUERY_KEY, res.user);
-          router.push("/");
+          router.push(redirectTo);
         }
       } catch (err) {
         setOtpError(
