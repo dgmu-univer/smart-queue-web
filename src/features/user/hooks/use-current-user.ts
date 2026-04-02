@@ -7,7 +7,7 @@ export const CURRENT_USER_QUERY_KEY = ["currentUser"] as const;
 export function useCurrentUser() {
   return useQuery<User, ApiError>({
     queryKey: CURRENT_USER_QUERY_KEY,
-    queryFn: () => api.client<User>("/user/me"),
+    queryFn: () => api<User>("/user/me"),
     retry: (failureCount, error) => {
       if (error instanceof ApiError && error.statusCode === 401) {
         return false;

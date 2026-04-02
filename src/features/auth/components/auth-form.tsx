@@ -7,7 +7,7 @@ import { PhoneStep } from "./phone-step";
 import { RoleStep } from "./role-step";
 import { OtpStep } from "./otp-step";
 import { authApi } from "../api";
-import { api, ApiError } from "@/lib/api";
+import { ApiError } from "@/lib/api";
 import { CURRENT_USER_QUERY_KEY } from "@/features/user/hooks/use-current-user";
 import type { UserRole } from "../types";
 

@@ -24,7 +24,7 @@ export function DashboardNav({ user }: DashboardNavProps) {
 
   async function handleLogout() {
     try {
-      await api.client("/auth/logout", { method: "POST" });
+      await api("/auth/logout", { method: "POST" });
     } catch {
       // Even if request fails — clear local state and redirect
     } finally {

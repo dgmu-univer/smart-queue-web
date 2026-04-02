@@ -1,5 +1,6 @@
 import { cache } from "react";
-import { api, ApiError } from "@/lib/api";
+import { apiServer } from "@/lib/api.server";
+import { ApiError } from "@/lib/api";
 import type { User } from "@/features/auth/types";
 
 /**
@@ -12,7 +13,7 @@ import type { User } from "@/features/auth/types";
  */
 export const getMe = cache(async (): Promise<User | null> => {
   try {
-    return await api.server<User>("/user/me");
+    return await apiServer<User>("/user/me");
   } catch (err) {
     if (err instanceof ApiError && err.statusCode === 401) {
       return null;
