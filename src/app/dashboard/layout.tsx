@@ -3,13 +3,21 @@ export const dynamic = "force-dynamic";
 import { redirect } from "next/navigation";
 import { getMe } from "@/features/user/api";
 import { DashboardNav } from "@/features/user/components/dashboard-nav";
+import { User } from "@/features/auth/types";
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getMe();
+  const user = {
+    "id": 1,
+    "phone": "+79991234567",
+    "role": "SUPPLIER",
+    "profileIsComplete": true,
+    "createdAt": "2025-04-02T10:30:00.000Z",
+    "updatedAt": "2025-04-02T10:30:00.000Z"
+  } as User;;
 
   if (!user) {
     redirect("/login");

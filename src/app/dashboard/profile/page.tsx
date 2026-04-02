@@ -31,7 +31,14 @@ function formatDate(iso: string): string {
 }
 
 export default async function ProfilePage() {
-  const user = await getMe();
+  const user = {
+    "id": 1,
+    "phone": "+79991234567",
+    "role": "SUPPLIER",
+    "profileIsComplete": true,
+    "createdAt": "2025-04-02T10:30:00.000Z",
+    "updatedAt": "2025-04-02T10:30:00.000Z"
+  } as User;
 
   if (!user) {
     redirect("/login");

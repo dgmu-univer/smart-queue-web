@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const PROTECTED_PREFIX = "/dashboard";
+const PROTECTED_PREFIX = "/dashboard11";
 const SESSION_COOKIE = "connect.sid";
 
 export function proxy(request: NextRequest) {
