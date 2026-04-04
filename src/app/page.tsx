@@ -1,8 +1,5 @@
-import { redirect } from "next/navigation";
+import { redirect } from 'next/navigation'
 
 export default function RootPage() {
-  
-  return (
-    <div>Привет</div>
-  )
+  return <div>Привет</div>
 }

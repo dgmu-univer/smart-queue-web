@@ -1,7 +1,7 @@
-import { cache } from "react";
-import { apiServer } from "@/lib/api.server";
-import { ApiError } from "@/lib/api";
-import type { User } from "@/features/auth/types";
+import { cache } from 'react'
+import { apiServer } from '@/lib/api.server'
+import { ApiError } from '@/lib/api'
+import type { User } from '@/features/auth/types'
 
 /**
  * Returns the current authenticated user, or `null` if the session
@@ -13,11 +13,11 @@ import type { User } from "@/features/auth/types";
  */
 export const getMe = cache(async (): Promise<User | null> => {
   try {
-    return await apiServer<User>("/user/me");
+    return await apiServer<User>('/user/me')
   } catch (err) {
     if (err instanceof ApiError && err.statusCode === 401) {
-      return null;
+      return null
     }
-    return null;
+    return null
   }
-});
+})

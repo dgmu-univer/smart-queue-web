@@ -1,6 +1,6 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @import 'tw-animate-css';
-@source "../**/*.{ts,tsx,js,jsx}";
+@source '../**/*.{ts,tsx,js,jsx}';
 
 :root {
   --radius: 0.625rem;
@@ -108,15 +108,15 @@
 *,
 *::before,
 *::after {
-    border-color: var(--border);
+  border-color: var(--border);
 }
 
 body {
-    background-color: var(--background);
-    color: var(--foreground);
-    font-family: Arial, Helvetica, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -131,7 +131,7 @@ body {
     @apply overflow-x-hidden;
   }
   body {
-    @apply min-h-svh w-full bg-background text-foreground has-[div[data-variant='inset']]:bg-sidebar;
+    @apply bg-background text-foreground has-[div[data-variant='inset']]:bg-sidebar min-h-svh w-full;
   }
 
   /* Override Radix scroll locking for sticky headers */
