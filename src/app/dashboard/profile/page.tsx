@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getMe } from "@/features/user/api";
 import type { User } from "@/features/auth/types";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/old/badge";
 import {
   Card,
   CardContent,
