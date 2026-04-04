@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getMe } from "@/features/user/api";
 import type { User } from "@/features/auth/types";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/old/card";
 import { ShoppingBag, Package, CheckCircle, Clock } from "lucide-react";
 
 const roleLabels: Record<User["role"], string> = {

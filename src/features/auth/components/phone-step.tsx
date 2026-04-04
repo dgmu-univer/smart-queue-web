@@ -3,9 +3,9 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/old/button';
+import { Input } from '@/components/ui/old/input';
+import { Label } from '@/components/ui/old/label';
 import { Loader2 } from 'lucide-react';
 
 const phoneSchema = z.object({

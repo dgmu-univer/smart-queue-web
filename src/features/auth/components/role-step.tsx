@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Building2, Store } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/old/button";
 import { cn } from "@/lib/utils";
 import type { UserRole } from "../types";
 

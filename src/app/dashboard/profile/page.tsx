@@ -8,7 +8,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/ui/old/card";
 import { User2, Phone, Calendar, ShieldCheck, ShieldAlert } from "lucide-react";
 
 export const metadata = {

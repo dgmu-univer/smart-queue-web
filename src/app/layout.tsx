@@ -7,7 +7,7 @@ const inter = Inter({
   variable: "--font-inter",
 });
 import { QueryProvider } from "@/components/providers/query-provider";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/old/toaster";
 
 export const metadata: Metadata = {
   title: "Price05 — B2B маркетплейс",
