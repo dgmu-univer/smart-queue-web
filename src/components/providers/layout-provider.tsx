@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+
 import { useIsMobile } from '@/hooks/use-mobile'
 
 const SIDEBAR_COOKIE_NAME = 'sidebar_collapsed'

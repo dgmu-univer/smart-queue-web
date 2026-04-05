@@ -1,7 +1,9 @@
 'use-client'
 
-import { useLayout } from '@/components/providers/layout-provider'
 import { PropsWithChildren } from 'react'
+
+import { useLayout } from '@/components/providers/layout-provider'
+import { cn } from '@/lib/utils'
 
 type SibeparWrapperProps = PropsWithChildren<unknown>
 

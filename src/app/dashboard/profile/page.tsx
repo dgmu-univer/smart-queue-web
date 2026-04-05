@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
-import { getMe } from '@/features/user/api'
-import type { User } from '@/features/auth/types'
+
+import { Calendar, Phone, ShieldAlert, ShieldCheck, User2 } from 'lucide-react'
+
 import { Badge } from '@/components/ui/old/badge'
 import {
   Card,
@@ -9,7 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/old/card'
-import { User2, Phone, Calendar, ShieldCheck, ShieldAlert } from 'lucide-react'
+import type { User } from '@/features/auth/types'
+import { getMe } from '@/features/user/api'
 
 export const metadata = {
   title: 'Профиль — OptPrice',

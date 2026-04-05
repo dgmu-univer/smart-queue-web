@@ -1,13 +1,15 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+
 import { useQueryClient } from '@tanstack/react-query'
 import { LogOut, ShoppingBag } from 'lucide-react'
-import { Button } from '@/components/ui/old/button'
+
 import { Badge } from '@/components/ui/badge'
-import { api } from '@/lib/api'
-import { CURRENT_USER_QUERY_KEY } from '@/features/user/hooks/use-current-user'
+import { Button } from '@/components/ui/old/button'
 import type { User } from '@/features/auth/types'
+import { CURRENT_USER_QUERY_KEY } from '@/features/user/hooks/use-current-user'
+import { api } from '@/lib/api'
 
 interface DashboardNavProps {
   user: User

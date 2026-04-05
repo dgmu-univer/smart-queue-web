@@ -1,15 +1,19 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+
 import { useRouter } from 'next/navigation'
+
 import { useQueryClient } from '@tanstack/react-query'
+
+import { CURRENT_USER_QUERY_KEY } from '@/features/user/hooks/use-current-user'
+import { ApiError } from '@/lib/api'
+
+import { authApi } from '../api'
+import type { UserRole } from '../types'
+import { OtpStep } from './otp-step'
 import { PhoneStep } from './phone-step'
 import { RoleStep } from './role-step'
-import { OtpStep } from './otp-step'
-import { authApi } from '../api'
-import { ApiError } from '@/lib/api'
-import { CURRENT_USER_QUERY_KEY } from '@/features/user/hooks/use-current-user'
-import type { UserRole } from '../types'
 
 type AuthStep = 'phone' | 'role' | 'otp'
 

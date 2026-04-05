@@ -1,7 +1,8 @@
 'use client'
 
 import * as React from 'react'
-import type { ToastProps, ToastActionElement } from '@/components/ui/old/toast'
+
+import type { ToastActionElement, ToastProps } from '@/components/ui/old/toast'
 
 const TOAST_LIMIT = 5
 const TOAST_REMOVE_DELAY = 5000
@@ -148,4 +149,4 @@ function useToast() {
   }
 }
 
-export { useToast, toast }
+export { toast, useToast }

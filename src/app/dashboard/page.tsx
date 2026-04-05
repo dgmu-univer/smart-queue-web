@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
-import { getMe } from '@/features/user/api'
-import type { User } from '@/features/auth/types'
+
+import { CheckCircle, Clock, Package, ShoppingBag } from 'lucide-react'
+
 import { Badge } from '@/components/ui/badge'
 import {
   Card,
@@ -8,7 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/old/card'
-import { ShoppingBag, Package, CheckCircle, Clock } from 'lucide-react'
+import type { User } from '@/features/auth/types'
+import { getMe } from '@/features/user/api'
 
 const roleLabels: Record<User['role'], string> = {
   SUPPLIER: 'Поставщик',

@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers'
+
 import { ApiError } from './api'
 
 const API_URL = process.env.API_URL ?? 'http://127.0.0.1:4000'

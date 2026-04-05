@@ -1,9 +1,10 @@
 import { api } from '@/lib/api'
+
 import type {
-  SendOtpResponse,
-  RegisterResponse,
-  VerifyOtpResponse,
   LogoutResponse,
+  RegisterResponse,
+  SendOtpResponse,
+  VerifyOtpResponse,
 } from './types'
 import type { UserRole } from './types'
 

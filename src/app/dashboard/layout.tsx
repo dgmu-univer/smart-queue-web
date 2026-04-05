@@ -1,9 +1,10 @@
 export const dynamic = 'force-dynamic'
 
 import { redirect } from 'next/navigation'
+
+import { User } from '@/features/auth/types'
 import { getMe } from '@/features/user/api'
 import { DashboardNav } from '@/features/user/components/dashboard-nav'
-import { User } from '@/features/auth/types'
 
 export default async function DashboardLayout({
   children,

@@ -1,9 +1,11 @@
 'use client'
 
-import { useRef, useState, useEffect, useCallback } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+
+import { Loader2 } from 'lucide-react'
+
 import { Button } from '@/components/ui/old/button'
 import { cn } from '@/lib/utils'
-import { Loader2 } from 'lucide-react'
 
 interface OtpStepProps {
   phone: string

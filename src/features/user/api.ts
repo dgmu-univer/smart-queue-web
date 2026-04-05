@@ -1,7 +1,8 @@
 import { cache } from 'react'
-import { apiServer } from '@/lib/api.server'
-import { ApiError } from '@/lib/api'
+
 import type { User } from '@/features/auth/types'
+import { ApiError } from '@/lib/api'
+import { apiServer } from '@/lib/api.server'
 
 /**
  * Returns the current authenticated user, or `null` if the session
