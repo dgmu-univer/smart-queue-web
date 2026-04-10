@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/old/card";
 import type { User } from "@/features/auth/types";
-import { getMe } from "@/features/user/api";
 
 const roleLabels: Record<User["role"], string> = {
   SUPPLIER: "Поставщик",
