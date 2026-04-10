@@ -1,3 +1,5 @@
+"use client";
+
 export const Sidebar = () => {
   return (
     <div className="h-screen w-64 bg-gray-800 p-4 text-white">
