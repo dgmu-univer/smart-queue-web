@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+
 import { Building2, Store } from "lucide-react";
+
 import { Button } from "@/components/ui/old/button";
 import { cn } from "@/lib/utils";
+
 import type { UserRole } from "../types";
 
 interface RoleStepProps {
@@ -63,8 +66,8 @@ export function RoleStep({
     <div className="space-y-6">
       <div className="space-y-2 text-center">
         <h1 className="text-2xl font-bold tracking-tight">Регистрация</h1>
-        <p className="text-sm text-muted-foreground">
-          Номер <span className="font-medium text-foreground">{phone}</span> не
+        <p className="text-muted-foreground text-sm">
+          Номер <span className="text-foreground font-medium">{phone}</span> не
           зарегистрирован. Выберите вашу роль.
         </p>
       </div>
@@ -79,7 +82,7 @@ export function RoleStep({
               setError(null);
             }}
             className={cn(
-              "relative flex flex-col items-center gap-3 rounded-xl border-2 p-6 text-center transition-all duration-200 hover:border-primary/60 hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+              "hover:border-primary/60 hover:bg-accent focus-visible:ring-ring relative flex flex-col items-center gap-3 rounded-xl border-2 p-6 text-center transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
               selectedRole === role.value
                 ? "border-primary bg-primary/5 text-primary"
                 : "border-border bg-card text-card-foreground",
@@ -97,12 +100,12 @@ export function RoleStep({
             </div>
             <div className="space-y-1">
               <p className="font-semibold">{role.label}</p>
-              <p className="text-xs text-muted-foreground leading-relaxed">
+              <p className="text-muted-foreground text-xs leading-relaxed">
                 {role.description}
               </p>
             </div>
             {selectedRole === role.value && (
-              <span className="absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">
+              <span className="bg-primary text-primary-foreground absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-full text-xs">
                 ✓
               </span>
             )}
@@ -110,7 +113,7 @@ export function RoleStep({
         ))}
       </div>
 
-      {error && <p className="text-sm text-destructive text-center">{error}</p>}
+      {error && <p className="text-destructive text-center text-sm">{error}</p>}
 
       <div className="space-y-3">
         <Button

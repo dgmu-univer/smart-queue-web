@@ -1,9 +1,11 @@
-'use client';
+"use client";
 
-import { useRef, useState, useEffect, useCallback } from 'react';
-import { Button } from '@/components/ui/old/button';
-import { cn } from '@/lib/utils';
-import { Loader2 } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from "react";
+
+import { Loader2 } from "lucide-react";
+
+import { Button } from "@/components/ui/old/button";
+import { cn } from "@/lib/utils";
 
 interface OtpStepProps {
   phone: string;
@@ -17,11 +19,20 @@ interface OtpStepProps {
 const OTP_LENGTH = 4;
 const RESEND_TIMEOUT = 60;
 
-export function OtpStep({ phone, onVerify, onResend, isLoading, error, onBack }: OtpStepProps) {
-  const [digits, setDigits] = useState<string[]>(Array(OTP_LENGTH).fill(''));
+export function OtpStep({
+  phone,
+  onVerify,
+  onResend,
+  isLoading,
+  error,
+  onBack,
+}: OtpStepProps) {
+  const [digits, setDigits] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [timer, setTimer] = useState(RESEND_TIMEOUT);
   const [resending, setResending] = useState(false);
-  const inputRefs = useRef<Array<HTMLInputElement | null>>(Array(OTP_LENGTH).fill(null));
+  const inputRefs = useRef<Array<HTMLInputElement | null>>(
+    Array(OTP_LENGTH).fill(null),
+  );
 
   // Countdown timer
   useEffect(() => {
@@ -60,7 +71,7 @@ export function OtpStep({ phone, onVerify, onResend, isLoading, error, onBack }:
       return;
     }
 
-    const digit = raw.replace(/\D/g, '').slice(-1);
+    const digit = raw.replace(/\D/g, "").slice(-1);
     const newDigits = [...digits];
     newDigits[index] = digit;
     setDigits(newDigits);
@@ -69,60 +80,67 @@ export function OtpStep({ phone, onVerify, onResend, isLoading, error, onBack }:
       focusIndex(index + 1);
     }
 
-    const code = newDigits.join('');
-    if (code.length === OTP_LENGTH && !newDigits.includes('')) {
+    const code = newDigits.join("");
+    if (code.length === OTP_LENGTH && !newDigits.includes("")) {
       submitCode(code);
     }
   }
 
-  function handleKeyDown(index: number, e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Backspace') {
+  function handleKeyDown(
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) {
+    if (e.key === "Backspace") {
       e.preventDefault();
       const newDigits = [...digits];
       if (newDigits[index]) {
-        newDigits[index] = '';
+        newDigits[index] = "";
         setDigits(newDigits);
       } else if (index > 0) {
-        newDigits[index - 1] = '';
+        newDigits[index - 1] = "";
         setDigits(newDigits);
         focusIndex(index - 1);
       }
-    } else if (e.key === 'ArrowLeft') {
+    } else if (e.key === "ArrowLeft") {
       e.preventDefault();
       focusIndex(index - 1);
-    } else if (e.key === 'ArrowRight') {
+    } else if (e.key === "ArrowRight") {
       e.preventDefault();
       focusIndex(index + 1);
-    } else if (e.key === 'Delete') {
+    } else if (e.key === "Delete") {
       e.preventDefault();
       const newDigits = [...digits];
-      newDigits[index] = '';
+      newDigits[index] = "";
       setDigits(newDigits);
     }
   }
 
   function handlePaste(e: React.ClipboardEvent<HTMLInputElement>) {
     e.preventDefault();
-    const text = e.clipboardData.getData('text/plain');
+    const text = e.clipboardData.getData("text/plain");
     handlePasteString(text, 0);
   }
 
   function handlePasteString(text: string, startIndex: number) {
-    const pastedDigits = text.replace(/\D/g, '').slice(0, OTP_LENGTH);
+    const pastedDigits = text.replace(/\D/g, "").slice(0, OTP_LENGTH);
     if (!pastedDigits) return;
 
     const newDigits = [...digits];
-    for (let i = 0; i < pastedDigits.length && startIndex + i < OTP_LENGTH; i++) {
+    for (
+      let i = 0;
+      i < pastedDigits.length && startIndex + i < OTP_LENGTH;
+      i++
+    ) {
       newDigits[startIndex + i] = pastedDigits[i];
     }
     setDigits(newDigits);
 
-    const nextEmpty = newDigits.findIndex((d) => d === '');
+    const nextEmpty = newDigits.findIndex((d) => d === "");
     const focusTarget = nextEmpty === -1 ? OTP_LENGTH - 1 : nextEmpty;
     focusIndex(focusTarget);
 
-    const code = newDigits.join('');
-    if (code.length === OTP_LENGTH && !newDigits.includes('')) {
+    const code = newDigits.join("");
+    if (code.length === OTP_LENGTH && !newDigits.includes("")) {
       submitCode(code);
     }
   }
@@ -135,7 +153,7 @@ export function OtpStep({ phone, onVerify, onResend, isLoading, error, onBack }:
     setResending(true);
     try {
       await onResend();
-      setDigits(Array(OTP_LENGTH).fill(''));
+      setDigits(Array(OTP_LENGTH).fill(""));
       setTimer(RESEND_TIMEOUT);
       setTimeout(() => focusIndex(0), 0);
     } finally {
@@ -143,16 +161,16 @@ export function OtpStep({ phone, onVerify, onResend, isLoading, error, onBack }:
     }
   }
 
-  const formattedTimer = `0:${String(timer).padStart(2, '0')}`;
-  const filledCount = digits.filter((d) => d !== '').length;
+  const formattedTimer = `0:${String(timer).padStart(2, "0")}`;
+  const filledCount = digits.filter((d) => d !== "").length;
 
   return (
     <div className="space-y-6">
       <div className="space-y-2 text-center">
         <h1 className="text-2xl font-bold tracking-tight">Введите код</h1>
-        <p className="text-sm text-muted-foreground">
-          Код подтверждения отправлен на номер{' '}
-          <span className="font-medium text-foreground">{phone}</span>
+        <p className="text-muted-foreground text-sm">
+          Код подтверждения отправлен на номер{" "}
+          <span className="text-foreground font-medium">{phone}</span>
         </p>
       </div>
 
@@ -176,26 +194,24 @@ export function OtpStep({ phone, onVerify, onResend, isLoading, error, onBack }:
             disabled={isLoading}
             aria-label={`Цифра ${i + 1} из ${OTP_LENGTH}`}
             className={cn(
-              'h-14 w-12 rounded-xl border-2 bg-background text-center text-xl font-bold tracking-widest transition-all duration-150',
-              'focus:outline-none focus:ring-0',
-              'disabled:cursor-not-allowed disabled:opacity-50',
+              "bg-background h-14 w-12 rounded-xl border-2 text-center text-xl font-bold tracking-widest transition-all duration-150",
+              "focus:ring-0 focus:outline-none",
+              "disabled:cursor-not-allowed disabled:opacity-50",
               digits[i]
-                ? 'border-primary text-primary shadow-sm'
-                : 'border-input text-foreground',
-              error && 'border-destructive text-destructive',
+                ? "border-primary text-primary shadow-sm"
+                : "border-input text-foreground",
+              error && "border-destructive text-destructive",
             )}
           />
         ))}
       </div>
 
       {/* Error */}
-      {error && (
-        <p className="text-center text-sm text-destructive">{error}</p>
-      )}
+      {error && <p className="text-destructive text-center text-sm">{error}</p>}
 
       {/* Progress hint */}
       {!error && filledCount > 0 && filledCount < OTP_LENGTH && (
-        <p className="text-center text-xs text-muted-foreground">
+        <p className="text-muted-foreground text-center text-xs">
           Введено {filledCount} из {OTP_LENGTH} цифр
         </p>
       )}
@@ -206,7 +222,7 @@ export function OtpStep({ phone, onVerify, onResend, isLoading, error, onBack }:
         className="w-full"
         size="lg"
         disabled={isLoading || filledCount < OTP_LENGTH}
-        onClick={() => submitCode(digits.join(''))}
+        onClick={() => submitCode(digits.join(""))}
       >
         {isLoading ? (
           <>
@@ -214,16 +230,16 @@ export function OtpStep({ phone, onVerify, onResend, isLoading, error, onBack }:
             Проверяем код...
           </>
         ) : (
-          'Подтвердить'
+          "Подтвердить"
         )}
       </Button>
 
       {/* Resend / Timer */}
       <div className="text-center">
         {timer > 0 ? (
-          <p className="text-sm text-muted-foreground">
-            Отправить повторно через{' '}
-            <span className="font-medium tabular-nums text-foreground">
+          <p className="text-muted-foreground text-sm">
+            Отправить повторно через{" "}
+            <span className="text-foreground font-medium tabular-nums">
               {formattedTimer}
             </span>
           </p>
@@ -232,9 +248,9 @@ export function OtpStep({ phone, onVerify, onResend, isLoading, error, onBack }:
             type="button"
             onClick={handleResend}
             disabled={resending}
-            className="text-sm font-medium text-primary underline-offset-4 hover:underline disabled:cursor-not-allowed disabled:opacity-50"
+            className="text-primary text-sm font-medium underline-offset-4 hover:underline disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {resending ? 'Отправляем...' : 'Отправить код повторно'}
+            {resending ? "Отправляем..." : "Отправить код повторно"}
           </button>
         )}
       </div>

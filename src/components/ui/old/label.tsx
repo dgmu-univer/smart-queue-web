@@ -1,8 +1,10 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import * as LabelPrimitive from '@radix-ui/react-label';
-import { cn } from '@/lib/utils';
+import * as React from "react";
+
+import * as LabelPrimitive from "@radix-ui/react-label";
+
+import { cn } from "@/lib/utils";
 
 function Label({
   className,
@@ -11,7 +13,7 @@ function Label({
   return (
     <LabelPrimitive.Root
       className={cn(
-        'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+        "text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
         className,
       )}
       {...props}

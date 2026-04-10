@@ -9,6 +9,7 @@
 ## Контекст проекта
 
 Проект — B2B маркетплейс. Есть два типа пользователей:
+
 - **SUPPLIER** — Поставщик
 - **STORE** — Магазин
 
@@ -42,7 +43,7 @@
 ## Модель пользователя
 
 ```typescript
-type UserRole = 'SUPPLIER' | 'STORE';
+type UserRole = "SUPPLIER" | "STORE";
 
 interface User {
   id: number;
@@ -65,19 +66,23 @@ interface User {
 ---
 
 #### `POST /auth/send-otp`
+
 Шаг 1 входа. Проверяет, существует ли пользователь.
 
 **Request:**
+
 ```json
 { "phone": "+79991234567" }
 ```
 
 **Response — пользователь найден:**
+
 ```json
 { "status": "OTP_SENT" }
 ```
 
 **Response — пользователь не зарегистрирован:**
+
 ```json
 { "status": "NEEDS_REGISTRATION" }
 ```
@@ -87,9 +92,11 @@ interface User {
 ---
 
 #### `POST /auth/register`
+
 Шаг 1 регистрации. Создаёт пользователя и отправляет OTP.
 
 **Request:**
+
 ```json
 {
   "phone": "+79991234567",
@@ -98,11 +105,13 @@ interface User {
 ```
 
 **Response:**
+
 ```json
 { "status": "OTP_SENT" }
 ```
 
 **Error 400** — номер уже занят:
+
 ```json
 {
   "statusCode": 400,
@@ -113,9 +122,11 @@ interface User {
 ---
 
 #### `POST /auth/verify-otp`
+
 Шаг 2 — общий для входа и регистрации. Верифицирует код и открывает сессию.
 
 **Request:**
+
 ```json
 {
   "phone": "+79991234567",
@@ -124,6 +135,7 @@ interface User {
 ```
 
 **Response:**
+
 ```json
 {
   "status": "SUCCESS",
@@ -152,9 +164,11 @@ interface User {
 ---
 
 #### `POST /auth/logout`
+
 Уничтожает серверную сессию.
 
 **Response:**
+
 ```json
 { "status": "LOGGED_OUT" }
 ```
@@ -164,9 +178,11 @@ interface User {
 ### Пользователь
 
 #### `GET /user/me`
+
 Возвращает текущего авторизованного пользователя. **Требует активной сессии.**
 
 **Response:**
+
 ```json
 {
   "id": 1,
@@ -179,6 +195,7 @@ interface User {
 ```
 
 **Error 401** — сессии нет:
+
 ```json
 {
   "statusCode": 401,
@@ -263,17 +280,14 @@ app/
 
 ```typescript
 // lib/api.ts
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
-export async function api<T>(
-  path: string,
-  init?: RequestInit,
-): Promise<T> {
+export async function api<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, {
     ...init,
-    credentials: 'include',
+    credentials: "include",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...init?.headers,
     },
   });
@@ -315,11 +329,11 @@ NEXT_PUBLIC_API_URL=http://localhost:4000
 
 Форма на странице `/login` имеет **три состояния** (один route, разные step):
 
-| Step | Что показываем |
-|------|----------------|
-| `phone` | Поле ввода номера телефона + кнопка «Продолжить» |
-| `role` | Выбор роли: карточки «Поставщик» / «Магазин» + кнопка «Зарегистрироваться» |
-| `otp` | 4 поля для кода + таймер 60 сек + ссылка «Отправить повторно» |
+| Step    | Что показываем                                                             |
+| ------- | -------------------------------------------------------------------------- |
+| `phone` | Поле ввода номера телефона + кнопка «Продолжить»                           |
+| `role`  | Выбор роли: карточки «Поставщик» / «Магазин» + кнопка «Зарегистрироваться» |
+| `otp`   | 4 поля для кода + таймер 60 сек + ссылка «Отправить повторно»              |
 
 Переход между шагами — через `useState` (без изменения URL).
 
@@ -330,7 +344,7 @@ NEXT_PUBLIC_API_URL=http://localhost:4000
 ```typescript
 // types/auth.ts
 
-export type UserRole = 'SUPPLIER' | 'STORE';
+export type UserRole = "SUPPLIER" | "STORE";
 
 export interface User {
   id: number;
@@ -341,23 +355,23 @@ export interface User {
   updatedAt: string;
 }
 
-export type SendOtpStatus = 'OTP_SENT' | 'NEEDS_REGISTRATION';
+export type SendOtpStatus = "OTP_SENT" | "NEEDS_REGISTRATION";
 
 export interface SendOtpResponse {
   status: SendOtpStatus;
 }
 
 export interface RegisterResponse {
-  status: 'OTP_SENT';
+  status: "OTP_SENT";
 }
 
 export interface VerifyOtpResponse {
-  status: 'SUCCESS';
+  status: "SUCCESS";
   user: User;
 }
 
 export interface LogoutResponse {
-  status: 'LOGGED_OUT';
+  status: "LOGGED_OUT";
 }
 
 export interface ApiError {

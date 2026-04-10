@@ -1,13 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+
 import { useQueryClient } from "@tanstack/react-query";
 import { LogOut, ShoppingBag } from "lucide-react";
-import { Button } from "@/components/ui/old/button";
+
 import { Badge } from "@/components/ui/badge";
-import { api } from "@/lib/api";
-import { CURRENT_USER_QUERY_KEY } from "@/features/user/hooks/use-current-user";
+import { Button } from "@/components/ui/old/button";
 import type { User } from "@/features/auth/types";
+import { CURRENT_USER_QUERY_KEY } from "@/features/user/hooks/use-current-user";
+import { api } from "@/lib/api";
 
 interface DashboardNavProps {
   user: User;
@@ -34,21 +36,21 @@ export function DashboardNav({ user }: DashboardNavProps) {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+    <header className="border-border bg-background/95 supports-backdrop-filter:bg-background/60 sticky top-0 z-40 border-b backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <ShoppingBag className="h-6 w-6 text-primary" />
+          <ShoppingBag className="text-primary h-6 w-6" />
           <span className="text-lg font-bold tracking-tight">OptPrice</span>
         </div>
 
         {/* User info + logout */}
         <div className="flex items-center gap-4">
-          <div className="hidden sm:flex flex-col items-end">
-            <span className="text-sm font-medium leading-none">
+          <div className="hidden flex-col items-end sm:flex">
+            <span className="text-sm leading-none font-medium">
               {user.phone}
             </span>
-            <span className="text-xs text-muted-foreground mt-0.5">
+            <span className="text-muted-foreground mt-0.5 text-xs">
               {user.profileIsComplete
                 ? "Профиль заполнен"
                 : "Профиль не заполнен"}
@@ -63,7 +65,7 @@ export function DashboardNav({ user }: DashboardNavProps) {
             variant="ghost"
             size="sm"
             onClick={handleLogout}
-            className="gap-2 text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground gap-2"
             aria-label="Выйти"
           >
             <LogOut className="h-4 w-4" />

@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { Inter } from "next/font/google";
+
+import { QueryProvider } from "@/components/providers/query-provider";
+import { Toaster } from "@/components/ui/old/toaster";
+
 import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
   variable: "--font-inter",
 });
-import { QueryProvider } from "@/components/providers/query-provider";
-import { Toaster } from "@/components/ui/old/toaster";
 
 export const metadata: Metadata = {
   title: "Price05 — B2B маркетплейс",
@@ -20,10 +23,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ru" suppressHydrationWarning>
+    <html lang="ru" suppressHydrationWarning dir="ltr">
       <body className={inter.variable}>
         <QueryProvider>
-          {children}
+          <NextThemesProvider>{children}</NextThemesProvider>
           <Toaster />
         </QueryProvider>
       </body>

@@ -1,9 +1,16 @@
 import { redirect } from "next/navigation";
-import { getMe } from "@/features/user/api";
-import type { User } from "@/features/auth/types";
+
+import { CheckCircle, Clock, Package, ShoppingBag } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/old/card";
-import { ShoppingBag, Package, CheckCircle, Clock } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/old/card";
+import type { User } from "@/features/auth/types";
+import { getMe } from "@/features/user/api";
 
 const roleLabels: Record<User["role"], string> = {
   SUPPLIER: "Поставщик",
@@ -17,12 +24,12 @@ const roleDescriptions: Record<User["role"], string> = {
 
 export default async function DashboardPage() {
   const user = {
-    "id": 1,
-    "phone": "+79991234567",
-    "role": "SUPPLIER",
-    "profileIsComplete": true,
-    "createdAt": "2025-04-02T10:30:00.000Z",
-    "updatedAt": "2025-04-02T10:30:00.000Z"
+    id: 1,
+    phone: "+79991234567",
+    role: "SUPPLIER",
+    profileIsComplete: true,
+    createdAt: "2025-04-02T10:30:00.000Z",
+    updatedAt: "2025-04-02T10:30:00.000Z",
   } as User;
 
   if (!user) {
@@ -37,13 +44,13 @@ export default async function DashboardPage() {
           <h1 className="text-2xl font-bold tracking-tight">
             Добро пожаловать!
           </h1>
-          <p className="mt-1 text-muted-foreground">
+          <p className="text-muted-foreground mt-1">
             {roleDescriptions[user.role]}
           </p>
         </div>
         <Badge
           variant={user.role === "SUPPLIER" ? "default" : "secondary"}
-          className="w-fit text-sm px-3 py-1"
+          className="w-fit px-3 py-1 text-sm"
         >
           {roleLabels[user.role]}
         </Badge>
@@ -79,14 +86,14 @@ export default async function DashboardPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-muted-foreground text-sm font-medium">
               Телефон
             </CardTitle>
-            <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+            <ShoppingBag className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <p className="text-lg font-semibold tracking-wide">{user.phone}</p>
-            <p className="mt-1 text-xs text-muted-foreground">
+            <p className="text-muted-foreground mt-1 text-xs">
               Основной контакт
             </p>
           </CardContent>
@@ -94,14 +101,14 @@ export default async function DashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-muted-foreground text-sm font-medium">
               Роль
             </CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
+            <Package className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <p className="text-lg font-semibold">{roleLabels[user.role]}</p>
-            <p className="mt-1 text-xs text-muted-foreground">
+            <p className="text-muted-foreground mt-1 text-xs">
               Изменить роль невозможно
             </p>
           </CardContent>
@@ -109,16 +116,16 @@ export default async function DashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-muted-foreground text-sm font-medium">
               Статус профиля
             </CardTitle>
-            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            <CheckCircle className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <p className="text-lg font-semibold">
               {user.profileIsComplete ? "Заполнен" : "Не заполнен"}
             </p>
-            <p className="mt-1 text-xs text-muted-foreground">
+            <p className="text-muted-foreground mt-1 text-xs">
               Дата регистрации:{" "}
               {new Date(user.createdAt).toLocaleDateString("ru-RU", {
                 day: "numeric",

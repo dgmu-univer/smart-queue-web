@@ -1,12 +1,16 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useQueryClient } from '@tanstack/react-query';
-import { LogOut } from 'lucide-react';
-import { Button } from '@/components/ui/old/button';
-import { authApi } from '@/features/auth/api';
-import { CURRENT_USER_QUERY_KEY } from '../hooks/use-current-user';
+import { useState } from "react";
+
+import { useRouter } from "next/navigation";
+
+import { useQueryClient } from "@tanstack/react-query";
+import { LogOut } from "lucide-react";
+
+import { Button } from "@/components/ui/old/button";
+import { authApi } from "@/features/auth/api";
+
+import { CURRENT_USER_QUERY_KEY } from "../hooks/use-current-user";
 
 export function LogoutButton() {
   const router = useRouter();
@@ -22,7 +26,7 @@ export function LogoutButton() {
     } finally {
       queryClient.removeQueries({ queryKey: CURRENT_USER_QUERY_KEY });
       queryClient.clear();
-      router.push('/login');
+      router.push("/login");
       router.refresh();
     }
   }
@@ -33,10 +37,10 @@ export function LogoutButton() {
       size="sm"
       onClick={handleLogout}
       disabled={isLoading}
-      className="gap-2 text-muted-foreground hover:text-foreground"
+      className="text-muted-foreground hover:text-foreground gap-2"
     >
       <LogOut className="h-4 w-4" />
-      {isLoading ? 'Выход...' : 'Выйти'}
+      {isLoading ? "Выход..." : "Выйти"}
     </Button>
   );
 }

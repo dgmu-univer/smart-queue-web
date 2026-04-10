@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { api, ApiError } from "@/lib/api";
+
 import type { User } from "@/features/auth/types";
+import { api, ApiError } from "@/lib/api";
 
 export const CURRENT_USER_QUERY_KEY = ["currentUser"] as const;
 

@@ -1,15 +1,19 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useCallback, useState } from "react";
+
 import { useRouter } from "next/navigation";
+
 import { useQueryClient } from "@tanstack/react-query";
+
+import { CURRENT_USER_QUERY_KEY } from "@/features/user/hooks/use-current-user";
+import { ApiError } from "@/lib/api";
+
+import { authApi } from "../api";
+import type { UserRole } from "../types";
+import { OtpStep } from "./otp-step";
 import { PhoneStep } from "./phone-step";
 import { RoleStep } from "./role-step";
-import { OtpStep } from "./otp-step";
-import { authApi } from "../api";
-import { ApiError } from "@/lib/api";
-import { CURRENT_USER_QUERY_KEY } from "@/features/user/hooks/use-current-user";
-import type { UserRole } from "../types";
 
 type AuthStep = "phone" | "role" | "otp";
 
@@ -94,7 +98,7 @@ export function AuthForm({ redirectTo = "/dashboard" }: AuthFormProps) {
         setIsLoading(false);
       }
     },
-    [phone, queryClient, router],
+    [phone, queryClient, redirectTo, router],
   );
 
   // Resend OTP
@@ -130,7 +134,7 @@ export function AuthForm({ redirectTo = "/dashboard" }: AuthFormProps) {
             <h1 className="text-2xl font-bold tracking-tight">
               Добро пожаловать
             </h1>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Введите номер телефона для входа или регистрации
             </p>
           </div>

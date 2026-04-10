@@ -1,6 +1,8 @@
+import { type Metadata } from "next";
 import { redirect } from "next/navigation";
-import { getMe } from "@/features/user/api";
-import type { User } from "@/features/auth/types";
+
+import { Calendar, Phone, ShieldAlert, ShieldCheck, User2 } from "lucide-react";
+
 import { Badge } from "@/components/ui/old/badge";
 import {
   Card,
@@ -9,9 +11,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/old/card";
-import { User2, Phone, Calendar, ShieldCheck, ShieldAlert } from "lucide-react";
+import type { User } from "@/features/auth/types";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Профиль — OptPrice",
 };
 
@@ -32,12 +34,12 @@ function formatDate(iso: string): string {
 
 export default async function ProfilePage() {
   const user = {
-    "id": 1,
-    "phone": "+79991234567",
-    "role": "SUPPLIER",
-    "profileIsComplete": true,
-    "createdAt": "2025-04-02T10:30:00.000Z",
-    "updatedAt": "2025-04-02T10:30:00.000Z"
+    id: 1,
+    phone: "+79991234567",
+    role: "SUPPLIER",
+    profileIsComplete: true,
+    createdAt: "2025-04-02T10:30:00.000Z",
+    updatedAt: "2025-04-02T10:30:00.000Z",
   } as User;
 
   if (!user) {
@@ -48,18 +50,18 @@ export default async function ProfilePage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Профиль</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="text-muted-foreground mt-1 text-sm">
           Информация о вашем аккаунте
         </p>
       </div>
 
       {/* Avatar + summary */}
       <div className="flex items-center gap-5">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+        <div className="bg-primary/10 text-primary flex h-16 w-16 items-center justify-center rounded-full">
           <User2 className="h-8 w-8" />
         </div>
         <div className="space-y-1">
-          <p className="text-lg font-semibold leading-none">{user.phone}</p>
+          <p className="text-lg leading-none font-semibold">{user.phone}</p>
           <div className="flex items-center gap-2">
             <Badge variant={user.role === "SUPPLIER" ? "default" : "secondary"}>
               {roleLabels[user.role]}
@@ -88,9 +90,9 @@ export default async function ProfilePage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <dl className="divide-y divide-border">
+          <dl className="divide-border divide-y">
             <div className="flex items-center gap-4 py-4">
-              <dt className="flex w-36 shrink-0 items-center gap-2 text-sm text-muted-foreground">
+              <dt className="text-muted-foreground flex w-36 shrink-0 items-center gap-2 text-sm">
                 <Phone className="h-4 w-4" />
                 Телефон
               </dt>
@@ -98,7 +100,7 @@ export default async function ProfilePage() {
             </div>
 
             <div className="flex items-center gap-4 py-4">
-              <dt className="flex w-36 shrink-0 items-center gap-2 text-sm text-muted-foreground">
+              <dt className="text-muted-foreground flex w-36 shrink-0 items-center gap-2 text-sm">
                 <User2 className="h-4 w-4" />
                 Роль
               </dt>
@@ -112,17 +114,17 @@ export default async function ProfilePage() {
             </div>
 
             <div className="flex items-center gap-4 py-4">
-              <dt className="flex w-36 shrink-0 items-center gap-2 text-sm text-muted-foreground">
+              <dt className="text-muted-foreground flex w-36 shrink-0 items-center gap-2 text-sm">
                 <ShieldCheck className="h-4 w-4" />
                 ID
               </dt>
-              <dd className="font-mono text-sm text-muted-foreground">
+              <dd className="text-muted-foreground font-mono text-sm">
                 #{user.id}
               </dd>
             </div>
 
             <div className="flex items-center gap-4 py-4">
-              <dt className="flex w-36 shrink-0 items-center gap-2 text-sm text-muted-foreground">
+              <dt className="text-muted-foreground flex w-36 shrink-0 items-center gap-2 text-sm">
                 <Calendar className="h-4 w-4" />
                 Регистрация
               </dt>
@@ -130,7 +132,7 @@ export default async function ProfilePage() {
             </div>
 
             <div className="flex items-center gap-4 py-4">
-              <dt className="flex w-36 shrink-0 items-center gap-2 text-sm text-muted-foreground">
+              <dt className="text-muted-foreground flex w-36 shrink-0 items-center gap-2 text-sm">
                 <Calendar className="h-4 w-4" />
                 Обновлён
               </dt>
