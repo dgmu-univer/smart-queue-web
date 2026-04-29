@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { Inter } from "next/font/google";
+import { Geist } from "next/font/google";
 
 import { QueryProvider } from "@/components/providers/query-provider";
 
 import "./globals.css";
 
-const inter = Inter({
+const inter = Geist({
   subsets: ["latin", "cyrillic"],
+  weight: ["500", "600", "800"],
   variable: "--font-inter",
 });
 
