@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { AuthForm } from "@/features/auth/components/auth-form";
 
 export const metadata: Metadata = {
   title: "Вход — OptPrice",
@@ -26,7 +25,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     <main className="bg-muted/40 flex min-h-screen items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="border-border bg-card rounded-2xl border px-8 py-10 shadow-sm">
-          <AuthForm redirectTo={redirectTo} />
+          АУФ
         </div>
       </div>
     </main>

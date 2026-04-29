@@ -12,36 +12,6 @@ export default function RootPage() {
             >
               <span className="absolute -inset-0.5"></span>
               <span className="sr-only">Open main menu</span>
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                data-slot="icon"
-                aria-hidden="true"
-                className="size-6 in-aria-expanded:hidden"
-              >
-                <path
-                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                data-slot="icon"
-                aria-hidden="true"
-                className="size-6 not-in-aria-expanded:hidden"
-              >
-                <path
-                  d="M6 18 18 6M6 6l12 12"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
             </button>
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">

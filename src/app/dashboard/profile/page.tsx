@@ -1,16 +1,7 @@
 import { type Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import { Calendar, Phone, ShieldAlert, ShieldCheck, User2 } from "lucide-react";
 
-import { Badge } from "@/components/ui/old/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/old/card";
 import type { User } from "@/features/auth/types";
 
 export const metadata: Metadata = {
@@ -58,89 +49,13 @@ export default async function ProfilePage() {
       {/* Avatar + summary */}
       <div className="flex items-center gap-5">
         <div className="bg-primary/10 text-primary flex h-16 w-16 items-center justify-center rounded-full">
-          <User2 className="h-8 w-8" />
+          авпваавп
         </div>
         <div className="space-y-1">
           <p className="text-lg leading-none font-semibold">{user.phone}</p>
-          <div className="flex items-center gap-2">
-            <Badge variant={user.role === "SUPPLIER" ? "default" : "secondary"}>
-              {roleLabels[user.role]}
-            </Badge>
-            {user.profileIsComplete ? (
-              <Badge variant="success" className="gap-1">
-                <ShieldCheck className="h-3 w-3" />
-                Профиль заполнен
-              </Badge>
-            ) : (
-              <Badge variant="warning" className="gap-1">
-                <ShieldAlert className="h-3 w-3" />
-                Профиль не заполнен
-              </Badge>
-            )}
-          </div>
+          <div className="flex items-center gap-2">Юзер</div>
         </div>
       </div>
-
-      {/* Details card */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Данные аккаунта</CardTitle>
-          <CardDescription>
-            Основная информация, привязанная к вашему профилю
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <dl className="divide-border divide-y">
-            <div className="flex items-center gap-4 py-4">
-              <dt className="text-muted-foreground flex w-36 shrink-0 items-center gap-2 text-sm">
-                <Phone className="h-4 w-4" />
-                Телефон
-              </dt>
-              <dd className="text-sm font-medium">{user.phone}</dd>
-            </div>
-
-            <div className="flex items-center gap-4 py-4">
-              <dt className="text-muted-foreground flex w-36 shrink-0 items-center gap-2 text-sm">
-                <User2 className="h-4 w-4" />
-                Роль
-              </dt>
-              <dd>
-                <Badge
-                  variant={user.role === "SUPPLIER" ? "default" : "secondary"}
-                >
-                  {roleLabels[user.role]}
-                </Badge>
-              </dd>
-            </div>
-
-            <div className="flex items-center gap-4 py-4">
-              <dt className="text-muted-foreground flex w-36 shrink-0 items-center gap-2 text-sm">
-                <ShieldCheck className="h-4 w-4" />
-                ID
-              </dt>
-              <dd className="text-muted-foreground font-mono text-sm">
-                #{user.id}
-              </dd>
-            </div>
-
-            <div className="flex items-center gap-4 py-4">
-              <dt className="text-muted-foreground flex w-36 shrink-0 items-center gap-2 text-sm">
-                <Calendar className="h-4 w-4" />
-                Регистрация
-              </dt>
-              <dd className="text-sm">{formatDate(user.createdAt)}</dd>
-            </div>
-
-            <div className="flex items-center gap-4 py-4">
-              <dt className="text-muted-foreground flex w-36 shrink-0 items-center gap-2 text-sm">
-                <Calendar className="h-4 w-4" />
-                Обновлён
-              </dt>
-              <dd className="text-sm">{formatDate(user.updatedAt)}</dd>
-            </div>
-          </dl>
-        </CardContent>
-      </Card>
     </div>
   );
 }

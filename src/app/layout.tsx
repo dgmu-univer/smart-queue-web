@@ -3,7 +3,6 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { Inter } from "next/font/google";
 
 import { QueryProvider } from "@/components/providers/query-provider";
-import { Toaster } from "@/components/ui/old/toaster";
 
 import "./globals.css";
 
@@ -27,7 +26,6 @@ export default function RootLayout({
       <body className={inter.variable}>
         <QueryProvider>
           <NextThemesProvider>{children}</NextThemesProvider>
-          <Toaster />
         </QueryProvider>
       </body>
     </html>

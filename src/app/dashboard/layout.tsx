@@ -1,6 +1,3 @@
-import { DashboardWrapper } from "@/components/dashboard/dashboard-wrapper";
-import { DashboardProvider } from "@/components/providers/dashboard-provider";
-
 export const dynamic = "force-dynamic";
 
 export default async function DashboardLayout({
@@ -9,8 +6,8 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <DashboardProvider>
-      <DashboardWrapper>{children}</DashboardWrapper>
-    </DashboardProvider>
+    <div>
+      <div>{children} Дашбоард</div>
+    </div>
   );
 }
