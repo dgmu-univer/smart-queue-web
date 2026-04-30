@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  frontend:
+  web:
     container_name: smart_queue_web
     image: ${DOCKER_FRONTEND_IMAGE}:latest
     restart: always
@@ -36,7 +36,7 @@ services:
       - internal-network
       - external-network
     depends_on:
-      frontend:
+      web:
         # Nginx запустится только когда frontend пройдёт health check
         condition: service_healthy
     healthcheck:
