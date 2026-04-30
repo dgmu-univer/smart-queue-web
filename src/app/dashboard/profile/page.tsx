@@ -1,11 +1,10 @@
 import { type Metadata } from "next";
 import { redirect } from "next/navigation";
 
-
 import type { User } from "@/features/auth/types";
 
 export const metadata: Metadata = {
-  title: "Профиль — OptPrice",
+  title: "Профиль — ДГМУ",
 };
 
 const roleLabels: Record<User["role"], string> = {

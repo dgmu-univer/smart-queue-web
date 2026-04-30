@@ -13,8 +13,8 @@ const inter = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Price05 — B2B маркетплейс",
-  description: "B2B маркетплейс для поставщиков и магазинов",
+  title: "ДГМУ — Запись в приёмную комиссию",
+  description: "Никаких очередей. Выберите дату и время визита за 2 минуты.",
 };
 
 export default function RootLayout({
