@@ -157,6 +157,7 @@ jobs:
             APP_DIR="/home/${{ secrets.REMOTE_SERVER_USERNAME }}/app"
             IMAGE="${{ env.DOCKER_IMAGE }}:latest"
             COMPOSE_FILE="docker-compose.yml"
+            export DOCKER_FRONTEND_IMAGE="${{ env.DOCKER_IMAGE }}"
 
             cd "$APP_DIR"
 
@@ -172,36 +173,36 @@ jobs:
             docker pull "$IMAGE"
 
             # ── 2. Сохраняем ID текущего контейнера для отката ─
-            OLD_CONTAINER=$(docker compose -f "$COMPOSE_FILE" ps -q frontend 2>/dev/null || echo "")
+            OLD_CONTAINER=$(docker compose -f "$COMPOSE_FILE" ps -q web 2>/dev/null || echo "")
             if [ -n "$OLD_CONTAINER" ]; then
               OLD_IMAGE=$(docker inspect --format='{{.Image}}' "$OLD_CONTAINER" 2>/dev/null || echo "")
               echo "📝 Хеш предыдущего образа: ${OLD_IMAGE:-нет}"
             fi
 
-            # ── 3. Запускаем только frontend ──────────────────
-            echo "🔄 Запуск контейнера frontend..."
-            docker compose -f "$COMPOSE_FILE" up -d --force-recreate --remove-orphans --no-deps frontend
+            # ── 3. Запускаем только web ───────────────────────
+            echo "🔄 Запуск контейнера web..."
+            docker compose -f "$COMPOSE_FILE" up -d --force-recreate --remove-orphans --no-deps web
 
             # ── 3.1 Показываем логи запуска ───────────────────
-            echo "📋 Логи запуска frontend:"
+            echo "📋 Логи запуска web:"
             sleep 10
-            docker logs optx-frontend 2>&1 || true
+            docker logs smart_queue_web 2>&1 || true
 
             # ── 4. Ожидание прохождения health check ──────────
-            echo "⏳ Ожидание готовности frontend..."
+            echo "⏳ Ожидание готовности web..."
             RETRIES=0
             MAX_RETRIES=20
             until [ "$RETRIES" -ge "$MAX_RETRIES" ]; do
-              HEALTH=$(docker inspect --format='{{.State.Health.Status}}' optx-frontend 2>/dev/null || echo "unknown")
-              STATE=$(docker inspect --format='{{.State.Status}}' optx-frontend 2>/dev/null || echo "unknown")
+              HEALTH=$(docker inspect --format='{{.State.Health.Status}}' smart_queue_web 2>/dev/null || echo "unknown")
+              STATE=$(docker inspect --format='{{.State.Status}}' smart_queue_web 2>/dev/null || echo "unknown")
               if [ "$HEALTH" = "healthy" ]; then
-                echo "✅ Frontend готов!"
+                echo "✅ Web готов!"
                 break
               fi
               if [ "$STATE" = "exited" ] || [ "$STATE" = "dead" ]; then
-                echo "❌ Контейнер frontend упал! Статус: $STATE"
+                echo "❌ Контейнер web упал! Статус: $STATE"
                 echo "📋 Полные логи контейнера:"
-                docker logs optx-frontend 2>&1 || true
+                docker logs smart_queue_web 2>&1 || true
                 exit 1
               fi
               RETRIES=$((RETRIES + 1))
@@ -210,11 +211,11 @@ jobs:
             done
 
             if [ "$RETRIES" -ge "$MAX_RETRIES" ]; then
-              echo "❌ Frontend не прошёл health check после $MAX_RETRIES попыток"
+              echo "❌ Web не прошёл health check после $MAX_RETRIES попыток"
               echo "📋 Логи контейнера:"
-              docker logs --tail 100 optx-frontend 2>&1 || true
+              docker logs --tail 100 smart_queue_web 2>&1 || true
               echo "📋 Логи health check:"
-              docker inspect --format='{{range .State.Health.Log}}{{.Output}}{{end}}' optx-frontend 2>&1 || true
+              docker inspect --format='{{range .State.Health.Log}}{{.Output}}{{end}}' smart_queue_web 2>&1 || true
               exit 1
             fi
 
@@ -224,7 +225,7 @@ jobs:
 
             echo "⏳ Проверка nginx..."
             sleep 5
-            NGINX_HEALTH=$(docker inspect --format='{{.State.Health.Status}}' optx-nginx 2>/dev/null || echo "unknown")
+            NGINX_HEALTH=$(docker inspect --format='{{.State.Health.Status}}' smart_queue_nginx 2>/dev/null || echo "unknown")
             echo "   Здоровье nginx: $NGINX_HEALTH"
 
             # ── 6. Очистка неиспользуемых образов ─────────────
