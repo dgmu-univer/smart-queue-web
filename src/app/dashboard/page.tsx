@@ -2,13 +2,6 @@ import { redirect } from "next/navigation";
 
 import { CheckCircle, Clock, Package, ShoppingBag } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/old/card";
 import type { User } from "@/features/auth/types";
 
 const roleLabels: Record<User["role"], string> = {
@@ -47,12 +40,6 @@ export default async function DashboardPage() {
             {roleDescriptions[user.role]}
           </p>
         </div>
-        <Badge
-          variant={user.role === "SUPPLIER" ? "default" : "secondary"}
-          className="w-fit px-3 py-1 text-sm"
-        >
-          {roleLabels[user.role]}
-        </Badge>
       </div>
 
       {/* Profile status banner */}
@@ -82,59 +69,7 @@ export default async function DashboardPage() {
       )}
 
       {/* Stats cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-muted-foreground text-sm font-medium">
-              Телефон
-            </CardTitle>
-            <ShoppingBag className="text-muted-foreground h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg font-semibold tracking-wide">{user.phone}</p>
-            <p className="text-muted-foreground mt-1 text-xs">
-              Основной контакт
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-muted-foreground text-sm font-medium">
-              Роль
-            </CardTitle>
-            <Package className="text-muted-foreground h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg font-semibold">{roleLabels[user.role]}</p>
-            <p className="text-muted-foreground mt-1 text-xs">
-              Изменить роль невозможно
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-muted-foreground text-sm font-medium">
-              Статус профиля
-            </CardTitle>
-            <CheckCircle className="text-muted-foreground h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg font-semibold">
-              {user.profileIsComplete ? "Заполнен" : "Не заполнен"}
-            </p>
-            <p className="text-muted-foreground mt-1 text-xs">
-              Дата регистрации:{" "}
-              {new Date(user.createdAt).toLocaleDateString("ru-RU", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">jhfgh</div>
     </div>
   );
 }

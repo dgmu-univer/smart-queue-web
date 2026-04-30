@@ -1,20 +1,20 @@
 import type { Metadata } from "next";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { Inter } from "next/font/google";
+import { Geist } from "next/font/google";
 
 import { QueryProvider } from "@/components/providers/query-provider";
-import { Toaster } from "@/components/ui/old/toaster";
 
 import "./globals.css";
 
-const inter = Inter({
+const inter = Geist({
   subsets: ["latin", "cyrillic"],
+  weight: ["500", "600", "800"],
   variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
-  title: "Price05 — B2B маркетплейс",
-  description: "B2B маркетплейс для поставщиков и магазинов",
+  title: "ДГМУ — Запись в приёмную комиссию",
+  description: "Никаких очередей. Выберите дату и время визита за 2 минуты.",
 };
 
 export default function RootLayout({
@@ -27,7 +27,6 @@ export default function RootLayout({
       <body className={inter.variable}>
         <QueryProvider>
           <NextThemesProvider>{children}</NextThemesProvider>
-          <Toaster />
         </QueryProvider>
       </body>
     </html>
