@@ -1,0 +1,240 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOCKER_IMAGE: ${{ secrets.DOCKER_FRONTEND_IMAGE }}
+
+jobs:
+  # ── Проверка качества (раскомментируй когда будет нужно) ──────────────
+  # quality:
+  #   name: Линтинг и проверка типов
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Клонирование репозитория
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Установка pnpm
+  #       uses: pnpm/action-setup@v4
+  #       with:
+  #         version: 9
+  #
+  #     - name: Настройка Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 22
+  #         cache: pnpm
+  #
+  #     - name: Установка зависимостей
+  #       run: pnpm install --frozen-lockfile
+  #
+  #     - name: Линтинг
+  #       run: pnpm run lint
+  #
+  #     - name: Проверка типов
+  #       run: pnpm run typecheck
+
+  # ── Сборка и публикация Docker-образа ─────────────────────────────────
+  build:
+    name: Сборка и публикация Docker-образа
+    # needs: quality  # раскомментируй когда включишь проверку качества
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.meta.outputs.version }}
+    steps:
+      - name: Клонирование репозитория
+        uses: actions/checkout@v4
+
+      - name: Настройка Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Метаданные Docker-образа
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_IMAGE }}
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=
+            type=ref,event=branch
+
+      - name: Авторизация в Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Сборка и отправка образа
+        uses: docker/build-push-action@v6
+        env:
+          BUILDKIT_PROGRESS: plain
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+          build-args: |
+            NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://x-opt.ru' }}
+            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL || 'https://x-opt.ru/api' }}
+            NEXT_PUBLIC_GITHUB_URL=${{ secrets.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/optprice' }}
+            NEXT_PUBLIC_GA_ID=${{ secrets.NEXT_PUBLIC_GA_ID || '' }}
+
+      - name: Проверка отправленного образа
+        run: |
+          echo "✅ Отправленные теги:"
+          echo "${{ steps.meta.outputs.tags }}"
+
+  # ── Деплой на продакшен-сервер ────────────────────────────────────────
+  deploy:
+    name: Деплой на продакшен
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Клонирование репозитория
+        uses: actions/checkout@v4
+
+      - name: Очистка сломанных путей на сервере
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.REMOTE_SERVER_HOST }}
+          username: ${{ secrets.REMOTE_SERVER_USERNAME }}
+          password: ${{ secrets.REMOTE_SERVER_SSH_KEY }}
+          port: ${{ secrets.REMOTE_SERVER_SSH_PORT }}
+          script: |
+            APP_DIR="/home/${{ secrets.REMOTE_SERVER_USERNAME }}/app"
+            mkdir -p "$APP_DIR/ssl"
+
+            # Используем временный alpine-контейнер от root для исправления прав
+            docker run --rm -v "$APP_DIR/nginx:/mnt/nginx" alpine sh -c '
+              # Удаляем nginx.conf если Docker создал его как директорию
+              if [ -d /mnt/nginx/nginx.conf ]; then
+                echo "⚠️  nginx.conf — директория, удаляем..."
+                rm -rf /mnt/nginx/nginx.conf
+              fi
+              # Исправляем владельца на UID 1000 (стандартный не-root пользователь)
+              chown -R 1000:1000 /mnt/nginx
+              chmod -R u+rwX /mnt/nginx
+            '
+
+            # Создаём директории после очистки
+            mkdir -p "$APP_DIR/nginx/conf.d"
+
+      - name: Копирование конфигов на сервер
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.REMOTE_SERVER_HOST }}
+          username: ${{ secrets.REMOTE_SERVER_USERNAME }}
+          password: ${{ secrets.REMOTE_SERVER_SSH_KEY }}
+          port: ${{ secrets.REMOTE_SERVER_SSH_PORT }}
+          source: "nginx/nginx.conf,nginx/conf.d/default.conf,docker-compose.yml"
+          target: "/home/${{ secrets.REMOTE_SERVER_USERNAME }}/app"
+          overwrite: true
+
+      - name: Деплой через SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.REMOTE_SERVER_HOST }}
+          username: ${{ secrets.REMOTE_SERVER_USERNAME }}
+          password: ${{ secrets.REMOTE_SERVER_SSH_KEY }}
+          port: ${{ secrets.REMOTE_SERVER_SSH_PORT }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+
+            APP_DIR="/home/${{ secrets.REMOTE_SERVER_USERNAME }}/app"
+            IMAGE="${{ env.DOCKER_IMAGE }}:latest"
+            COMPOSE_FILE="docker-compose.yml"
+
+            cd "$APP_DIR"
+
+            echo "══════════════════════════════════════════════"
+            echo "🚀 Начало деплоя — $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+            echo "══════════════════════════════════════════════"
+
+            echo "📄 Проверка конфигов Nginx:"
+            ls -la nginx/nginx.conf nginx/conf.d/default.conf
+
+            # ── 1. Скачиваем свежий образ ─────────────────────
+            echo "📦 Скачиваем образ: $IMAGE"
+            docker pull "$IMAGE"
+
+            # ── 2. Сохраняем ID текущего контейнера для отката ─
+            OLD_CONTAINER=$(docker compose -f "$COMPOSE_FILE" ps -q frontend 2>/dev/null || echo "")
+            if [ -n "$OLD_CONTAINER" ]; then
+              OLD_IMAGE=$(docker inspect --format='{{.Image}}' "$OLD_CONTAINER" 2>/dev/null || echo "")
+              echo "📝 Хеш предыдущего образа: ${OLD_IMAGE:-нет}"
+            fi
+
+            # ── 3. Запускаем только frontend ──────────────────
+            echo "🔄 Запуск контейнера frontend..."
+            docker compose -f "$COMPOSE_FILE" up -d --force-recreate --remove-orphans --no-deps frontend
+
+            # ── 3.1 Показываем логи запуска ───────────────────
+            echo "📋 Логи запуска frontend:"
+            sleep 10
+            docker logs optx-frontend 2>&1 || true
+
+            # ── 4. Ожидание прохождения health check ──────────
+            echo "⏳ Ожидание готовности frontend..."
+            RETRIES=0
+            MAX_RETRIES=20
+            until [ "$RETRIES" -ge "$MAX_RETRIES" ]; do
+              HEALTH=$(docker inspect --format='{{.State.Health.Status}}' optx-frontend 2>/dev/null || echo "unknown")
+              STATE=$(docker inspect --format='{{.State.Status}}' optx-frontend 2>/dev/null || echo "unknown")
+              if [ "$HEALTH" = "healthy" ]; then
+                echo "✅ Frontend готов!"
+                break
+              fi
+              if [ "$STATE" = "exited" ] || [ "$STATE" = "dead" ]; then
+                echo "❌ Контейнер frontend упал! Статус: $STATE"
+                echo "📋 Полные логи контейнера:"
+                docker logs optx-frontend 2>&1 || true
+                exit 1
+              fi
+              RETRIES=$((RETRIES + 1))
+              echo "   Статус: $STATE | Здоровье: $HEALTH (попытка $RETRIES/$MAX_RETRIES)"
+              sleep 5
+            done
+
+            if [ "$RETRIES" -ge "$MAX_RETRIES" ]; then
+              echo "❌ Frontend не прошёл health check после $MAX_RETRIES попыток"
+              echo "📋 Логи контейнера:"
+              docker logs --tail 100 optx-frontend 2>&1 || true
+              echo "📋 Логи health check:"
+              docker inspect --format='{{range .State.Health.Log}}{{.Output}}{{end}}' optx-frontend 2>&1 || true
+              exit 1
+            fi
+
+            # ── 5. Запускаем nginx ────────────────────────────
+            echo "🔄 Запуск контейнера nginx..."
+            docker compose -f "$COMPOSE_FILE" up -d --force-recreate --remove-orphans --no-deps nginx
+
+            echo "⏳ Проверка nginx..."
+            sleep 5
+            NGINX_HEALTH=$(docker inspect --format='{{.State.Health.Status}}' optx-nginx 2>/dev/null || echo "unknown")
+            echo "   Здоровье nginx: $NGINX_HEALTH"
+
+            # ── 6. Очистка неиспользуемых образов ─────────────
+            echo "🧹 Удаление неиспользуемых образов..."
+            docker image prune -f
+
+            echo ""
+            echo "══════════════════════════════════════════════"
+            echo "✅ Деплой завершён успешно — $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+            echo "══════════════════════════════════════════════"
+            echo ""
+            echo "📊 Запущенные контейнеры:"
+            docker compose -f "$COMPOSE_FILE" ps
