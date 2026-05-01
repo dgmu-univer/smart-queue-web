@@ -44,7 +44,7 @@ const typescriptConfig = defineConfig([
     name: 'project/javascript-disable-type-check',
     files: ['**/*.{js,mjs,cjs}'],
     ...tseslintConfigs.disableTypeChecked,
-  }
+  },
 ]);
 
 const reactConfig = defineConfig([
@@ -95,7 +95,7 @@ const reactConfig = defineConfig([
         version: '19',
       },
     },
-  }
+  },
 ]);
 
 const stylisticConfig = defineConfig([
@@ -108,25 +108,14 @@ const stylisticConfig = defineConfig([
     rules: {
       // Remove legacy formatting rules from ESLint core
       ...stylisticPlugin.configs['disable-legacy'].rules,
-      // Add recommended stylistic rules
-      ...stylisticPlugin.configs.recommended.rules,
-      // Custom style preferences
-      '@stylistic/indent': ['warn', 2],
-      '@stylistic/quotes': ['warn', 'single', {
-        avoidEscape: true,
-        allowTemplateLiterals: 'always'
-      }],
-      '@stylistic/semi': ['warn', 'always'],
+      '@stylistic/semi': ['error', 'always'],
       '@stylistic/no-extra-semi': 'error',
-      '@stylistic/comma-dangle': ['warn', 'only-multiline'],
-      '@stylistic/arrow-parens': ['warn', 'as-needed', {
-        requireForBlockBody: true
-      }],
+      // Add recommended stylistic rules
       '@stylistic/brace-style': ['warn', '1tbs', {
-        allowSingleLine: true
+        allowSingleLine: true,
       }],
     },
-  }
+  },
 ]);
 
 const ignoresConfig = defineConfig([
@@ -139,7 +128,7 @@ const ignoresConfig = defineConfig([
       '.vscode/',
       '.zed/',
       'next-env.d.ts',
-    ]
+    ],
   },
 ]);
 
@@ -175,7 +164,7 @@ const tailwindcssConfig = defineConfig(
         // "tailwindConfig": "tailwind.config.js"
         // https://github.com/schoero/eslint-plugin-better-tailwindcss/blob/main/docs/rules/no-unregistered-classes.md
         detectComponentClasses: true, // Enable custom class detection
-      }
+      },
     },
   },
 );
