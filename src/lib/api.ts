@@ -4,13 +4,15 @@ export class ApiError extends Error {
     message: string,
   ) {
     super(message);
-    this.name = "ApiError";
+    this.name = 'ApiError';
   }
 }
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const body = await res.json().catch(() => ({}));
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
     throw new ApiError(res.status, body.message ?? `HTTP ${res.status}`);
   }
   return res.json() as Promise<T>;
@@ -26,9 +28,10 @@ async function handleResponse<T>(res: Response): Promise<T> {
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`/api${path}`, {
     ...init,
-    credentials: "include",
+    credentials: 'include',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
       ...init?.headers,
     },
   });

@@ -1,14 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query';
 
-import type { User } from "@/features/auth/types";
-import { api, ApiError } from "@/lib/api";
+import type { User } from '@/features/auth/types';
+import { api, ApiError } from '@/lib/api';
 
-export const CURRENT_USER_QUERY_KEY = ["currentUser"] as const;
+export const CURRENT_USER_QUERY_KEY = ['currentUser'] as const;
 
 export function useCurrentUser() {
   return useQuery<User, ApiError>({
     queryKey: CURRENT_USER_QUERY_KEY,
-    queryFn: () => api<User>("/user/me"),
+    queryFn: () => api<User>('/user/me'),
     retry: (failureCount, error) => {
       if (error instanceof ApiError && error.statusCode === 401) {
         return false;
