@@ -1,13 +1,17 @@
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
-export default async function DashboardLayout({
+export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <div>
-      <div>{children} Дашбоард</div>
+      <div>
+        {children}
+        {' '}
+        Дашбоард
+      </div>
     </div>
   );
 }

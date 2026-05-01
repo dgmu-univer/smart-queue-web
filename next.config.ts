@@ -1,13 +1,13 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
-const BACKEND_URL = process.env.API_URL ?? "http://127.0.0.1:4000";
+const BACKEND_URL = process.env.API_URL ?? 'http://127.0.0.1:4000';
 
 const nextConfig: NextConfig = {
-  output: "standalone",
-  async rewrites() {
+  output: 'standalone',
+  rewrites() {
     return [
       {
-        source: "/api/:path*",
+        source: '/api/:path*',
         destination: `${BACKEND_URL}/:path*`,
       },
     ];
