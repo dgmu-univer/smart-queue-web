@@ -1,5 +1,8 @@
 // import { ArrowUpRight } from 'lucide-react'
 
+import { ArrowUpRight } from "lucide-react";
+import { Button } from "./ui/button";
+
 export default function Hero() {
   return (
     <div className="flex min-h-screen items-center justify-center overflow-hidden">
@@ -28,17 +31,17 @@ export default function Hero() {
             {' '}
             ДГМУ онлайн
           </h1>
-          <p className="mt-4 max-w-[60ch] bg-sky-500 text-lg sm:mt-6 sm:text-xl/normal">
+          <p className="mt-4 max-w-[60ch] text-lg sm:mt-6 sm:text-xl/normal">
             Никаких очередей. Выберите дату и время визита за 2 минуты.
             Официальная запись абитуриентов Дагестанского государственного
             медицинского университета.
           </p>
           <div className="mt-8 flex items-center gap-4 sm:mt-12">
-            { /* <Button className="rounded-full text-base" size="lg">
+            <Button className="rounded-full text-base" size="lg">
               Записаться
               {' '}
               <ArrowUpRight className="size-5!" />
-            </Button> */ }
+            </Button>
           </div>
         </div>
         <div className="bg-accent aspect-video w-full rounded-xl lg:aspect-auto lg:h-screen lg:w-250 lg:rounded-none" />

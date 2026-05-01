@@ -1,3 +1,5 @@
+"use client";
+
 import Link from 'next/link';
 import { Wheat } from 'lucide-react';
 
