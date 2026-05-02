@@ -1,10 +1,24 @@
 @import 'tailwindcss';
 
 @plugin 'tailwindcss-animate';
+@import '@radix-ui/colors/slate.css';
+@import '@radix-ui/colors/slate-dark.css';
+@import '@radix-ui/colors/teal.css';
+@import '@radix-ui/colors/teal-dark.css';
+@import '@radix-ui/colors/purple.css';
+@import '@radix-ui/colors/purple-dark.css';
+@import '@radix-ui/colors/grass.css';
+@import '@radix-ui/colors/grass-dark.css';
+@import '@radix-ui/colors/amber.css';
+@import '@radix-ui/colors/amber-dark.css';
+@import '@radix-ui/colors/tomato.css';
+@import '@radix-ui/colors/tomato-dark.css';
 
 @custom-variant dark (&:is(.dark *));
 
 /* Tailwind base/components/utilities should be first. */
+@tailwind base;
+@tailwind components;
 @tailwind utilities;
 
 /*
