@@ -38,6 +38,7 @@ const typescriptConfig = defineConfig([
     rules: {
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/triple-slash-reference': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
     },
   },
   {
@@ -107,7 +108,7 @@ const stylisticConfig = defineConfig([
     },
     rules: {
       // Remove legacy formatting rules from ESLint core
-      ...stylisticPlugin.configs['disable-legacy'].rules,
+      ...stylisticPlugin.configs['recommended'].rules,
       '@stylistic/semi': ['error', 'always'],
       '@stylistic/no-extra-semi': 'error',
       // Add recommended stylistic rules
