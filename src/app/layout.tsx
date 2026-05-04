@@ -9,15 +9,15 @@ import '@radix-ui/themes/styles.css';
 import './globals.css';
 
 const geist = Geist({
-  subsets: ['latin'],
+  subsets: ['latin', 'cyrillic'],
   variable: '--font-sans',
 });
 const geistMono = Geist_Mono({
-  subsets: ['latin'],
+  subsets: ['latin', 'cyrillic'],
   variable: '--font-mono',
 });
 const caveat = Caveat({
-  subsets: ['latin'],
+  subsets: ['latin', 'cyrillic'],
   variable: '--font-handwriting',
 });
 
