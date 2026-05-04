@@ -10,12 +10,7 @@ export const metadata: Metadata = {
 
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions);
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
 
-  if (!session?.serverCookie) {
-    return new Response('Unauthorized', { status: 401 });
-  }
   // Делаем запрос к внешнему сервису
   const response = await fetch('https://price05.ru/api/me', {
     method: 'GET',

@@ -1,13 +1,6 @@
 import Image from 'next/image';
 import { Star, StarHalf } from 'lucide-react';
 
-const avatars = [
-  { src: '/avatars/avatar-1.jpg', alt: 'Photographer 1' },
-  { src: '/avatars/avatar-2.png', alt: 'Photographer 2' },
-  { src: '/avatars/avatar-3.jpg', alt: 'Photographer 3' },
-  { src: '/avatars/avatar-4.jpg', alt: 'Photographer 4' },
-];
-
 export function SocialProof() {
   return (
     <section className="mx-auto w-full max-w-3xl px-5 pb-16 sm:pb-24">

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { LogInIcon } from 'lucide-react';
+import { User } from 'lucide-react';
 
 export function SiteHeader() {
   return (
@@ -39,7 +39,7 @@ export function SiteHeader() {
             href="/login"
             className="text-foreground hover:text-foreground/70 inline-flex items-center gap-1.5 rounded-md font-medium transition-colors"
           >
-            <LogInIcon className="size-4" aria-hidden="true" />
+            <User className="size-4" aria-hidden="true" />
             <span>Войти</span>
           </Link>
         </nav>
