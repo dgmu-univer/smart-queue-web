@@ -1,121 +1,59 @@
-'use client';
-
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Container, Section } from '@radix-ui/themes';
-import { z } from 'zod';
-
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-
-// Validation schema
-const loginSchema = z.object({
-  username: z.string(),
-  password: z.string().min(1, 'Password is required'),
-});
-type LoginFormData = z.infer<typeof loginSchema>;
+import { AuthModule } from '@/features/auth/auth-module';
 
 export default function LoginPage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [, setServerError] = useState<string | null>(null);
-
-  const {
-    register,
-    handleSubmit,
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-  });
-
-  const onSubmit = async (data: LoginFormData) => {
-    setLoading(true);
-    setServerError(null);
-
-    try {
-      // Use NextAuth signIn with credentials provider
-      await signIn('credentials', {
-        username: data.username,
-        password: data.password,
-        redirect: false, // Don't redirect automatically
-      });
-
-      // Success - redirect based on user role
-      // NextAuth session will be available after successful sign in
-      router.push('/dashboard');
-      router.refresh(); // Refresh to update session on server
-    } catch (error) {
-      console.error('Login error:', error);
-      setServerError('Network error. Please check your connection and try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <Section size="2" className="flex min-h-screen items-center justify-center">
-      <Container size="1" p="2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Login to your account</CardTitle>
-            <CardDescription>
-              Enter your email below to login to your account
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <FieldGroup>
-                <Field>
-                  <FieldLabel htmlFor="email">Email</FieldLabel>
-                  <Input
-                    {...register('username')}
-                    id="username"
-                    placeholder="milan"
-                    required
-                  />
-                </Field>
-                <Field>
-                  <div className="flex items-center">
-                    <FieldLabel htmlFor="password">Password</FieldLabel>
-                    <a
-                      href="/forgot"
-                      className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                    >
-                      Forgot your password?
-                    </a>
-                  </div>
-                  <Input {...register('password')} id="password" type="password" required />
-                </Field>
+    <main className="relative flex min-h-svh items-center justify-center overflow-hidden px-4 py-12">
+      {/* Gradient background - same as main page */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(120%_80%_at_50%_-10%,#fde8ef_0%,#fff5e6_28%,#eef3ff_58%,#ffffff_85%)]"
+      />
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none absolute -top-24 left-1/2 -z-10 h-120 w-205 -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(255,200,210,0.55),rgba(255,200,210,0)_70%)] blur-2xl
+        "
+      />
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none absolute top-40 right-[-10%] -z-10 hidden h-105 w-130 rounded-full bg-[radial-gradient(closest-side,rgba(190,210,255,0.5),rgba(190,210,255,0)_70%)] blur-2xl sm:block
+        "
+      />
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none absolute top-72 left-[-10%] -z-10 hidden h-105 w-130 rounded-full bg-[radial-gradient(closest-side,rgba(255,225,180,0.45),rgba(255,225,180,0)_70%)] blur-2xl sm:block
+        "
+      />
 
-                <Field>
-                  <Button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full"
-                    aria-label={loading ? 'Signing in...' : 'Sign in'}
-                  >
-                    {loading ? 'Signing in...' : 'Sign in'}
-                  </Button>
-                </Field>
-              </FieldGroup>
-            </form>
-          </CardContent>
-        </Card>
-      </Container>
-    </Section>
+      {/* Logo */}
+      <div className="absolute top-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1 sm:top-8">
+        <div className="bg-foreground text-background flex size-12 items-center justify-center rounded-xl">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="size-7"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v4" />
+            <path d="M12 18v4" />
+            <path d="M2 12h4" />
+            <path d="M18 12h4" />
+            <path d="M4.93 4.93l2.83 2.83" />
+            <path d="M16.24 16.24l2.83 2.83" />
+            <path d="M4.93 19.07l2.83-2.83" />
+            <path d="M16.24 7.76l2.83-2.83" />
+          </svg>
+        </div>
+        <span className="text-sm font-semibold">ДГМУ</span>
+      </div>
+      <AuthModule />
+    </main>
   );
 }
