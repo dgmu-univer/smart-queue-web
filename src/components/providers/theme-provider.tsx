@@ -4,14 +4,14 @@ import React, { Suspense } from 'react';
 import { Theme } from '@radix-ui/themes';
 
 interface ThemeProviderProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 /**
  * Client-side Theme Provider wrapper
  * Isolates Radix UI Theme's client-side hydration from server rendering
  * to prevent hydration mismatches caused by dynamic theme attributes
- * 
+ *
  * Wrapped with Suspense to prevent hydration errors from async theme loading
  */
 export function ThemeProvider({ children }: ThemeProviderProps) {

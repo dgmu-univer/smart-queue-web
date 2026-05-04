@@ -1,6 +1,6 @@
 export const ROLE_PERMISSIONS = {
   SUPER_ADMIN: [
-    '*', 
+    '*',
   ],
   ADMIN: [
     // Dashboard routes
@@ -31,13 +31,13 @@ export const PUBLIC_ROUTES = [
 
 /**
  * Check if a path matches a pattern
- * 
+ *
  * Patterns:
  * - '*' = Match all paths
  * - '/path/*' = Match /path and all subpaths
  * - '/path/[param]' = Match /path with any single segment
  * - '/path' = Exact match only
- * 
+ *
  * @param pathname - The path to check (e.g., '/products/123')
  * @param pattern - The pattern to match against (e.g., '/products/*')
  * @returns true if path matches pattern
@@ -73,11 +73,11 @@ function matchesPattern(pathname: string, pattern: string): boolean {
 
 /**
  * Check if a user role can access a specific route
- * 
+ *
  * @param pathname - The path to check (e.g., '/products/123')
  * @param userRole - The user's role (e.g., 'STAFF')
  * @returns true if user has access to the route
- * 
+ *
  * @example
  * canAccess('/products', 'STAFF') // true
  * canAccess('/settings', 'STAFF') // false
@@ -87,12 +87,12 @@ function matchesPattern(pathname: string, pattern: string): boolean {
 export function canAccess(pathname: string, userRole?: string | null): boolean {
   // No role = unauthenticated user, check public routes only
   if (!userRole) {
-    return PUBLIC_ROUTES.some((pattern) => matchesPattern(pathname, pattern));
+    return PUBLIC_ROUTES.some(pattern => matchesPattern(pathname, pattern));
   }
 
   // Check role-specific permissions
   const permissions = ROLE_PERMISSIONS[userRole as keyof typeof ROLE_PERMISSIONS];
-  
+
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!permissions) {
     // Unknown role = deny access
@@ -100,22 +100,22 @@ export function canAccess(pathname: string, userRole?: string | null): boolean {
   }
 
   // Check if any permission pattern matches the pathname
-  return permissions.some((pattern) => matchesPattern(pathname, pattern));
+  return permissions.some(pattern => matchesPattern(pathname, pattern));
 }
 
 /**
  * Check if a route is public (no authentication required)
- * 
+ *
  * @param pathname - The path to check
  * @returns true if route is public
  */
 export function isPublicRoute(pathname: string): boolean {
-  return PUBLIC_ROUTES.some((pattern) => matchesPattern(pathname, pattern));
+  return PUBLIC_ROUTES.some(pattern => matchesPattern(pathname, pattern));
 }
 
 /**
  * Get the default redirect path for a user role after login
- * 
+ *
  * @param userRole - The user's role
  * @returns The default redirect path for the role
  */
@@ -128,13 +128,12 @@ export function getDefaultRedirect(userRole?: string | null): string {
   return ROLE_DEFAULT_REDIRECTS[userRole as keyof typeof ROLE_DEFAULT_REDIRECTS] || '/';
 }
 
-
 /**
  * Check if a user has permission to perform an action on a resource
- * 
+ *
  * This is for fine-grained permissions within routes (e.g., edit vs view)
  * Currently simplified - extend as needed for action-level permissions
- * 
+ *
  * @param userRole - The user's role
  * @param action - The action (e.g., 'create', 'read', 'update', 'delete')
  * @param resource - The resource (e.g., 'product', 'order', 'customer')
@@ -143,7 +142,7 @@ export function getDefaultRedirect(userRole?: string | null): string {
 export function canPerformAction(
   userRole: string,
   action: 'create' | 'read' | 'update' | 'delete',
-  resource: string
+  resource: string,
 ): boolean {
   // SUPER_ADMIN can do anything
   if (userRole === 'SUPER_ADMIN') {
