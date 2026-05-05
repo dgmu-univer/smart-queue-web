@@ -45,15 +45,15 @@ const nextConfig: NextConfig = {
       '@hookform/resolvers',
     ],
   },
-  // rewrites() {
-  //   return [
-  //     {
-  //       // Proxy all /api/* requests to backend EXCEPT /api/auth/* (NextAuth)
-  //       source: '/api/((?!auth/).*)',
-  //       destination: `${BACKEND_URL}/$1`,
-  //     },
-  //   ];
-  // },
+  rewrites() {
+    return [
+      {
+        // Proxy all /api/* requests to backend EXCEPT /api/auth/* (NextAuth)
+        source: '/api/((?!auth/).*)',
+        destination: `${BACKEND_URL}/api/$1`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
