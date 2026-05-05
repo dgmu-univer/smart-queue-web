@@ -4,7 +4,7 @@ import { Caveat, Geist, Geist_Mono } from 'next/font/google';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { SessionProvider } from '@/components/providers/session-provider';
 import { ThemeProvider } from '@/components/providers/theme-provider';
-import { TooltipProvider } from '@/components/ui/tooltip'
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 import '@radix-ui/themes/styles.css';
 import './globals.css';
