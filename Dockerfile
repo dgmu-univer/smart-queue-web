@@ -16,6 +16,7 @@ ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL \
     NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL \
     NEXTAUTH_SECRET=$NEXTAUTH_SECRET \
     NEXTAUTH_URL=$NEXTAUTH_URL \
+    NEXTAUTH_URL_INTERNAL=http://smart_queue_web:3000 \
     NEXT_TELEMETRY_DISABLED=1
 
 # ── Зависимости ──────────────────────────────────────────────────────
