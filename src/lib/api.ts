@@ -1,8 +1,8 @@
 import ky from 'ky';
-import { BACKEND_URL } from '../../next.config';
+// import { BACKEND_URL } from '../../next.config';
 
 const api = ky.extend({
-  baseUrl: BACKEND_URL,
+  baseUrl: 'http://backend:8080',
   prefix: '/api',
   hooks: {
     beforeRequest: [

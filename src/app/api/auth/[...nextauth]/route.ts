@@ -43,8 +43,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         // 1. Делаем запрос к вашему API
-        const backendUrl = 'http://backend:8080/api/login';
-        const res = await api.post<User>(backendUrl, {
+        const res = await api.post<User>('/login', {
           json: {
             username: credentials?.username,
             password: credentials?.password,
