@@ -11,6 +11,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  PUBLIC_API_URL: https://price05.ru/api
+  PUBLIC_SITE_URL: https://price05.ru
   DOCKER_IMAGE: ${{ secrets.DOCKER_FRONTEND_IMAGE }}
 
 jobs:
@@ -86,11 +88,10 @@ jobs:
           cache-to: type=gha,mode=max
           platforms: linux/amd64
           build-args: |
-            NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://x-opt.ru' }}
-            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL || 'https://x-opt.ru/api' }}
-            NEXT_PUBLIC_GITHUB_URL=${{ secrets.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/optprice' }}
-            NEXT_PUBLIC_GA_ID=${{ secrets.NEXT_PUBLIC_GA_ID || '' }}
-
+            NEXT_PUBLIC_SITE_URL=${{ env.PUBLIC_SITE_URL }}
+            NEXT_PUBLIC_API_URL=${{ env.PUBLIC_API_URL }}
+            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+            NEXTAUTH_URL=${{ env.PUBLIC_SITE_URL }}
       - name: Проверка отправленного образа
         run: |
           echo "✅ Отправленные теги:"
