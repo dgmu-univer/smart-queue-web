@@ -1,39 +1,16 @@
-export class ApiError extends Error {
-  constructor(
-    public readonly statusCode: number,
-    message: string,
-  ) {
-    super(message);
-    this.name = 'ApiError';
-  }
-}
+import ky from 'ky';
+import { BACKEND_URL } from '../../next.config';
 
-async function handleResponse<T>(res: Response): Promise<T> {
-  if (!res.ok) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const body = await res.json().catch(() => ({}));
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
-    throw new ApiError(res.status, body.message ?? `HTTP ${res.status}`);
-  }
-  return res.json() as Promise<T>;
-}
+const api = ky.extend({
+  baseUrl: BACKEND_URL,
+  prefix: '/api',
+  hooks: {
+    beforeRequest: [
+      ({ request }) => {
+        request.headers.set('Authorization', 'token initial-token');
+      },
+    ],
+  },
+});
 
-/**
- * Client-side fetch.
- * All requests go through the Next.js rewrite proxy (`/api/*` → backend),
- * so the browser never crosses origins and cookies are sent automatically.
- *
- * Used in Client Components, hooks, and feature api modules.
- */
-export async function api<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`/api${path}`, {
-    ...init,
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      // eslint-disable-next-line @typescript-eslint/no-misused-spread
-      ...init?.headers,
-    },
-  });
-  return handleResponse<T>(res);
-}
+export default api;

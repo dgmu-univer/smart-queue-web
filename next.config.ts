@@ -1,6 +1,6 @@
 import type { NextConfig } from 'next';
 
-const BACKEND_URL = process.env.API_URL ?? 'http://127.0.0.1:4000';
+export const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://127.0.0.1:4000';
 
 const nextConfig: NextConfig = {
   /* Next.js 16 App Router Configuration */
@@ -40,21 +40,20 @@ const nextConfig: NextConfig = {
       '@radix-ui/react-tooltip',
       '@radix-ui/react-icons',
       'lucide-react',
-      'recharts',
       'date-fns',
       'react-hook-form',
       '@hookform/resolvers',
     ],
   },
-  rewrites() {
-    return [
-      {
-        // Proxy all /api/* requests to backend EXCEPT /api/auth/* (NextAuth)
-        source: '/api/((?!auth/).*)',
-        destination: `${BACKEND_URL}/api/$1`,
-      },
-    ];
-  },
+  // rewrites() {
+  //   return [
+  //     {
+  //       // Proxy all /api/* requests to backend EXCEPT /api/auth/* (NextAuth)
+  //       source: '/api/((?!auth/).*)',
+  //       destination: `${BACKEND_URL}/$1`,
+  //     },
+  //   ];
+  // },
 };
 
 export default nextConfig;

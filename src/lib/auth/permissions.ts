@@ -5,10 +5,11 @@ export const ROLE_PERMISSIONS = {
   ADMIN: [
     // Dashboard routes
     '/dashboard',
+    '/dashboard/*',
   ],
   OPERATOR: [
     // Dashboard routes
-    '/table',
+    '/workspace',
   ],
 } as const;
 
@@ -27,6 +28,7 @@ export const ROLE_DEFAULT_REDIRECTS = {
 export const PUBLIC_ROUTES = [
   '/',
   '/login',
+  '/api/auth/*', // NextAuth routes
 ] as const;
 
 /**
