@@ -3,18 +3,34 @@
 // NextAuth.js v4.24.13 Configuration for Next.js v16.0.1
 // Implements T022 - JWT strategy with credentials provider
 
+import api from '@/lib/api';
 import NextAuth from 'next-auth';
 import type { NextAuthOptions } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
+interface User {
+  fio: string
+  role: 'ADMIN' | 'OPERATOR'
+  serverCookie: string
+}
 /**
  * NextAuth configuration
  * Compatible with Next.js v16.0.1
  */
 export const authOptions: NextAuthOptions = {
+  // Secret for JWT encryption and CSRF protection
+  secret: process.env.NEXTAUTH_SECRET,
+  // Use JWT strategy for session management (FR-036, FR-040)
   session: {
     strategy: 'jwt',
-    maxAge: 24 * 60 * 60, // 2 часа в секундах, если на бэкенде так же
+    maxAge: 30 * 24 * 60 * 60, // 30 days (FR-040)
+  },
+
+  // JWT configuration
+  jwt: {
+    secret: process.env.NEXTAUTH_SECRET,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   // Authentication providers
   providers: [
@@ -27,10 +43,11 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         // 1. Делаем запрос к вашему API
-        const res = await fetch('https://price05.ru/api/login', {
-          method: 'POST',
-          body: JSON.stringify(credentials),
-          headers: { 'Content-Type': 'application/json' },
+        const res = await api.post<User>(`/login`, {
+          json: {
+            username: credentials?.username,
+            password: credentials?.password,
+          },
         });
 
         if (res.ok) {
@@ -40,11 +57,13 @@ export const authOptions: NextAuthOptions = {
           // Вытаскиваем само значение SESSION
           const sessionCookie = setCookie?.split(';').find(c => c.trim().startsWith('SESSION='));
 
+          const user = await res.json();
           // 3. Возвращаем объект пользователя + куку (чтобы передать её в jwt callback)
           return {
-            id: '1', // NextAuth требует id
-            name: credentials?.username,
-            serverCookie: sessionCookie,
+            id: '',
+            fio: user.fio,
+            role: user.role,
+            serverCookie: sessionCookie ?? '',
           };
         }
         return null;
@@ -69,20 +88,24 @@ export const authOptions: NextAuthOptions = {
       // Default: redirect to /dashboard (proxy will handle role-based redirects)
       return `${baseUrl}/dashboard`;
     },
-    jwt({ token, user }) {
+    jwt({ token, user, trigger, session }) {
       // Передаем куку из объекта user в JWT токен NextAuth
       if (user) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
         token.serverCookie = user.serverCookie;
+        token.fio = user.fio;
+        token.role = user.role;
       }
+      // Update session (for session updates)
+      if (trigger === 'update' && session) {
+        return { ...token, ...session } as JWT;
+      }
+
       return token;
     },
     session({ session, token }) {
-      // При желании прокидываем в сессию на фронт
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
       session.serverCookie = token.serverCookie;
+      session.fio = token.fio;
+      session.role = token.role;
       return session;
     },
   },
