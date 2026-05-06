@@ -15,7 +15,7 @@ import { type AdminFormData, authAdminCredsSchema } from '../auth-schema';
 export const AdminForm = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [, setServerError] = useState<string | null>(null);
+  const [error, setServerError] = useState<string | null>(null);
 
   const {
     register,
@@ -30,16 +30,25 @@ export const AdminForm = () => {
 
     try {
       // Use NextAuth signIn with credentials provider
-      await signIn('credentials', {
+      const result = await signIn('credentials', {
         username: data.username,
         password: data.password,
         redirect: false, // Don't redirect automatically
       });
 
+      console.log(result)
+      if (result?.error) {
+        setServerError(result.error);
+        return;
+      }
       // Success - redirect based on user role
       // NextAuth session will be available after successful sign in
-      router.push('/dashboard');
-      router.refresh(); // Refresh to update session on server
+      if (result?.url) {
+        router.push(result.url);
+      } else {
+        router.push('/dashboard');
+        router.refresh(); // Refresh to update session on server
+      }
     } catch (error) {
       console.error('Login error:', error);
       setServerError('Network error. Please check your connection and try again.');
@@ -50,6 +59,7 @@ export const AdminForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      {error && <div className="text-red-500">{error}</div>}
       <FieldGroup>
         <Field>
           <FieldLabel htmlFor="login">Логин</FieldLabel>
