@@ -1,4 +1,7 @@
+'use client';
+
 import type { ReactNode } from 'react';
+import { signOut,useSession } from 'next-auth/react';
 import {
   CirclePlusIcon,
   CreditCardIcon,
@@ -26,6 +29,7 @@ interface Props {
 }
 
 const ProfileDropdown = ({ trigger, defaultOpen, align = 'end' }: Props) => {
+  const { data: session } = useSession()
   return (
     <DropdownMenu defaultOpen={defaultOpen}>
       <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
@@ -39,8 +43,8 @@ const ProfileDropdown = ({ trigger, defaultOpen, align = 'end' }: Props) => {
             <span className="ring-card absolute right-0 bottom-0 block size-2 rounded-full bg-green-600 ring-2" />
           </div>
           <div className="flex flex-1 flex-col items-start">
-            <span className="text-foreground text-lg font-semibold">John Doe</span>
-            <span className="text-muted-foreground text-base">john.doe@example.com</span>
+            <span className="text-foreground text-lg font-semibold">{session?.fio}</span>
+            <span className="text-muted-foreground text-base">{session?.role}</span>
           </div>
         </DropdownMenuLabel>
 
@@ -80,7 +84,7 @@ const ProfileDropdown = ({ trigger, defaultOpen, align = 'end' }: Props) => {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem variant="destructive" className="px-4 py-2.5 text-base">
+        <DropdownMenuItem variant="destructive" onClick={() => void signOut()} className="px-4 py-2.5 text-base">
           <LogOutIcon className="size-5" />
           <span>Logout</span>
         </DropdownMenuItem>

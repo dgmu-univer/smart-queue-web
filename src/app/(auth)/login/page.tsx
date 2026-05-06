@@ -1,6 +1,16 @@
-import { AuthModule } from '@/features/auth/auth-module';
+import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth';
 
-export default function LoginPage() {
+import { AuthModule } from '@/features/auth/auth-module';
+import { authOptions } from '@/lib/auth';
+
+export default async function LoginPage() {
+  const session = await getServerSession(authOptions);
+
+  if (session) {
+    return redirect('/dashboard');
+  }
+
   return (
     <main className="relative flex min-h-svh items-center justify-center overflow-hidden px-4 py-12">
       {/* Gradient background - same as main page */}
