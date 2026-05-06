@@ -36,7 +36,6 @@ export const AdminForm = () => {
         redirect: false, // Don't redirect automatically
       });
 
-      console.log(result)
       if (result?.error) {
         setServerError(result.error);
         return;

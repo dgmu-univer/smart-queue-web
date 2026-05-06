@@ -28,6 +28,7 @@ export const ROLE_DEFAULT_REDIRECTS = {
 export const PUBLIC_ROUTES = [
   '/',
   '/login',
+  '/appointments',
   '/api/auth/*', // NextAuth routes
 ] as const;
 
