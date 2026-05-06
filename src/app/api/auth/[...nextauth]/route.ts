@@ -8,6 +8,7 @@ import NextAuth from 'next-auth';
 import type { NextAuthOptions } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { BACKEND_URL } from '../../../../../next.config';
 
 interface User {
   fio: string
@@ -42,8 +43,10 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Пароль', type: 'password' },
       },
       async authorize(credentials) {
+        console.log('AAAAAAAA', BACKEND_URL)
+        console.log('NEXTAUTH_URL', process.env.NEXTAUTH_URL)
         // 1. Делаем запрос к вашему API
-        const res = await api.post<User>('http://backend:8080/api/login', {
+        const res = await api.post<User>('/api/login', {
           json: {
             username: credentials?.username,
             password: credentials?.password,
