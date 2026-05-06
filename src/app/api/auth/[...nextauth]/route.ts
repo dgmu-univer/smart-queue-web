@@ -1,19 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 // src/app/api/auth/[...nextauth]/route.ts
 // NextAuth.js v4.24.13 Configuration for Next.js v16.0.1
-// Implements T022 - JWT strategy with credentials provider
 
-import api from '@/lib/api';
 import NextAuth from 'next-auth';
 import type { NextAuthOptions } from 'next-auth';
-import { JWT } from 'next-auth/jwt';
+import type { JWT } from 'next-auth/jwt';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
-interface User {
-  fio: string
-  role: 'ADMIN' | 'OPERATOR'
-  serverCookie: string
-}
+// В продакшене используем внутренний адрес бэкенда напрямую,
+// чтобы избежать петли: Next.js → Nginx → Next.js → backend
+const API_URL = process.env.API_URL ?? 'http://127.0.0.1:4000';
 /**
  * NextAuth configuration
  * Compatible with Next.js v16.0.1
@@ -42,32 +37,56 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Пароль', type: 'password' },
       },
       async authorize(credentials) {
-        // 1. Делаем запрос к вашему API
-        const res = await api.post<User>('/login', {
-          json: {
-            username: credentials?.username,
-            password: credentials?.password,
-          },
-        });
-        console.log('AAAAAAAA', res);
-
-        if (res.ok) {
-          // 2. Достаем куку из заголовка set-cookie
-          const setCookie = res.headers.get('set-cookie');
-
-          // Вытаскиваем само значение SESSION
-          const sessionCookie = setCookie?.split(';').find(c => c.trim().startsWith('SESSION='));
-
-          const user = await res.json();
-          // 3. Возвращаем объект пользователя + куку (чтобы передать её в jwt callback)
-          return {
-            id: '',
-            fio: user.fio,
-            role: user.role,
-            serverCookie: sessionCookie ?? '',
-          };
+        if (!credentials?.username || !credentials.password) {
+          throw new Error('Username and password are required');
         }
-        return null;
+
+        try {
+          // Запрос идёт напрямую на бэкенд (не через nginx),
+          // чтобы избежать таймаута из-за петли через публичный URL
+          const response = await fetch(`${API_URL}/api/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              username: credentials.username,
+              password: credentials.password,
+            }),
+          });
+
+          if (!response.ok) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            const body = await response.json().catch(() => ({}));
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
+            throw new Error(body.message ?? `Login failed: ${response.status}`);
+          }
+
+          // Извлекаем SESSION куку из заголовка set-cookie
+          const setCookieHeader = response.headers.get('set-cookie');
+          const sessionCookie = setCookieHeader
+            ?.split(',')
+            .find(c => c.trim().startsWith('SESSION='))
+            ?.split(';')[0]
+            ?.split('=')[1];
+
+          if (!sessionCookie) {
+            throw new Error('No SESSION cookie received from backend');
+          }
+
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          const user = await response.clone().json().catch(() => ({}));
+
+          return {
+            id: credentials.username,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+            fio: user.fio ?? credentials.username,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+            role: user.role ?? 'OPERATOR',
+            serverCookie: `SESSION=${sessionCookie}`,
+          };
+        } catch (error) {
+          console.error('❌ Authorization error:', error);
+          throw error;
+        }
       },
     }),
   ],
@@ -91,6 +110,7 @@ export const authOptions: NextAuthOptions = {
     },
     jwt({ token, user, trigger, session }) {
       // Передаем куку из объекта user в JWT токен NextAuth
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (user) {
         token.serverCookie = user.serverCookie;
         token.fio = user.fio;
@@ -130,15 +150,7 @@ export const authOptions: NextAuthOptions = {
     // },
   },
 
-  debug: true,
-  logger: {
-    debug(code, metadata) {
-      console.log('🔍 NextAuth Debug:', code, metadata);
-    },
-    error(code, metadata) {
-      console.error('❌ NextAuth Error:', code, metadata);
-    },
-  },
+  debug: process.env.NODE_ENV === 'development',
 };
 
 // Export NextAuth handler

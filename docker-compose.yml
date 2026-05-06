@@ -5,8 +5,12 @@ services:
     restart: always
     networks:
       - internal-network
+      - backend-network  # сеть бэкенда — нужна чтобы NextAuth мог достучиться до backend:8080
     environment:
       - NODE_ENV=production
+      # Внутренний адрес бэкенда — используется NextAuth для authorize()
+      # чтобы не было петли через публичный nginx
+      - API_URL=http://backend:8080
     healthcheck:
       test:
         [
@@ -72,3 +76,7 @@ networks:
   # Внешняя сеть для доступа извне
   external-network:
     driver: bridge
+  # Сеть бэкенда — должна совпадать с именем сети в docker-compose бэкенда
+  backend-network:
+    external: true
+    name: smart-queue-api_app-network

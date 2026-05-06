@@ -10,6 +10,7 @@ ARG NEXT_PUBLIC_SITE_URL
 ARG NEXT_PUBLIC_API_URL
 ARG NEXTAUTH_SECRET
 ARG NEXTAUTH_URL
+ARG API_URL=http://backend:8080
 
 # Превращаем аргументы в переменные окружения
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL \
@@ -17,6 +18,7 @@ ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL \
     NEXTAUTH_SECRET=$NEXTAUTH_SECRET \
     NEXTAUTH_URL=$NEXTAUTH_URL \
     NEXTAUTH_URL_INTERNAL=http://smart_queue_web:3000 \
+    API_URL=$API_URL \
     NEXT_TELEMETRY_DISABLED=1
 
 # ── Зависимости ──────────────────────────────────────────────────────
