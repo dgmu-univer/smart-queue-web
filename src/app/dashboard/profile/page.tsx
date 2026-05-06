@@ -1,35 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-
 import UserProfile from '@/components/user-profile';
-import api from '@/lib/api';
+import { User } from '@/features/auth/types';
+import { apiServer } from '@/lib/api.server';
 
-interface UserData {
-  fio: string
-  username: string
-  email: string
-  role: string
-}
+type UserData = User;
 // app/profile/page.tsx
 export default async function ProfilePage() {
   let userData = null;
   let error = null;
 
   try {
-    const response = await api.get<UserData>('/public/me', {
+    const response = await apiServer<UserData>('/me', {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
       // Важно для серверного компонента
       cache: 'no-store',
     });
-
-    if (response.ok) {
-      userData = await response.json();
-    } else {
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      error = `HTTP ${response.status}`;
-    }
+    userData = response;
   } catch (err) {
     error = err instanceof Error ? err.message : 'Ошибка запроса';
   }
@@ -67,31 +55,11 @@ export default async function ProfilePage() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="rounded-lg bg-gray-50 p-4">
               <div className="text-sm text-gray-500">ФИО</div>
-              <p className="text-lg font-semibold text-gray-800">{userData.fio}</p>
-            </div>
-
-            <div className="rounded-lg bg-gray-50 p-4">
-              <div className="text-sm text-gray-500">Логин</div>
-              <p className="text-lg font-semibold text-gray-800">{userData.username}</p>
-            </div>
-
-            <div className="rounded-lg bg-gray-50 p-4">
-              <div className="text-sm text-gray-500">Email</div>
               <p className="text-lg font-semibold text-gray-800">{userData.email}</p>
             </div>
-
             <div className="rounded-lg bg-gray-50 p-4">
-              <div className="text-sm text-gray-500">Роль</div>
-              <div className="mt-1">
-                <span className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${
-                  userData.role === 'ADMIN'
-                    ? 'bg-purple-100 text-purple-800'
-                    : 'bg-green-100 text-green-800'
-                }`}
-                >
-                  {userData.role}
-                </span>
-              </div>
+              <div className="text-sm text-gray-500">ФИО</div>
+              <p className="text-lg font-semibold text-gray-800">{userData.fio}</p>
             </div>
           </div>
         </div>

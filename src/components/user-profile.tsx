@@ -3,13 +3,12 @@
 // app/components/UserProfile.tsx
 'use client';
 
+import { api } from '@/lib/api';
 import { useEffect, useState } from 'react';
 
 interface UserData {
-  fio: string
-  username: string
-  email: string
-  role: string
+  name: 'name'
+  description: 'description'
 }
 
 export default function UserProfile() {
@@ -22,23 +21,14 @@ export default function UserProfile() {
       try {
         console.log('🚀 Загрузка данных пользователя...');
 
-        const response = await fetch('https://price05.ru/api/public/me', {
+        const response = await api<UserData>('/public/mock', {
           method: 'GET',
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
         });
-
-        console.log('📡 Статус ответа:', response.status);
-
-        if (!response.ok) {
-          throw new Error(`HTTP ошибка: ${response.status}`);
-        }
-
-        const data: UserData = await response.json();
-        console.log('✅ Данные получены:', data);
-        setUserData(data);
+        setUserData(response);
       } catch (err) {
         console.error('❌ Ошибка при загрузке:', err);
         setError(err instanceof Error ? err.message : 'Неизвестная ошибка');
@@ -82,34 +72,16 @@ export default function UserProfile() {
     <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow-sm">
       <h2 className="mb-4 text-2xl font-bold text-gray-800">Профиль пользователя</h2>
       Клиентский компонент
-      <div className="space-y-3">
-        <div className="border-b pb-2">
-          <div className="font-semibold text-gray-600">ФИО:</div>
-          <p className="mt-1 text-gray-800">{userData.fio}</p>
-        </div>
-
-        <div className="border-b pb-2">
-          <div className="font-semibold text-gray-600">Логин:</div>
-          <p className="mt-1 text-gray-800">{userData.username}</p>
-        </div>
-
-        <div className="border-b pb-2">
-          <div className="font-semibold text-gray-600">Email:</div>
-          <p className="mt-1 text-gray-800">{userData.email}</p>
-        </div>
-
-        <div className="border-b pb-2">
-          <div className="font-semibold text-gray-600">Роль:</div>
-          <p className="mt-1">
-            <span className={`rounded-sm px-2 py-1 text-sm ${
-              userData.role === 'ADMIN'
-                ? 'bg-red-100 text-red-800'
-                : 'bg-blue-100 text-blue-800'
-            }`}
-            >
-              {userData.role}
-            </span>
-          </p>
+      <div className="p-6">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="rounded-lg bg-gray-50 p-4">
+            <div className="text-sm text-gray-500">ФИО</div>
+            <p className="text-lg font-semibold text-gray-800">{userData.description}</p>
+          </div>
+          <div className="rounded-lg bg-gray-50 p-4">
+            <div className="text-sm text-gray-500">ФИО</div>
+            <p className="text-lg font-semibold text-gray-800">{userData.name}</p>
+          </div>
         </div>
       </div>
     </div>
