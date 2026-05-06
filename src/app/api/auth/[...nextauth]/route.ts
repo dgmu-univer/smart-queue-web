@@ -8,7 +8,6 @@ import NextAuth from 'next-auth';
 import type { NextAuthOptions } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { BACKEND_URL } from '../../../../../next.config';
 
 interface User {
   fio: string
@@ -43,8 +42,6 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Пароль', type: 'password' },
       },
       async authorize(credentials) {
-        console.log('AAAAAAAA', BACKEND_URL)
-        console.log('NEXTAUTH_URL', process.env.NEXTAUTH_URL)
         // 1. Делаем запрос к вашему API
         const res = await api.post<User>('/login', {
           json: {
@@ -52,6 +49,7 @@ export const authOptions: NextAuthOptions = {
             password: credentials?.password,
           },
         });
+        console.log('AAAAAAAA', res);
 
         if (res.ok) {
           // 2. Достаем куку из заголовка set-cookie

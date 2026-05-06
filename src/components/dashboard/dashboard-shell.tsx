@@ -56,7 +56,7 @@ const DashboardShell = ({ children }: PropsWithChildren) => {
                 <SidebarMenu>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link href="/dashboard">
+                      <Link href="/">
                         <LayoutDashboardIcon />
                         <span>Панель управления</span>
                       </Link>
@@ -64,7 +64,7 @@ const DashboardShell = ({ children }: PropsWithChildren) => {
                   </SidebarMenuItem>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link href="/applications">
+                      <Link href="/">
                         <FileTextIcon />
                         <span>Заявки на поступление</span>
                       </Link>
@@ -81,7 +81,7 @@ const DashboardShell = ({ children }: PropsWithChildren) => {
                 <SidebarMenu>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link href="/applicants">
+                      <Link href="/">
                         <UsersIcon />
                         <span>База абитуриентов</span>
                       </Link>
@@ -89,7 +89,7 @@ const DashboardShell = ({ children }: PropsWithChildren) => {
                   </SidebarMenuItem>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link href="/specialties">
+                      <Link href="/">
                         <GraduationCapIcon />
                         <span>Направления и квоты</span>
                       </Link>
@@ -97,7 +97,7 @@ const DashboardShell = ({ children }: PropsWithChildren) => {
                   </SidebarMenuItem>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link href="/exams">
+                      <Link href="/">
                         <ClipboardCheckIcon />
                         <span>Вступительные испытания</span>
                       </Link>
@@ -105,7 +105,7 @@ const DashboardShell = ({ children }: PropsWithChildren) => {
                   </SidebarMenuItem>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link href="/documents">
+                      <Link href="/">
                         <FilesIcon />
                         <span>Проверка документов</span>
                       </Link>
@@ -122,7 +122,7 @@ const DashboardShell = ({ children }: PropsWithChildren) => {
                 <SidebarMenu>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link href="/calendar">
+                      <Link href="/">
                         <CalendarDaysIcon />
                         <span>График приема</span>
                       </Link>
@@ -130,7 +130,7 @@ const DashboardShell = ({ children }: PropsWithChildren) => {
                   </SidebarMenuItem>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link href="/analytics">
+                      <Link href="/">
                         <BarChart3Icon />
                         <span>Статистика приема</span>
                       </Link>
@@ -138,7 +138,7 @@ const DashboardShell = ({ children }: PropsWithChildren) => {
                   </SidebarMenuItem>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link href="/archive">
+                      <Link href="/">
                         <ArchiveIcon />
                         <span>Архив прошлых лет</span>
                       </Link>
@@ -154,7 +154,7 @@ const DashboardShell = ({ children }: PropsWithChildren) => {
                 <SidebarMenu>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link href="/users">
+                      <Link href="/">
                         <UserCogIcon />
                         <span>Сотрудники ПК</span>
                       </Link>
@@ -162,7 +162,7 @@ const DashboardShell = ({ children }: PropsWithChildren) => {
                   </SidebarMenuItem>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link href="/settings">
+                      <Link href="/">
                         <SettingsIcon />
                         <span>Настройки портала</span>
                       </Link>
@@ -178,7 +178,7 @@ const DashboardShell = ({ children }: PropsWithChildren) => {
                 <SidebarMenu>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <a href="/users">
+                      <a href="/">
                         <UserCogIcon />
                         <span>Сотрудники ПК</span>
                       </a>
@@ -186,7 +186,7 @@ const DashboardShell = ({ children }: PropsWithChildren) => {
                   </SidebarMenuItem>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <a href="/settings">
+                      <a href="/">
                         <SettingsIcon />
                         <span>Настройки портала</span>
                       </a>
