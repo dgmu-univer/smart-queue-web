@@ -43,7 +43,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         // 1. Делаем запрос к вашему API
-        const res = await api.post<User>('/api/login', {
+        const res = await api.post<User>('http://backend:8080/api/login', {
           json: {
             username: credentials?.username,
             password: credentials?.password,
@@ -129,8 +129,15 @@ export const authOptions: NextAuthOptions = {
     // },
   },
 
-  // Enable debug in development
-  debug: process.env.NODE_ENV === 'development',
+  debug: true,
+  logger: {
+    debug(code, metadata) {
+      console.log('🔍 NextAuth Debug:', code, metadata);
+    },
+    error(code, metadata) {
+      console.error('❌ NextAuth Error:', code, metadata);
+    },
+  },
 };
 
 // Export NextAuth handler
