@@ -46,7 +46,7 @@ export const authOptions: NextAuthOptions = {
         console.log('AAAAAAAA', BACKEND_URL)
         console.log('NEXTAUTH_URL', process.env.NEXTAUTH_URL)
         // 1. Делаем запрос к вашему API
-        const res = await api.post<User>('/api/login', {
+        const res = await api.post<User>('/login', {
           json: {
             username: credentials?.username,
             password: credentials?.password,
