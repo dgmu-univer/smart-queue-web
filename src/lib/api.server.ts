@@ -55,7 +55,6 @@ export async function apiServer<T>(
   init?: RequestInit,
 ): Promise<T> {
   const sessionCookie = await getSessionCookie();
-  console.log(`${API_URL}/api/${path}`);
   const res = await fetch(`${API_URL}/api${path}`, {
     ...init,
     headers: {
