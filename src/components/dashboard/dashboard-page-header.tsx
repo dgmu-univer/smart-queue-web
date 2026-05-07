@@ -7,7 +7,7 @@ type DashboardPageHeaderProps = PropsWithChildren<{
 
 export default function DashboardPageHeader({ title, children, description }: DashboardPageHeaderProps) {
   return (
-    <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+    <div className="mb-12 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
       <div className="flex flex-col gap-1">
         <h1 className="text-3xl font-bold tracking-tight text-balance sm:text-4xl">
           {title}
