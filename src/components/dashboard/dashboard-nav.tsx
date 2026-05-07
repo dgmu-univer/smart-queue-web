@@ -14,8 +14,8 @@ import { AppIcon } from '../app-icon';
 import { DashboardUser } from './dashboard-user';
 
 const navLinks = [
-  { href: '/dashboard', label: 'Управление' },
-  // { href: '/dashboard', label: 'Projects' },
+  { href: '/dashboard/settings', label: 'Настройки' },
+  { href: '/dashboard/education-levels', label: 'Уровни образования' },
   // { href: '/dashboard', label: 'Library' },
   // { href: '/dashboard', label: 'Billing' },
 ];
@@ -38,7 +38,6 @@ export function DashboardNav() {
                 <NavigationMenuItem key={link.href}>
                   <NavigationMenuLink
                     asChild
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     className={navigationMenuTriggerStyle()}
                   >
                     <Link href={link.href}>{link.label}</Link>

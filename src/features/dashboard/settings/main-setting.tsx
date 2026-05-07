@@ -17,7 +17,7 @@ export default function MainSettings() {
   return (
     <Card className="bg-card/80 backdrop-blur-sm">
       <CardHeader>
-        <CardTitle>Основыне настройки</CardTitle>
+        <CardTitle>Основные настройки</CardTitle>
       </CardHeader>
       <CardContent>
         <Grid columns="2" gap="6" width="auto">
