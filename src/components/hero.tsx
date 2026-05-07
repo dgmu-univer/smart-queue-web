@@ -1,14 +1,13 @@
-import Image from 'next/image';
 import { CalendarCheck } from 'lucide-react';
+
+import { AppIcon } from './app-icon';
 
 export function Hero() {
   return (
     <section className="relative mx-auto flex max-w-3xl flex-col items-center px-5 pt-8 pb-12 text-center sm:py-16">
       {/* App icon */}
       <div className="flex size-16 items-center justify-center rounded-2xl bg-blue-600 shadow-lg ring-1 shadow-neutral-900/20 ring-black/10 sm:size-[72px]">
-        <Image
-          src="/avatars/logo.png"
-          alt=""
+        <AppIcon
           width={55}
           height={55}
           className="ring-background object-cover"
