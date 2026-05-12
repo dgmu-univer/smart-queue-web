@@ -1,23 +1,36 @@
-import { Grid } from '@radix-ui/themes';
-
 import DashboardPageHeader from '@/components/dashboard/dashboard-page-header';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs'
 import { ExludedSlots, MainSettings, Weekends } from '@/features/dashboard';
 
 export default function Page() {
   return (
     <>
       <DashboardPageHeader title="Настройки" />
-      <Grid columns="1" gap="3">
-        <Grid columns={{ initial: '1', lg: '1', xs: '1' }} gap="3" width="auto">
+      <Tabs defaultValue="main">
+        <TabsList>
+          <TabsTrigger value="main">Основное</TabsTrigger>
+          <TabsTrigger value="slot">Настройка слота</TabsTrigger>
+          <TabsTrigger value="weekend">Нерабочие дни</TabsTrigger>
+          <TabsTrigger value="exluded">Исключенные слоты</TabsTrigger>
+        </TabsList>
+        <TabsContent value="main">
           <MainSettings />
-        </Grid>
-        <Grid columns="1" gap="3" width="auto">
+        </TabsContent>
+        <TabsContent value="slot">
+          dfdsfsdf
+        </TabsContent>
+        <TabsContent value="weekend">
           <Weekends />
-        </Grid>
-        <Grid columns="1" gap="3" width="auto">
+        </TabsContent>
+        <TabsContent value="exluded">
           <ExludedSlots />
-        </Grid>
-      </Grid>
+        </TabsContent>
+      </Tabs>
     </>
   );
 }
