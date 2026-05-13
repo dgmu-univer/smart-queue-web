@@ -1,12 +1,12 @@
 export interface PeriodSettingsPayload {
-  period?: SchedulePeriod
-  working_time?: TimeRange
+  work_date?: SchedulePeriod
+  work_time?: TimeRange
   lunch?: LunchRange
 }
 
 export interface GetPeriodSettings {
-  period: SchedulePeriod
-  working_time: TimeRange
+  work_date: SchedulePeriod
+  work_time: TimeRange
   lanch: LunchRange
 }
 
@@ -21,8 +21,8 @@ export interface TimeRange {
 }
 
 export interface LunchRange {
-  start_time: string | null // Формат: HH:MM или null
-  end_time: string | null // Формат: HH:MM или null
+  start_time: string | undefined // Формат: HH:MM или null
+  end_time: string | undefined // Формат: HH:MM или null
 }
 
 export interface SlotRange {

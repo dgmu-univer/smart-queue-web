@@ -29,7 +29,7 @@ export function DashboardNav() {
             <span className="text-background flex size-8 items-center justify-center rounded-lg bg-blue-600">
               <AppIcon width={23} height={23} />
             </span>
-            <span className="text-sm font-semibold tracking-tight">ДГМУ</span>
+            <span className="text-sm font-semibold tracking-tight">ДДДД</span>
           </Link>
 
           <NavigationMenu className="hidden md:flex">

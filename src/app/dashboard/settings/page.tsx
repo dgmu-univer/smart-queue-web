@@ -28,7 +28,7 @@ export default async function Page() {
           <TabsTrigger value="exluded">Исключенные слоты</TabsTrigger>
         </TabsList>
         <TabsContent value="main">
-          <MainSettings defaultValues={periods} />
+          <MainSettings values={periods} />
         </TabsContent>
         <TabsContent value="slot">
           <SlotSettings />
