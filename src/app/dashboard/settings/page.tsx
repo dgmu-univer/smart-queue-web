@@ -4,10 +4,19 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from '@/components/ui/tabs'
-import { ExludedSlots, MainSettings, Weekends } from '@/features/dashboard';
+} from '@/components/ui/tabs';
+import { ExludedSlots, MainSettings, SlotSettings, Weekends } from '@/features/dashboard';
+import { adminSettingApi } from '@/features/dashboard/api/admin-setting';
 
-export default function Page() {
+export default async function Page() {
+  const [periods, slot, nonWorkingDays, excludedSlots] = await Promise.all([
+    adminSettingApi.getPeriods(),
+    adminSettingApi.getSlot(),
+    adminSettingApi.getNonWorkingDays(),
+    adminSettingApi.getExcluedeSlots(),
+  ]);
+  console.log(periods, slot, nonWorkingDays, excludedSlots);
+
   return (
     <>
       <DashboardPageHeader title="Настройки" />
@@ -19,10 +28,10 @@ export default function Page() {
           <TabsTrigger value="exluded">Исключенные слоты</TabsTrigger>
         </TabsList>
         <TabsContent value="main">
-          <MainSettings />
+          <MainSettings defaultValues={periods} />
         </TabsContent>
         <TabsContent value="slot">
-          dfdsfsdf
+          <SlotSettings />
         </TabsContent>
         <TabsContent value="weekend">
           <Weekends />
