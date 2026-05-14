@@ -9,13 +9,12 @@ import { ExludedSlots, MainSettings, SlotSettings, Weekends } from '@/features/d
 import { adminSettingApi } from '@/features/dashboard/api/admin-setting';
 
 export default async function Page() {
-  const [periods, slot, nonWorkingDays, excludedSlots] = await Promise.all([
+  const [periods] = await Promise.all([
     adminSettingApi.getPeriods(),
     adminSettingApi.getSlot(),
     adminSettingApi.getNonWorkingDays(),
     adminSettingApi.getExcluedeSlots(),
   ]);
-  console.log(periods, slot, nonWorkingDays, excludedSlots);
 
   return (
     <>

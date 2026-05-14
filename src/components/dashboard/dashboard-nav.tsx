@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/navigation-menu';
 
 import { AppIcon } from '../app-icon';
+import NavLink from '../ui/nav-link';
 import { DashboardUser } from './dashboard-user';
 
 const navLinks = [
@@ -40,7 +41,7 @@ export function DashboardNav() {
                     asChild
                     className={navigationMenuTriggerStyle()}
                   >
-                    <Link href={link.href}>{link.label}</Link>
+                    <NavLink href={link.href}>{link.label}</NavLink>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
               ))}
