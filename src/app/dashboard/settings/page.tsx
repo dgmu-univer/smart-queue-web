@@ -15,7 +15,6 @@ export default async function Page() {
     adminSettingApi.getNonWorkingDays(),
     adminSettingApi.getExcluedeSlotsSetting(),
   ]);
-
   return (
     <>
       <DashboardPageHeader title="Настройки" />

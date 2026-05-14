@@ -15,7 +15,6 @@ import {
 } from '@/components/ui/card';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Field, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from '@/components/ui/field';
-import { Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { api } from '@/lib/api';
 import { payloadDate } from '@/lib/date';
@@ -66,7 +65,7 @@ export default function MainSettings({ values }: { values?: MainSettings }) {
           end_date: payloadDate(data.work_date.end_date),
         },
       };
-      console.log(payload);
+
       await api('/admin-settings/periods', {
         method: 'PATCH',
         body: JSON.stringify(payload),
