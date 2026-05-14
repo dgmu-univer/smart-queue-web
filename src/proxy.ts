@@ -89,13 +89,11 @@ export async function proxy(req: NextRequest) {
 
   // 1) Allow public routes
   if (isPublicRoute(pathname)) {
-    console.log('[PROXY] Public route allowed', pathname);
     return applySecurityProtections();
   }
 
   // 2) Get JWT token (NextAuth)
   const token = (await getToken({ req, secret: process.env.NEXTAUTH_SECRET }));
-  console.log('[Token] ', token);
   if (!token) {
     console.warn('[PROXY] Unauthenticated access blocked → /login', pathname);
     return NextResponse.redirect(new URL('/login', req.url));

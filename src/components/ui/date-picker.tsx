@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 import { format } from 'date-fns';
-import { ChevronDownIcon } from 'lucide-react';
+import { ru } from 'date-fns/locale';
+import { CalendarIcon, ChevronDownIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -48,7 +49,7 @@ export function DatePicker({
   placeholder = 'Выберите дату',
   className,
   align = 'start',
-  dateFormat = 'PPP',
+  dateFormat = 'd MMMM, yyyy',
   icon = <ChevronDownIcon />,
   calendarProps,
   disabled = false,
@@ -72,8 +73,8 @@ export function DatePicker({
             className,
           )}
         >
-          {value ? format(value, dateFormat) : <span>{placeholder}</span>}
-          {icon}
+          {value ? format(value, dateFormat, { locale: ru }) : <span>{placeholder}</span>}
+          <CalendarIcon className="ml-auto size-4 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align={align}>

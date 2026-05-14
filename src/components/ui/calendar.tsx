@@ -6,7 +6,7 @@ import {
   DayPicker,
   getDefaultClassNames,
 } from 'react-day-picker';
-import { ru } from "date-fns/locale"
+import { ru } from 'date-fns/locale'
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
