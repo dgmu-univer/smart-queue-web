@@ -65,7 +65,7 @@ const SECURITY_HEADERS = {
   // (Next.js удаляет его по умолчанию, но мы делаем это для дополнительной страховки)
 };
 
-export function applySecurityProtections(): NextResponse {
+export function applySecurityProtections(serverCookie?: string): NextResponse {
   // 3. Security Headers: Apply to all responses
   const response = NextResponse.next();
 
@@ -73,6 +73,27 @@ export function applySecurityProtections(): NextResponse {
   Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
     response.headers.set(key, value);
   });
+
+  if (serverCookie && typeof serverCookie === 'string') {
+    // Разбираем строку с куками
+    const cookieStrings = serverCookie.split(',').map(c => c.trim());
+
+    for (const cookieString of cookieStrings) {
+      if (cookieString && cookieString !== '') {
+        // Извлекаем имя куки и значение
+        const [name, ...rest] = cookieString.split('=');
+        const value = rest.join('=').split(';')[0];
+
+        // Устанавливаем куку для всех последующих запросов
+        response.cookies.set(name, value, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'none',
+          path: '/',
+        });
+      }
+    }
+  }
 
   // Remove X-Powered-By header if present (extra safety)
   response.headers.delete('X-Powered-By');
@@ -99,7 +120,8 @@ export async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
-  return applySecurityProtections();
+
+  return applySecurityProtections(token?.serverCookie);
 }
 
 export const config = {
