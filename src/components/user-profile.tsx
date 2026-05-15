@@ -3,8 +3,9 @@
 // app/components/UserProfile.tsx
 'use client';
 
-import { api } from '@/lib/api';
 import { useEffect, useState } from 'react';
+
+import { api } from '@/lib/api';
 
 interface UserData {
   name: 'name'

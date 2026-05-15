@@ -99,27 +99,6 @@ export async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
-  // 3) Пробрасываем SESSION куку в /api/* запросы (кроме /api/auth/*)
-  // Работает и локально (через rewrite) и на проде (через nginx)
-  if (pathname.startsWith('/api/') && !pathname.startsWith('/api/auth/')) {
-    const serverCookie = token.serverCookie;
-    if (serverCookie) {
-      const requestHeaders = new Headers(req.headers);
-      const existingCookies = requestHeaders.get('cookie') ?? '';
-      if (!existingCookies.includes('SESSION=')) {
-        requestHeaders.set(
-          'cookie',
-          existingCookies ? `${existingCookies}; ${serverCookie}` : serverCookie,
-        );
-      }
-      const response = applySecurityProtections();
-      return NextResponse.next({
-        request: { headers: requestHeaders },
-        headers: response.headers,
-      });
-    }
-  }
-
   return applySecurityProtections();
 }
 

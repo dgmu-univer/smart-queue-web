@@ -20,6 +20,7 @@ import { api } from '@/lib/api';
 import { payloadDate } from '@/lib/date';
 
 import { type MainSettings } from '../api/types';
+import { getSession, useSession } from 'next-auth/react';
 
 // Регулярные выражения для базовой валидации формата
 const timeRegex = /^\d{2}:\d{2}$/;
@@ -41,8 +42,9 @@ export const formSchema = z.object({
 
 export default function MainSettings({ values }: { values?: MainSettings }) {
   const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+    //resolver: zodResolver(formSchema),
     values: values
       ? {
           ...values,
@@ -65,6 +67,8 @@ export default function MainSettings({ values }: { values?: MainSettings }) {
           end_date: payloadDate(data.work_date.end_date),
         },
       };
+      const session = await getSession()
+      console.log(session)
 
       await api('/admin-settings/periods', {
         method: 'PATCH',
