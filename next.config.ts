@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
-
+  
   experimental: {
     optimizeCss: true,
     optimizePackageImports: [
