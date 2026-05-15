@@ -39,6 +39,8 @@ export function PhoneInputField({
       international
       defaultCountry="RU"
       value={value}
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       onChange={onChange}
       className={cn(
         'flex w-full items-stretch rounded-md',

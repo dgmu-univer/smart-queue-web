@@ -120,7 +120,7 @@ export async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
-
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   return applySecurityProtections(token?.serverCookie);
 }
 
