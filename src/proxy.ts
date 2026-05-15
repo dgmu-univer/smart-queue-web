@@ -94,11 +94,32 @@ export async function proxy(req: NextRequest) {
   }
 
   // 2) Get JWT token (NextAuth)
-  const token = (await getToken({ req, secret: process.env.NEXTAUTH_SECRET }));
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   console.log('[Token] ', token);
   if (!token) {
     console.warn('[PROXY] Unauthenticated access blocked → /login', pathname);
     return NextResponse.redirect(new URL('/login', req.url));
+  }
+
+  // 3) Пробрасываем SESSION куку в /api/* запросы (кроме /api/auth/*)
+  // Работает и локально (через rewrite) и на проде (через nginx)
+  if (pathname.startsWith('/api/') && !pathname.startsWith('/api/auth/')) {
+    const serverCookie = token.serverCookie;
+    if (serverCookie) {
+      const requestHeaders = new Headers(req.headers);
+      const existingCookies = requestHeaders.get('cookie') ?? '';
+      if (!existingCookies.includes('SESSION=')) {
+        requestHeaders.set(
+          'cookie',
+          existingCookies ? `${existingCookies}; ${serverCookie}` : serverCookie,
+        );
+      }
+      const response = applySecurityProtections();
+      return NextResponse.next({
+        request: { headers: requestHeaders },
+        headers: response.headers,
+      });
+    }
   }
 
   return applySecurityProtections();
