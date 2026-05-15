@@ -21,17 +21,19 @@ ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL \
     API_URL=$API_URL \
     NEXT_TELEMETRY_DISABLED=1
 
+# ── Активируем corepack (управление версией pnpm через packageManager) ──
+RUN corepack enable
+
 # ── Зависимости ──────────────────────────────────────────────────────
 FROM base AS deps
-RUN npm install -g pnpm@latest
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+RUN corepack enable && pnpm install --frozen-lockfile
 
 # ── Сборка ───────────────────────────────────────────────────────────
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npm install -g pnpm@latest && pnpm run build
+RUN corepack enable && pnpm run build
 
 # ── Продакшен ────────────────────────────────────────────────────────
 FROM base AS runner
