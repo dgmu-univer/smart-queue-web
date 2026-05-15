@@ -28,7 +28,7 @@ const nextConfig: NextConfig = {
    * Кука SESSION передаётся через proxy.ts (из NextAuth JWT).
    * /api/auth/* исключается — это NextAuth.
    */
-  async rewrites() {
+  rewrites() {
     if (process.env.NODE_ENV !== 'development') return [];
     return [
       {
