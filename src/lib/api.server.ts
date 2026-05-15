@@ -25,14 +25,24 @@ async function handleResponse<T>(res: Response): Promise<T> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
     throw new ApiError(res.status, body.message ?? `HTTP ${res.status}`);
   }
-  return res.json() as Promise<T>;
+
+  // Проверяем, есть ли вообще содержимое в ответе
+  const contentType = res.headers.get('content-type');
+
+  if (contentType?.includes('application/json')) {
+    return await res.json() as Promise<T>; // Безопасно парсим, если это JSON
+  }
+
+  // Если бэкенд возвращает пустой ответ при успешном обновлении
+  return { success: true } as T;
+
 }
 
 /**
  * Получает SESSION куку из NextAuth сессии.
  * NextAuth хранит serverCookie внутри своего JWT токена.
  */
-async function getSessionCookie(): Promise<string | null> {
+export async function getSessionCookie(): Promise<string | null> {
   // Сначала пробуем получить из NextAuth сессии (serverCookie из JWT)
   const session = await getServerSession(authOptions);
   if (session?.serverCookie) {

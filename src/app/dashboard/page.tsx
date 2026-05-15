@@ -1,18 +1,74 @@
+import { Card } from '@radix-ui/themes';
+import {
+  BookOpen,
+  Calendar,
+  GraduationCap,
+  Stethoscope,
+  Users } from 'lucide-react';
+
+import DashboardPageHeader from '@/components/dashboard/dashboard-page-header';
+import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+const stats = [
+  {
+    title: 'За сегодня',
+    value: '+42',
+    description: 'новых абитуриентов',
+    icon: Calendar,
+    color: 'text-blue-600',
+  },
+  {
+    title: 'За все время',
+    value: '1,284',
+    description: 'всего заявок',
+    icon: Users,
+    color: 'text-slate-600',
+  },
+  {
+    title: 'Колледж',
+    value: '450',
+    description: 'всего заявок',
+    icon: BookOpen,
+    color: 'text-emerald-600',
+  },
+  {
+    title: 'Специалитет',
+    value: '612',
+    description: 'всего заявок',
+    icon: GraduationCap,
+    color: 'text-indigo-600',
+  },
+  {
+    title: 'Ординатура',
+    value: '222',
+    description: 'всего заявок',
+    icon: Stethoscope,
+    color: 'text-rose-600',
+  },
+];
+
 export default function DashboardPage() {
   return (
-    <div className="space-y-8">
-      {/* Welcome header */}
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            Добро пожаловать!
-          </h1>
-          <p className="mt-1">
-            Арсен
-          </p>
-        </div>
+    <>
+      <DashboardPageHeader title="Статистика" />
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {stats.map(item => (
+          <Card key={item.title}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {item.title}
+              </CardTitle>
+              <item.icon className={`size-4 ${item.color}`} />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{item.value}</div>
+              <p className="text-muted-foreground text-xs">
+                {item.description}
+              </p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">jhfgh</div>
-    </div>
+    </>
   );
 }
