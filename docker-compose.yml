@@ -10,7 +10,7 @@ services:
       - NODE_ENV=production
       # Внутренний адрес бэкенда — используется NextAuth для authorize()
       # чтобы не было петли через публичный nginx
-      - API_URL=http://backend:8080
+      - EXTERNAL_API_HOST=http://backend:8080
     healthcheck:
       test:
         [

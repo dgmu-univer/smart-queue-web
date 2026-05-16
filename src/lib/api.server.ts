@@ -1,9 +1,8 @@
-import { getServerSession } from 'next-auth';
-import { cookies } from 'next/headers';
-
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { getToken } from 'next-auth/jwt';
+import { cookies, headers } from 'next/headers';
 
 import { ApiError } from './api';
+import { NextApiRequest } from 'next';
 
 /**
  * Серверный fetch-хелпер.
@@ -15,9 +14,6 @@ import { ApiError } from './api';
  * Используется ТОЛЬКО в Server Components и Server Actions.
  * Никогда не импортируй этот модуль в Client Components.
  */
-
-const API_URL = process.env.API_URL ?? 'http://backend:8080';
-
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -35,22 +31,25 @@ async function handleResponse<T>(res: Response): Promise<T> {
 
   // Если бэкенд возвращает пустой ответ при успешном обновлении
   return { success: true } as T;
-
 }
 
-/**
- * Получает SESSION куку из NextAuth сессии.
- * NextAuth хранит serverCookie внутри своего JWT токена.
- */
 export async function getSessionCookie(): Promise<string | null> {
-  // Сначала пробуем получить из NextAuth сессии (serverCookie из JWT)
-  const session = await getServerSession(authOptions);
-  if (session?.serverCookie) {
-    return session.serverCookie;
+  // Передаем заголовки текущего запроса, чтобы getToken смог прочитать и расшифровать NextAuth JWT
+  const req = {
+    headers: Object.fromEntries(await headers()),
+    cookies: Object.fromEntries(
+      (await cookies()).getAll().map((c) => [c.name, c.value])
+    ),
+  };
+
+  // Извлекаем зашифрованный токен напрямую из кук Next-Auth
+  const token = await getToken({ req: req as NextApiRequest, secret: process.env.NEXTAUTH_SECRET });
+
+  if (token?.backendCookies) {
+    return token.backendCookies;
   }
 
   // Fallback: если SESSION кука всё же есть напрямую в cookies
-  // (например при SSR до инициализации NextAuth)
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('SESSION');
   if (sessionCookie) {
@@ -65,7 +64,7 @@ export async function apiServer<T>(
   init?: RequestInit,
 ): Promise<T> {
   const sessionCookie = await getSessionCookie();
-  const res = await fetch(`${API_URL}/api${path}`, {
+  const res = await fetch(`${process.env.EXTERNAL_API_HOST}/backend/api${path}`, {
     ...init,
     headers: {
       'Content-Type': 'application/json',

@@ -1,40 +1,31 @@
-// types/next-auth.d.ts
-// NextAuth.js Type Augmentation (Per Official Documentation)
-// Location: types/next-auth.d.ts (NOT root)
-// Reference: https://next-auth.js.org/getting-started/typescript
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import NextAuth, { DefaultSession } from 'next-auth';
 import { JWT as DefaultJWT } from 'next-auth/jwt';
 
-type Role = 'ADMIN' | 'OPERATOR';
+export interface ApplicationUser {
+  fio: string
+  username: string
+  role: ApplicationUserRole
+}
+
+export type ApplicationUserRole = 'ADMIN' | 'OPERATOR';
 
 declare module 'next-auth' {
-  /**
-   * Returned by `getServerSession`, `getSession` and received as a prop on the `SessionProvider` React Context
-   */
   interface Session {
-    fio: string
-    role: string
-    serverCookie: string // Extends default properties (email, name, image)
+    user: ApplicationUser & {
+      id: string // временно пихаем username
+    }
   }
 
-  /**
-   * The shape of the user object returned in the OAuth providers' `profile` callback,
-   * or the second parameter of the `session` callback, when using a database.
-   */
-  interface User {
-    fio: string
-    role: string
-    serverCookie: string
+  interface User extends ApplicationUser {
+    id: string // временно пихаем username
+    backendCookies: string
   }
 }
 
 declare module 'next-auth/jwt' {
-  /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
   interface JWT extends DefaultJWT {
-    fio: string
-    role: string
-    serverCookie: string
+    user: ApplicationUser & {
+      id: string // временно пихаем username
+    }
+    backendCookies: string
   }
 }
