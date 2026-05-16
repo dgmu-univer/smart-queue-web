@@ -17,7 +17,6 @@ export class ApiError extends Error {
     this.name = 'ApiError';
   }
 }
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'localhost';
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
@@ -30,7 +29,7 @@ async function handleResponse<T>(res: Response): Promise<T> {
 }
 
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_URL}/api${path}`, {
+  const res = await fetch(`${process.env.EXTERNAL_API_HOST}/api${path}`, {
     ...init,
     credentials: 'include',
     headers: {

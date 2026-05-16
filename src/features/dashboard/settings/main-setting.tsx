@@ -67,10 +67,8 @@ export default function MainSettings({ values }: { values?: MainSettings }) {
           end_date: payloadDate(data.work_date.end_date),
         },
       };
-      const session = await getSession()
-      console.log(session)
 
-      await api('/admin-settings/periods', {
+      await fetch('/api/admin-settings/periods', {
         method: 'PATCH',
         body: JSON.stringify(payload),
       });

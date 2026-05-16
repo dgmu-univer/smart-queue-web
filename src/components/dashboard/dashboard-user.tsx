@@ -3,7 +3,7 @@
 import { signOut, useSession } from 'next-auth/react';
 import { Bell, LogOut, User } from 'lucide-react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -36,7 +36,7 @@ export function DashboardUser() {
             aria-label="Account menu"
           >
             <Avatar className="size-9">
-              <AvatarImage src="/avatars/avatar-1.jpg" alt="Account" />
+              {/* <AvatarImage src="/avatars/avatar-1.jpg" alt="Account" /> */}
               <AvatarFallback><User className="size-4" /></AvatarFallback>
             </Avatar>
           </Button>
@@ -44,9 +44,9 @@ export function DashboardUser() {
         <DropdownMenuContent align="end" className="w-56">
           <DropdownMenuLabel>
             <div className="flex flex-col">
-              <span className="text-sm font-medium">{data?.fio}</span>
+              <span className="text-sm font-medium">{data?.user.fio}</span>
               <span className="text-muted-foreground text-xs font-normal">
-                {data?.role}
+                {data?.user.role}
               </span>
             </div>
           </DropdownMenuLabel>
