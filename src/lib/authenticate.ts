@@ -9,7 +9,7 @@ export async function authenticate(
   password: string,
 ) {
   const response = await fetch(
-    `${process.env.EXTERNAL_API_HOST}/backend/api/login`,
+    `${process.env.EXTERNAL_API_HOST}/api/login`,
     {
       method: 'POST',
       headers: {

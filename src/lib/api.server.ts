@@ -38,7 +38,7 @@ export async function getSessionCookie(): Promise<string | null> {
   const req = {
     headers: Object.fromEntries(await headers()),
     cookies: Object.fromEntries(
-      (await cookies()).getAll().map((c) => [c.name, c.value])
+      (await cookies()).getAll().map(c => [c.name, c.value]),
     ),
   };
 
@@ -64,7 +64,7 @@ export async function apiServer<T>(
   init?: RequestInit,
 ): Promise<T> {
   const sessionCookie = await getSessionCookie();
-  const res = await fetch(`${process.env.EXTERNAL_API_HOST}/backend/api${path}`, {
+  const res = await fetch(`${process.env.EXTERNAL_API_HOST}/api${path}`, {
     ...init,
     headers: {
       'Content-Type': 'application/json',
