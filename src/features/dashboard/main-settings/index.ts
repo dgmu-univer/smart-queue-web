@@ -1,1 +1,4 @@
-import { } from './main-settings-form'
+import MainSettingsForm from './main-settings-form';
+export { getMainSettingInitData } from './actions';
+export * from './types';
+export default MainSettingsForm;

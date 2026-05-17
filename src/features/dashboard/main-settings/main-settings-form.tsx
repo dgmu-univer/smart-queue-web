@@ -17,7 +17,7 @@ import { Field, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from
 import { Input } from '@/components/ui/input';
 import { payloadDate } from '@/lib/date';
 
-import { type MainSettings } from '../api/types';
+import { MainSettings } from './types';
 
 // Регулярные выражения для базовой валидации формата
 const timeRegex = /^\d{2}:\d{2}$/;
@@ -37,17 +37,17 @@ export const formSchema = z.object({
   }),
 });
 
-export default function MainSettings({ values }: { values?: MainSettings }) {
+export default function MainSettingsForm({ initialData }: { initialData?: MainSettings }) {
   const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     // resolver: zodResolver(formSchema),
-    values: values
+    values: initialData
       ? {
-          ...values,
+          ...initialData,
           work_date: {
-            end_date: new Date(values.work_date.end_date),
-            start_date: new Date(values.work_date.start_date),
+            end_date: new Date(initialData.work_date.end_date),
+            start_date: new Date(initialData.work_date.start_date),
           },
         }
       : undefined,

@@ -1,7 +1,5 @@
 import type { NextConfig } from 'next';
 
-export const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://127.0.0.1:4000';
-
 const nextConfig: NextConfig = {
   /* Next.js 16 App Router Configuration */
   reactStrictMode: true,
