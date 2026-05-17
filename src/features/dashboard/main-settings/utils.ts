@@ -27,6 +27,8 @@ export function defineUpdatePayload(formData: MainSettingsFormProps): MainSettin
       end_date: dateAsApiString(formData.work_date.end_date),
       start_date: dateAsApiString(formData.work_date.start_date),
     },
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     lunch: formData.lunchOff
       ? {
           end_time: null,

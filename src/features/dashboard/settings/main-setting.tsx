@@ -15,7 +15,7 @@ import {
 import { DatePicker } from '@/components/ui/date-picker';
 import { Field, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { payloadDate } from '@/lib/date';
+import { dateAsApiString } from '@/lib/date';
 
 import { type MainSettings } from '../api/types';
 
@@ -60,8 +60,8 @@ export default function MainSettings({ values }: { values?: MainSettings }) {
         ...data,
         work_date: {
           ...data.work_date,
-          start_date: payloadDate(data.work_date.start_date),
-          end_date: payloadDate(data.work_date.end_date),
+          start_date: dateAsApiString(data.work_date.start_date),
+          end_date: dateAsApiString(data.work_date.end_date),
         },
       };
 
