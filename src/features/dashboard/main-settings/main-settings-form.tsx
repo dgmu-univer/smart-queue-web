@@ -49,7 +49,6 @@ export default function MainSettingsForm({ initialData }: { initialData?: MainSe
     resolver: zodResolver(formSchema),
     values: defineInitData(initialData),
   });
-  console.log(initialData)
 
   const lunchOff = useWatch<MainSettingsFormProps, 'lunchOff'>({
     control: form.control,
