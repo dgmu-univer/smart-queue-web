@@ -3,6 +3,7 @@ import { cookies, headers } from 'next/headers';
 
 import { ApiError } from './api';
 import { NextApiRequest } from 'next';
+import { redirect } from 'next/navigation';
 
 /**
  * Серверный fetch-хелпер.
@@ -18,6 +19,12 @@ async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const body = await res.json().catch(() => ({}));
+    if (res.status === 403) {
+      redirect('/api/auth/signout');
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      throw new ApiError(res.status, body.message ?? 'Сессия истекла. Выполняется выход...');
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
     throw new ApiError(res.status, body.message ?? `HTTP ${res.status}`);
   }
