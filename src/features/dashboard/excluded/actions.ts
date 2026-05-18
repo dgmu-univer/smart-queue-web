@@ -5,7 +5,6 @@ import { type AddExcludedSlotFormProps } from './add-excluded-slot';
 import { type ExcludeSlotItem } from './types';
 import { API_DATE_FORMAT } from '@/lib/date';
 import { format } from 'date-fns';
-import { updateTag } from 'next/cache';
 
 export async function updateExcludedActions(formData: AddExcludedSlotFormProps) {
   const payload: ExcludeSlotItem = {
@@ -14,7 +13,6 @@ export async function updateExcludedActions(formData: AddExcludedSlotFormProps) 
     end_time: formData.endTime,
     start_time: formData.startTime,
   };
-  await apiServer('/admin-settings/excluede-slots',
+  return await apiServer('/admin-settings/excluede-slots',
     { method: 'POST', body: JSON.stringify(payload) });
-  updateTag('excluede-slots-init');
 }

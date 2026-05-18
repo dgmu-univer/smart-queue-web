@@ -1,13 +1,16 @@
 import ExludedSlotsTable, { ExcludeSlotItem } from '@/features/dashboard/excluded';
 import { apiServer } from '@/lib/api.server';
 
-async function getExcluedeInitData(): Promise<ExcludeSlotItem<number>[]> {
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+async function getExcludedInitData(): Promise<ExcludeSlotItem<number>[]> {
   return await apiServer('/admin-settings/excluede-slots',
-    { method: 'GET', next: { tags: ['excluede-slots-init'] } });
+    { method: 'GET', cache: 'no-store' });
 }
 
 export default async function Page() {
-  const initialData = await getExcluedeInitData();
+  const initialData = await getExcludedInitData();
   return (
     <ExludedSlotsTable initialData={initialData} />
   );

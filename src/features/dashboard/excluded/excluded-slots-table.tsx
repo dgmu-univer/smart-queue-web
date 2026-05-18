@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import {
   Card,
@@ -15,13 +16,15 @@ import { AddExcludedSlot } from './add-excluded-slot';
 import { ExcludeSlotItem } from './types';
 
 export default function ExludedSlotsTable({ initialData }: { initialData: ExcludeSlotItem<number>[] }) {
-  const [data] = useState<ExcludeSlotItem<number>[]>(initialData);
+  const router = useRouter();
+
+  console.log('Длина имеет', initialData.length)
   return (
     <Card className="bg-card/80 backdrop-blur-sm">
       <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <CardTitle>Исключенные слоты</CardTitle>
         <CardDescription>
-          <AddExcludedSlot />
+          <AddExcludedSlot _onSubmit={() => { router.refresh(); }} />
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-1">
@@ -34,9 +37,13 @@ export default function ExludedSlotsTable({ initialData }: { initialData: Exclud
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.map(date => (
-              <TableRow key={date.date + date.end_time}>
-                <TableCell className="font-medium">{date.date}</TableCell>
+            {initialData.map(date => (
+              <TableRow key={date.date + date.end_time + date.start_time}>
+                <TableCell className="font-medium">
+                  {date.id}
+                  {' '}
+                  {date.date}
+                </TableCell>
                 <TableCell>{date.start_time}</TableCell>
                 <TableCell>{date.end_time}</TableCell>
               </TableRow>

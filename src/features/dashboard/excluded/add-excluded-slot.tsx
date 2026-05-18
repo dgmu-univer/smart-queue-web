@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
@@ -27,7 +28,7 @@ const formSchema = z.object({
 
 export type AddExcludedSlotFormProps = z.infer<typeof formSchema>;
 
-export function AddExcludedSlot() {
+export function AddExcludedSlot({ _onSubmit }: { _onSubmit: () => void }) {
   const [isOpen, setOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
@@ -44,6 +45,7 @@ export function AddExcludedSlot() {
       setIsPending(true);
       await updateExcludedActions(values);
       setOpen(false);
+      _onSubmit();
     } catch (error) {
       console.error(error);
     } finally {
