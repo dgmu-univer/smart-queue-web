@@ -3,7 +3,7 @@ import { apiServer } from '@/lib/api.server';
 
 async function getSlotSettingInitData(): Promise<SlotSettings> {
   return await apiServer('/admin-settings/slots',
-    { method: 'GET', next: { tags: ['slots-settings-init'] } });
+    { method: 'GET' });
 }
 
 export default async function Page() {
