@@ -16,9 +16,7 @@ import { DashboardUser } from './dashboard-user';
 
 const navLinks = [
   { href: '/dashboard/settings', label: 'Настройки' },
-  { href: '/dashboard/education-levels', label: 'Уровни образования' },
-  // { href: '/dashboard', label: 'Library' },
-  // { href: '/dashboard', label: 'Billing' },
+  { href: '/dashboard/degree-programs', label: 'Уровни образования' },
 ];
 
 export function DashboardNav() {
@@ -30,7 +28,7 @@ export function DashboardNav() {
             <span className="text-background flex size-8 items-center justify-center rounded-lg bg-blue-600">
               <AppIcon width={23} height={23} />
             </span>
-            <span className="text-sm font-semibold tracking-tight">ДДДД</span>
+            <span className="text-sm font-semibold tracking-tight">ДГМУ</span>
           </Link>
 
           <NavigationMenu className="hidden md:flex">

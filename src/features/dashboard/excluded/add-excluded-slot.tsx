@@ -12,6 +12,7 @@ import { DatePicker } from '@/components/ui/date-picker';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -73,6 +74,11 @@ export function AddExcludedSlot() {
       <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>Добавить исключенный слот</DialogTitle>
+          <DialogDescription>
+            Добавьте период, который будет исключён из расписания записи.
+            В указанное время абитуриенты не смогут выбрать этот слот для бронирования.
+            Полезно для обеденных перерывов, собраний или личных событий.
+           </DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex size-full flex-col gap-6">
           <Controller

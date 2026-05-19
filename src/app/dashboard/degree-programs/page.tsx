@@ -1,5 +1,5 @@
 import DashboardPage from '@/components/dashboard/dashboard-page';
-import EducationLevelManager, { type EducationLevelItem } from '@/features/dashboard/education-level';
+import DegreeProgramsManager, { type DegreeProgramsItem } from '@/features/dashboard/degree-programs';
 import { apiServer } from '@/lib/api.server';
 import { Metadata } from 'next';
 
@@ -8,16 +8,16 @@ export const metadata: Metadata = {
   description: 'Страница для редактирования уровней образования',
 };
 
-async function getEducationLevelInitData(): Promise<EducationLevelItem[]> {
+async function getDegreeInitData(): Promise<DegreeProgramsItem[]> {
   return await apiServer('/degree-programs',
     { method: 'GET' });
 }
 
 export default async function Page() {
-  const initailData = await getEducationLevelInitData();
+  const initailData = await getDegreeInitData();
   return (
     <DashboardPage title="Уровни образования">
-      <EducationLevelManager initailData={initailData} />
+      <DegreeProgramsManager initailData={initailData} />
     </DashboardPage>
   );
 }
