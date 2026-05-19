@@ -4,6 +4,7 @@ import { Caveat, Geist, Geist_Mono } from 'next/font/google';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { SessionProvider } from '@/components/providers/session-provider';
 import { ThemeProvider } from '@/components/providers/theme-provider';
+import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 import '@radix-ui/themes/styles.css';
@@ -44,6 +45,7 @@ export default function RootLayout({
             </QueryProvider>
           </ThemeProvider>
         </SessionProvider>
+        <Toaster position="top-center" />
       </body>
     </html>
   );

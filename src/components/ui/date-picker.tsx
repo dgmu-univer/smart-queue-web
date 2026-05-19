@@ -12,6 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { disabledMonth } from '@/lib/date';
 import { cn } from '@/lib/utils';
 
 // ---------------------------------------------------------------------------
@@ -69,7 +70,7 @@ export function DatePicker({
           disabled={disabled}
           data-empty={!value}
           className={cn(
-            'data-[empty=true]:text-muted-foreground w-[212px] justify-between text-left font-normal',
+            'data-[empty=true]:text-muted-foreground w-53 justify-between text-left font-normal',
             className,
           )}
         >
@@ -83,6 +84,7 @@ export function DatePicker({
           selected={value}
           onSelect={handleSelect}
           defaultMonth={value}
+          {...disabledMonth}
           {...calendarProps}
         />
       </PopoverContent>

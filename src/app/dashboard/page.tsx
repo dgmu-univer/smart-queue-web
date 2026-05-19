@@ -6,8 +6,14 @@ import {
   Stethoscope,
   Users } from 'lucide-react';
 
-import DashboardPageHeader from '@/components/dashboard/dashboard-page-header';
+import DashboardPage from '@/components/dashboard/dashboard-page';
 import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Статистика — Панель управления — ДГМУ',
+  description: 'Страница для просмотра статистики',
+};
 
 const stats = [
   {
@@ -47,10 +53,9 @@ const stats = [
   },
 ];
 
-export default function DashboardPage() {
+export default function Page() {
   return (
-    <>
-      <DashboardPageHeader title="Статистика" />
+    <DashboardPage title="Статистика">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {stats.map(item => (
           <Card key={item.title}>
@@ -69,6 +74,6 @@ export default function DashboardPage() {
           </Card>
         ))}
       </div>
-    </>
+    </DashboardPage>
   );
 }

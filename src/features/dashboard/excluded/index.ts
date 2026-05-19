@@ -1,4 +1,4 @@
-import ExludedSlotsTable from './excluded-slots-table';
+import ExludedSlotsManager from './excluded-slots-manager';
 
 export { type ExcludeSlotItem } from './types';
-export default ExludedSlotsTable;
+export default ExludedSlotsManager;

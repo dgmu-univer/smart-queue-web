@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useTransition } from 'react';
 import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
 import z from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -44,7 +45,7 @@ export const formSchema = z.object({
 export type MainSettingsFormProps = z.infer<typeof formSchema>;
 
 export default function MainSettingsForm({ initialData }: { initialData?: MainSettings }) {
-  const [pending, setPenging] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const form = useForm<MainSettingsFormProps>({
     resolver: zodResolver(formSchema),
     values: defineInitData(initialData),
@@ -55,15 +56,18 @@ export default function MainSettingsForm({ initialData }: { initialData?: MainSe
     name: 'lunchOff',
   });
 
-  const onUpdate: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
-    try {
-      setPenging(true);
-      await updateMainSettingsActions(data);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setPenging(false);
-    }
+  const onUpdate: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
+    startTransition(async () => {
+      const result = await updateMainSettingsActions(data);
+      if (result.success) {
+        toast.success('Основные настройки успешно обновлены!');
+      } else {
+        toast.error(`Что-то пошло не так! (${result.error.status.toString()})`, {
+          description: result.error.message,
+          descriptionClassName: 'text-foreground',
+        });
+      }
+    });
   };
 
   return (
@@ -189,7 +193,7 @@ export default function MainSettingsForm({ initialData }: { initialData?: MainSe
           </div>
         </CardContent>
         <CardFooter>
-          <Button disabled={!form.formState.isDirty} loading={pending} type="submit">Сохранить</Button>
+          <Button disabled={!form.formState.isDirty} loading={isPending} type="submit">Сохранить</Button>
         </CardFooter>
       </form>
     </Card>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus } from 'lucide-react';
@@ -10,12 +10,13 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
   InputOTP,
@@ -24,24 +25,25 @@ import {
 } from '@/components/ui/input-otp';
 import { Textarea } from '@/components/ui/textarea';
 
-import { updateEducationLevel } from './actions';
+import { createDegreeProgram } from './actions';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export const formSchema = z.object({
-  // Обязательная строка, минимум 2 символа
   name: z.string({ required_error: 'Поле обязательно для заполнения' }).min(2, 'Имя должно содержать минимум 2 символа'),
-
-  // Необязательная строка, максимум 500 символов
   description: z.string().max(500, 'Описание не должно превышать 500 символов').optional(),
-
-  // ПИН-код строго из 6 цифр (передается как строка)
-  pin: z.string({ required_error: 'Поле обязательно для заполнения' }),
+  pin: z.string({ required_error: 'Поле обязательно для заполнения' })
+    .min(6, 'ПИН-код должен содержать минимум 6 цифр')
+    .max(6, 'ПИН-код должен содержать максимум 6 цифр'),
 });
 
 export type AddEducationLevelFormProps = z.infer<typeof formSchema>;
 
 export default function AddEducationLevel() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isPending, setIsPending] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -52,42 +54,50 @@ export default function AddEducationLevel() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      setIsPending(true);
-      await updateEducationLevel(values);
-      setIsOpen(false);
-      form.reset();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsPending(false);
-    }
+  function onCreate(values: z.infer<typeof formSchema>) {
+    startTransition(async () => {
+      const result = await createDegreeProgram(values);
+      if (result.success) {
+        form.reset();
+        setIsOpen(false);
+        router.refresh();
+        toast.success('Уровень образования успешно создан!');
+      } else {
+        toast.error(`Что-то пошло не так! (${result.error.status.toString()})`, {
+          description: result.error.message,
+          descriptionClassName: 'text-foreground',
+        });
+      }
+    });
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2">
+        <Button className="gap-2" variant="secondary">
           <Plus className="size-4" />
           {' '}
-          Добавить
+          Добавить уровень образования
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>Добавить уровень образования</DialogTitle>
+          <DialogDescription>
+            Добавьте уровень образования (например, «Колледж», «Бакалавриат», «Ординатура»).
+            Укажите название, описание и уникальный пин-код из 6 цифр — он будет использоваться оператором для авторизации.
+          </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
-          <div className="grid gap-4 py-4">
+        <form onSubmit={form.handleSubmit(onCreate)} className="flex flex-col gap-6">
+          <div className="grid gap-4">
             <Controller
               control={form.control}
               name="name"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="name">Начало</FieldLabel>
-                  <Input {...field} id="name" placeholder="Наименование" />
+                  <FieldLabel htmlFor="name">Наименование</FieldLabel>
+                  <Input {...field} id="name" placeholder="Введите наименование" />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
@@ -108,7 +118,10 @@ export default function AddEducationLevel() {
               name="pin"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="pin">Пин код (6 знаков)</FieldLabel>
+                  <FieldLabel htmlFor="pin">Пин-код (6 знаков)</FieldLabel>
+                  <FieldDescription>
+                    Пин-код будет использоваться оператором для входа.
+                  </FieldDescription>
                   <InputOTP
                     maxLength={8}
                     {...field}

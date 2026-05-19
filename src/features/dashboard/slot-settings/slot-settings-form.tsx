@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useTransition } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
 import z from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -16,13 +17,20 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 
+import FieldHint from './components/field-hint';
 import { updateSlotSettingsActions } from './actions';
 
 const formSchema = z.object({
-  duration_minutes: z.string({ required_error: 'Время слота обязательно' }),
-  capacity_per_slot: z.string({ required_error: 'Вместимость слота обязательно' }),
-});
+  duration_minutes: z.coerce
+    .number({ required_error: 'Время слота обязательно' })
+    .min(5, { message: 'Минимум 5 минут' })
+    .max(60, { message: 'Максимум 60 минут' }),
 
+  capacity_per_slot: z.coerce
+    .number({ required_error: 'Вместимость слота обязательно' })
+    .min(1, { message: 'Минимум 1 человек' })
+    .max(15, { message: 'Максимум 15 человек' }),
+});
 export interface SlotSettings {
   duration_minutes: number
   capacity_per_slot: number
@@ -31,24 +39,24 @@ export interface SlotSettings {
 export type SlotSettingsFormProps = z.infer<typeof formSchema>;
 
 export default function SlotSettingsForm({ initialData }: { initialData: SlotSettings }) {
-  const [isPending, setIsPending] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const form = useForm<SlotSettingsFormProps>({
     resolver: zodResolver(formSchema),
-    values: {
-      duration_minutes: initialData.duration_minutes.toString(),
-      capacity_per_slot: initialData.capacity_per_slot.toString(),
-    },
+    values: initialData,
   });
 
-  const onUpdate: SubmitHandler<SlotSettingsFormProps> = async (data) => {
-    try {
-      setIsPending(true);
-      await updateSlotSettingsActions(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsPending(false);
-    }
+  const onUpdate: SubmitHandler<SlotSettingsFormProps> = (data) => {
+    startTransition(async () => {
+      const result = await updateSlotSettingsActions(data);
+      if (result.success) {
+        toast.success('Настройки слота успешно обновлены!');
+      } else {
+        toast.error(`Что-то пошло не так! (${result.error.status.toString()})`, {
+          description: result.error.message,
+          descriptionClassName: 'text-foreground',
+        });
+      }
+    });
   };
 
   return (
@@ -65,7 +73,9 @@ export default function SlotSettingsForm({ initialData }: { initialData: SlotSet
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="duration_minutes">Время слота</FieldLabel>
-                  <Input {...field} id="duration_minutes" type="number" placeholder="15" />
+                  <FieldHint hint="минут">
+                    <Input {...field} id="duration_minutes" type="number" placeholder="15" />
+                  </FieldHint>
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
@@ -76,7 +86,9 @@ export default function SlotSettingsForm({ initialData }: { initialData: SlotSet
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="capacity_per_slot">Вместимость слота</FieldLabel>
-                  <Input {...field} id="capacity_per_slot" type="number" placeholder="10" />
+                  <FieldHint hint="человек">
+                    <Input {...field} id="capacity_per_slot" type="number" placeholder="10" />
+                  </FieldHint>
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}

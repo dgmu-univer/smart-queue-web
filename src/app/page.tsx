@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Hero } from '@/components/hero';
 import { SiteHeader } from '@/components/site-header';
 import { SocialProof } from '@/components/social-proof';
