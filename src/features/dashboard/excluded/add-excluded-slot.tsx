@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -19,6 +20,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field
 import { Input } from '@/components/ui/input';
 
 import { updateExcludedActions } from './actions';
+import { Plus } from 'lucide-react';
 
 const formSchema = z.object({
   date: z.date({ required_error: 'Выберите дату' }),
@@ -28,35 +30,45 @@ const formSchema = z.object({
 
 export type AddExcludedSlotFormProps = z.infer<typeof formSchema>;
 
-export function AddExcludedSlot({ _onSubmit }: { _onSubmit: () => void }) {
+export function AddExcludedSlot() {
   const [isOpen, setOpen] = useState(false);
-  const [isPending, setIsPending] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      startTime: '00:00',
-      endTime: '00:00',
+      startTime: '',
+      endTime: '',
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      setIsPending(true);
-      await updateExcludedActions(values);
-      setOpen(false);
-      _onSubmit();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsPending(false);
-    }
+  function onSubmit(data: z.infer<typeof formSchema>) {
+    startTransition(async () => {
+      const result = await updateExcludedActions(data);
+      if (result.success) {
+        form.reset();
+        setOpen(false);
+        router.refresh();
+        toast.success('Слот успешно добавлен!');
+      } else {
+        toast.error(`Что-то пошло не так! (${result.error.status.toString()})`, {
+          description: result.error.message,
+          descriptionClassName: 'text-foreground',
+        });
+      }
+    });
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button onClick={() => { setOpen(true); }}>Добавить</Button>
+        <Button onClick={() => { setOpen(true); }} className="gap-2">
+          <Plus className="size-4" />
+          {' '}
+          Добавить слот
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-106.25">
         <DialogHeader>

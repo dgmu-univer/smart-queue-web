@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useTransition } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
@@ -39,22 +39,24 @@ export interface SlotSettings {
 export type SlotSettingsFormProps = z.infer<typeof formSchema>;
 
 export default function SlotSettingsForm({ initialData }: { initialData: SlotSettings }) {
-  const [isPending, setIsPending] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const form = useForm<SlotSettingsFormProps>({
     resolver: zodResolver(formSchema),
     values: initialData,
   });
 
-  const onUpdate: SubmitHandler<SlotSettingsFormProps> = async (data) => {
-    try {
-      setIsPending(true);
-      await updateSlotSettingsActions(data);
-      toast.success('Настройки слота обновлены');
-    } catch {
-      toast.error('Ошибка при обновлении настроек слота');
-    } finally {
-      setIsPending(false);
-    }
+  const onUpdate: SubmitHandler<SlotSettingsFormProps> = (data) => {
+    startTransition(async () => {
+      const result = await updateSlotSettingsActions(data);
+      if (result.success) {
+        toast.success('Настройки слота успешно обновлены!');
+      } else {
+        toast.error(`Что-то пошло не так! (${result.error.status.toString()})`, {
+          description: result.error.message,
+          descriptionClassName: 'text-foreground',
+        });
+      }
+    });
   };
 
   return (
@@ -72,7 +74,7 @@ export default function SlotSettingsForm({ initialData }: { initialData: SlotSet
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="duration_minutes">Время слота</FieldLabel>
                   <FieldHint hint="минут">
-                    <Input {...field} id="duration_minutes" max={60} maxLength={2} min={1} type="number" placeholder="15" />
+                    <Input {...field} id="duration_minutes" type="number" placeholder="15" />
                   </FieldHint>
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>

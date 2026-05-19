@@ -6,7 +6,7 @@ import {
   DayPicker,
   getDefaultClassNames,
 } from 'react-day-picker';
-import { ru } from 'date-fns/locale'
+import { ru } from 'date-fns/locale';
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -45,6 +45,13 @@ function Calendar({
         formatMonthDropdown: date =>
           date.toLocaleString('default', { month: 'short' }),
         ...formatters,
+      }}
+      modifiers={{
+        weekend: date => date.getDay() === 0 || date.getDay() === 6,
+      }}
+      // Применяем стили к этому модификатору
+      modifiersStyles={{
+        weekend: { color: 'red' },
       }}
       classNames={{
         root: cn('w-fit', defaultClassNames.root),

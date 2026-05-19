@@ -1,4 +1,10 @@
 import { DashboardNav } from '@/components/dashboard/dashboard-nav';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Панель управления — ДГМУ',
+  description: 'Панель управления',
+};
 
 export default function DashboardLayout({
   children,

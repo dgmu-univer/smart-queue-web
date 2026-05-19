@@ -8,6 +8,12 @@ import {
 
 import DashboardPage from '@/components/dashboard/dashboard-page';
 import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Статистика — Панель управления — ДГМУ',
+  description: 'Страница для просмотра статистики',
+};
 
 const stats = [
   {

@@ -9,11 +9,13 @@
  */
 
 export class ApiError extends Error {
+  public status: number;
   constructor(
     public readonly statusCode: number,
     message: string,
   ) {
     super(message);
+    this.status = statusCode;
     this.name = 'ApiError';
   }
 }

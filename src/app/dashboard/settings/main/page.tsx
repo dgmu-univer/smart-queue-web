@@ -2,10 +2,16 @@ import { Suspense } from 'react';
 
 import MainSettingsForm, { type MainSettings } from '@/features/dashboard/main-settings';
 import { apiServer } from '@/lib/api.server';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Основные настройки — Панель управления — ДГМУ',
+  description: 'Страница для редактирования основных настроек',
+};
 
 async function getMainSettingInitData(): Promise<MainSettings> {
   return await apiServer('/admin-settings/periods',
-    { method: 'GET', next: { tags: ['main-settings-init'] } });
+    { method: 'GET' });
 }
 
 export default async function Page() {

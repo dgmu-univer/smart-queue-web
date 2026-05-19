@@ -1,9 +1,14 @@
 import WeekendsCalendar from '@/features/dashboard/weekend';
 import { apiServer } from '@/lib/api.server';
+import { Metadata } from 'next';
 
+export const metadata: Metadata = {
+  title: 'Нерабочные дни — Панель управления — ДГМУ',
+  description: 'Страница для редактирования нерабочных дней',
+};
 async function getWeekendInitData(): Promise<string[]> {
   return await apiServer('/admin-settings/non-working-days',
-    { method: 'GET', next: { tags: ['weekend-settings-init'] } });
+    { method: 'GET' });
 }
 
 export default async function Page() {

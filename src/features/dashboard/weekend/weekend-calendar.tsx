@@ -1,6 +1,7 @@
 'use client';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { parse } from 'date-fns';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -11,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { API_DATE_FORMAT } from '@/lib/date';
+import { API_DATE_FORMAT, disabledMonth } from '@/lib/date';
 
 import { updateWeekendActions } from './actions';
 
@@ -21,7 +22,7 @@ const parsedDates = (initialData: string[]) => initialData.map(date =>
 
 export default function WeekendsCalendar({ initialData }: { initialData: string[] }) {
   const [weekends, setWeekends] = useState<Date[]>(parsedDates(initialData));
-  const [isPending, setIsPending] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const handleSelect = (newSelected: Date[] | undefined) => {
     if (Array.isArray(newSelected)) {
@@ -31,15 +32,18 @@ export default function WeekendsCalendar({ initialData }: { initialData: string[
     }
   };
 
-  const handleUpdate = async () => {
-    try {
-      setIsPending(true);
-      await updateWeekendActions(weekends);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsPending(false);
-    }
+  const handleUpdate = () => {
+    startTransition(async () => {
+      const result = await updateWeekendActions(weekends);
+      if (result.success) {
+        toast.success('Выходные дни успешно обновлены!');
+      } else {
+        toast.error(`Что-то пошло не так! (${result.error.status.toString()})`, {
+          description: result.error.message,
+          descriptionClassName: 'text-foreground',
+        });
+      }
+    });
   };
 
   return (
@@ -56,19 +60,13 @@ export default function WeekendsCalendar({ initialData }: { initialData: string[
           numberOfMonths={3}
           showOutsideDays={false}
           className="rounded-lg border"
-          modifiers={{
-            weekend: date => date.getDay() === 0 || date.getDay() === 6,
-          }}
-          // Применяем стили к этому модификатору
-          modifiersStyles={{
-            weekend: { color: 'red' },
-          }}
+          {...disabledMonth}
         />
       </CardContent>
       <CardFooter>
         <Button
           onClick={() => {
-            void handleUpdate();
+            handleUpdate();
           }}
           loading={isPending}
         >

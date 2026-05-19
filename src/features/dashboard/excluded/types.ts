@@ -1,5 +1,5 @@
-export interface ExcludeSlotItem<IdType = undefined> {
-  id: IdType
+export interface ExcludeSlotItem {
+  id: number
   date: string
   start_time: string
   end_time: string

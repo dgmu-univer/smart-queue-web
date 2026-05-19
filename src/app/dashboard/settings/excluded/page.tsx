@@ -1,10 +1,13 @@
-import ExludedSlotsTable, { ExcludeSlotItem } from '@/features/dashboard/excluded';
+import ExludedSlotsManager, { ExcludeSlotItem } from '@/features/dashboard/excluded';
 import { apiServer } from '@/lib/api.server';
+import { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const metadata: Metadata = {
+  title: 'Исключенные слоты — Панель управления — ДГМУ',
+  description: 'Страница для редактирования исключенных слотов',
+};
 
-async function getExcludedInitData(): Promise<ExcludeSlotItem<number>[]> {
+async function getExcludedInitData(): Promise<ExcludeSlotItem[]> {
   return await apiServer('/admin-settings/excluede-slots',
     { method: 'GET', cache: 'no-store' });
 }
@@ -12,6 +15,6 @@ async function getExcludedInitData(): Promise<ExcludeSlotItem<number>[]> {
 export default async function Page() {
   const initialData = await getExcludedInitData();
   return (
-    <ExludedSlotsTable initialData={initialData} />
+    <ExludedSlotsManager initialData={initialData} />
   );
 }
