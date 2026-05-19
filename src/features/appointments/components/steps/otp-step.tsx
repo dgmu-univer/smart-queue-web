@@ -1,13 +1,8 @@
 'use client';
 
-type Step = {
-  id: string;
-  title: string;
-  description: string;
-  verifyId?: string;
-};
+import { Stepper } from '@stepperize/react';
 
-export default function OtpStep({ step }: { step?: Step }) {
-  console.log(step)
-  return (<div>OtpStep</div>);
+export default function OtpStep({ stepper }: { stepper: Stepper }) {
+  const meta = stepper.metadata.get('id');
+  return (<button type="button" onClick={() => void stepper.navigation.next()}>{meta}</button>);
 }

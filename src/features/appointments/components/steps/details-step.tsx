@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { Stepper } from '@stepperize/react';
 
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
@@ -7,7 +8,6 @@ import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 import { PhoneInputField } from '../phone-input';
-import { useStepper } from '../../steps';
 
 const educationOptions = [
   { value: 'college', label: 'Колледж' },
@@ -27,18 +27,14 @@ function generateTimeSlots() {
 
 const timeSlots = generateTimeSlots();
 
-export default function DetailsStep() {
+export default function DetailsStep({ stepper }: { stepper: Stepper }) {
   const [education, setEducation] = React.useState<string>('');
   const [phone, setPhone] = React.useState<string | undefined>('');
   const [slot, setSlot] = React.useState<string>('');
-  const stepper = useStepper();
-  const isStep1Valid = education.length && phone?.length && slot.length;
-
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        stepper.navigation.next()
       }}
     >
       <FieldGroup>
@@ -92,7 +88,15 @@ export default function DetailsStep() {
         </div>
       </FieldGroup>
 
-      <Button type="submit" size="lg" className="mt-8 w-full">
+      <Button
+        type="button"
+        onClick={() => {
+          stepper.metadata.set('id', phone);
+          void stepper.navigation.next()
+        }}
+        size="lg"
+        className="mt-8 w-full"
+      >
         Далее
       </Button>
     </form>

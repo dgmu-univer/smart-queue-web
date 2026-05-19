@@ -91,4 +91,3 @@ export function DatePicker({
     </Popover>
   );
 }
-

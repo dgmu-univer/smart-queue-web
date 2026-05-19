@@ -2,8 +2,10 @@
 
 import { useState, useTransition } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus } from 'lucide-react';
+import { toast } from 'sonner';
 import z from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -26,8 +28,6 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 
 import { createDegreeProgram } from './actions';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 
 export const formSchema = z.object({
   name: z.string({ required_error: 'Поле обязательно для заполнения' }).min(2, 'Имя должно содержать минимум 2 символа'),

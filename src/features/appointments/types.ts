@@ -1,15 +1,15 @@
 export interface DegreeProgram {
-  id: number;
-  name: string;
-  description: string;
+  id: number
+  name: string
+  description: string
 }
 
 export interface PeriodSettings {
-  start_date: string;
-  end_date: string;
+  start_date: string
+  end_date: string
 }
 
 export interface DegreeProgramsResponse {
-  degreePrograms: DegreeProgram[];
-  periodSettings: PeriodSettings;
+  degreePrograms: DegreeProgram[]
+  periodSettings: PeriodSettings
 }
