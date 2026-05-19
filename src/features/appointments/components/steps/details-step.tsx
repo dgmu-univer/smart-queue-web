@@ -6,7 +6,8 @@ import { DatePicker } from '@/components/ui/date-picker';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-import { PhoneInputField } from './phone-input';
+import { PhoneInputField } from '../phone-input';
+import { useStepper } from '../../steps';
 
 const educationOptions = [
   { value: 'college', label: 'Колледж' },
@@ -30,16 +31,14 @@ export default function DetailsStep() {
   const [education, setEducation] = React.useState<string>('');
   const [phone, setPhone] = React.useState<string | undefined>('');
   const [slot, setSlot] = React.useState<string>('');
-
+  const stepper = useStepper();
   const isStep1Valid = education.length && phone?.length && slot.length;
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        if (isStep1Valid) {
-          // stepper.navigation.next()
-        }
+        stepper.navigation.next()
       }}
     >
       <FieldGroup>
@@ -65,7 +64,7 @@ export default function DetailsStep() {
             id="phone"
             value={phone}
             onChange={setPhone}
-            placeholder="(900) 123-45-67"
+            placeholder="+7 (988) 123-00-00"
           />
         </Field>
 
@@ -93,7 +92,7 @@ export default function DetailsStep() {
         </div>
       </FieldGroup>
 
-      <Button type="submit" size="lg" className="mt-8 w-full" disabled={!isStep1Valid}>
+      <Button type="submit" size="lg" className="mt-8 w-full">
         Далее
       </Button>
     </form>

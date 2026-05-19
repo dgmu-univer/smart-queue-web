@@ -33,7 +33,6 @@ async function handleResponse<T>(res: Response): Promise<T> {
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${process.env.EXTERNAL_API_HOST}/api${path}`, {
     ...init,
-    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
