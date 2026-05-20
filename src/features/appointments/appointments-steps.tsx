@@ -1,8 +1,6 @@
 'use client';
 
-import { Card } from '@radix-ui/themes';
-
-import { CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 import StepperIndicator from './components/step-indicator';
 import { DetailsStep, OtpStep, SuccessStep } from './components/steps';
