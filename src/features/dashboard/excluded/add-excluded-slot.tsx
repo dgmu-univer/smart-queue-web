@@ -45,7 +45,7 @@ export function AddExcludedSlot() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  const handleCreate = (data: z.infer<typeof formSchema>) => {
     startTransition(async () => {
       const result = await updateExcludedActions(data);
       if (result.success) {
@@ -60,7 +60,7 @@ export function AddExcludedSlot() {
         });
       }
     });
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
@@ -80,7 +80,12 @@ export function AddExcludedSlot() {
             Полезно для обеденных перерывов, собраний или личных событий.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex size-full flex-col gap-6">
+        <form
+          onSubmit={(e) => {
+            void form.handleSubmit(handleCreate)(e);
+          }}
+          className="flex size-full flex-col gap-6"
+        >
           <Controller
             control={form.control}
             name="date"

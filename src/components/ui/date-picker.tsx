@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { CalendarIcon, ChevronDownIcon } from 'lucide-react';
+import { CalendarIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -51,7 +51,6 @@ export function DatePicker({
   className,
   align = 'start',
   dateFormat = 'd MMMM, yyyy',
-  icon = <ChevronDownIcon />,
   calendarProps,
   disabled = false,
 }: DatePickerProps) {

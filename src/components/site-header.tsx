@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { User } from 'lucide-react';
+
+import { UserSignLink } from './dashboard/user-sign-link';
 
 export function SiteHeader() {
   return (
@@ -35,13 +36,7 @@ export function SiteHeader() {
             Контакты
           </Link>
           <span aria-hidden="true" className="bg-border hidden h-4 w-px sm:inline-block" />
-          <Link
-            href="/login"
-            className="text-foreground hover:text-foreground/70 inline-flex items-center gap-1.5 rounded-md font-medium transition-colors"
-          >
-            <User className="size-4" aria-hidden="true" />
-            <span>Войти</span>
-          </Link>
+          <UserSignLink />
         </nav>
       </div>
     </header>

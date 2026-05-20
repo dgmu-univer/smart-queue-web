@@ -1,7 +1,7 @@
 export interface MainSettings {
   work_date: WorkDateObject
   work_time: WorkTimeObject
-  lunch: LunchObject
+  lunch: LunchObject | null
 }
 
 export interface WorkDateObject {
@@ -15,6 +15,6 @@ export interface WorkTimeObject {
 }
 
 export interface LunchObject {
-  start_time?: string // Формат: HH:MM или null
-  end_time?: string // Формат: HH:MM или null
+  start_time: string // Формат: HH:MM или ''
+  end_time: string // Формат: HH:MM или ''
 }

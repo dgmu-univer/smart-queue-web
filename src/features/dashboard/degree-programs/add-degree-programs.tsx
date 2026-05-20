@@ -89,7 +89,7 @@ export default function AddEducationLevel() {
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={form.handleSubmit(onCreate)} className="flex flex-col gap-6">
+        <form onSubmit={e => void form.handleSubmit(onCreate)(e)} className="flex flex-col gap-6">
           <div className="grid gap-4">
             <Controller
               control={form.control}
