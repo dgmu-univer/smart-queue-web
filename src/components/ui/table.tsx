@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Inbox, Plus } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+
 import { Button } from './button';
 
 function Table({ className, ...props }: React.ComponentProps<'table'>) {
@@ -107,41 +108,41 @@ function TableCaption({
 }
 
 interface EmptyTableProps {
-  colSpan?: number;
-  title?: string;
-  description?: string;
-  onAction?: () => void;
-  actionLabel?: string;
+  colSpan?: number
+  title?: string
+  description?: string
+  onAction?: () => void
+  actionLabel?: string
 }
 
 function EmptyTableGradient({
   colSpan = 3,
-  title = "Нет данных",
-  description = "Здесь пока ничего нет. Добавьте первый элемент, чтобы начать работу.",
+  title = 'Нет данных',
+  description = 'Здесь пока ничего нет. Добавьте первый элемент, чтобы начать работу.',
   onAction,
-  actionLabel = "Добавить"
+  actionLabel = 'Добавить',
 }: EmptyTableProps) {
   return (
     <TableRow>
       <TableCell colSpan={colSpan} className="text-muted-foreground py-10 text-center">
-        <div className="flex `min-h-50 w-full flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-muted/50">
-            <Inbox className="h-10 w-10 text-muted-foreground" />
+        <div className="`min-h-50 flex w-full flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
+          <div className="bg-muted/50 mx-auto flex size-20 items-center justify-center rounded-full">
+            <Inbox className="text-muted-foreground size-10" />
           </div>
           <h3 className="mt-4 text-lg font-semibold">{title}</h3>
-          <p className="mb-4 mt-2 text-sm text-muted-foreground max-w-sm">
+          <p className="text-muted-foreground mt-2 mb-4 max-w-sm text-sm">
             {description}
           </p>
           {onAction && (
             <Button onClick={onAction} size="sm">
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus className="mr-2 size-4" />
               {actionLabel}
             </Button>
           )}
         </div>
       </TableCell>
     </TableRow>
-    
+
   );
 }
 

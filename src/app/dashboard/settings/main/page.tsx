@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
+import { Metadata } from 'next';
 
 import MainSettingsForm, { type MainSettings } from '@/features/dashboard/main-settings';
 import { apiServer } from '@/lib/api.server';
-import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Основные настройки — Панель управления — ДГМУ',

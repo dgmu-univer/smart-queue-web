@@ -1,6 +1,7 @@
+import { Metadata } from 'next';
+
 import SlotSettingsForm, { type SlotSettings } from '@/features/dashboard/slot-settings';
 import { apiServer } from '@/lib/api.server';
-import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Настройки слотов — Панель управления — ДГМУ',

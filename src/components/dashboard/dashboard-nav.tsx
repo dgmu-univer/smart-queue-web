@@ -57,7 +57,7 @@ export function DashboardNav() {
               <NavigationMenuItem key={link.href}>
                 <NavigationMenuLink
                   asChild
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
                   className={navigationMenuTriggerStyle()}
                 >
                   <Link href={link.href}>{link.label}</Link>

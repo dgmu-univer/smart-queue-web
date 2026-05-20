@@ -58,7 +58,7 @@ export default function ExludedSlotsManager({ initialData }: { initialData: Excl
             </TableRow>
           </TableHeader>
           <TableBody>
-            {isEmpty && <EmptyTableGradient colSpan={4}/>}
+            {isEmpty && <EmptyTableGradient colSpan={4} />}
             {!isEmpty && initialData.map(slot => (
               <TableRow key={slot.id}>
                 <TableCell className="font-medium">

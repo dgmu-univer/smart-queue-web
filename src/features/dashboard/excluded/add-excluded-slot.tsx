@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import * as z from 'zod';
 
@@ -21,7 +22,6 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field
 import { Input } from '@/components/ui/input';
 
 import { updateExcludedActions } from './actions';
-import { Plus } from 'lucide-react';
 
 const formSchema = z.object({
   date: z.date({ required_error: 'Выберите дату' }),
@@ -45,7 +45,7 @@ export function AddExcludedSlot() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  const handleCreate = (data: z.infer<typeof formSchema>) => {
     startTransition(async () => {
       const result = await updateExcludedActions(data);
       if (result.success) {
@@ -60,7 +60,7 @@ export function AddExcludedSlot() {
         });
       }
     });
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
@@ -78,9 +78,14 @@ export function AddExcludedSlot() {
             Добавьте период, который будет исключён из расписания записи.
             В указанное время абитуриенты не смогут выбрать этот слот для бронирования.
             Полезно для обеденных перерывов, собраний или личных событий.
-           </DialogDescription>
+          </DialogDescription>
         </DialogHeader>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex size-full flex-col gap-6">
+        <form
+          onSubmit={(e) => {
+            void form.handleSubmit(handleCreate)(e);
+          }}
+          className="flex size-full flex-col gap-6"
+        >
           <Controller
             control={form.control}
             name="date"

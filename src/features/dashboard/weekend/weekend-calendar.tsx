@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useTransition } from 'react';
 import { parse } from 'date-fns';
 import { toast } from 'sonner';
@@ -24,9 +25,9 @@ export default function WeekendsCalendar({ initialData }: { initialData: string[
   const [weekends, setWeekends] = useState<Date[]>(parsedDates(initialData));
   const [isPending, startTransition] = useTransition();
 
-  const handleSelect = (newSelected: Date[] | undefined) => {
-    if (Array.isArray(newSelected)) {
-      setWeekends(newSelected);
+  const onSelectWeekends = (weekends: Date[] | undefined) => {
+    if (Array.isArray(weekends)) {
+      setWeekends(weekends);
     } else {
       setWeekends([]);
     }
@@ -54,7 +55,7 @@ export default function WeekendsCalendar({ initialData }: { initialData: string[
       <CardContent className="flex flex-col gap-1">
         <Calendar
           selected={weekends}
-          onSelect={handleSelect}
+          onSelect={onSelectWeekends}
           mode="multiple"
           captionLayout="dropdown"
           numberOfMonths={3}
