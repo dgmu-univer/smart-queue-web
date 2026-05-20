@@ -1,7 +1,7 @@
 export interface MainSettings {
   work_date: WorkDateObject
   work_time: WorkTimeObject
-  lunch: LunchObject
+  lunch: LunchObject | null
 }
 
 export interface WorkDateObject {

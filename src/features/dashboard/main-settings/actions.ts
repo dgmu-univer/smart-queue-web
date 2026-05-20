@@ -6,7 +6,6 @@ import { defineUpdatePayload } from './utils';
 
 export async function updateMainSettingsActions(formData: MainSettingsFormProps): Promise<ActionPromisifyResult> {
   const payload = defineUpdatePayload(formData);
-  console.log(payload);
   try {
     await apiServer('/admin-settings/periods', { method: 'PATCH', body: JSON.stringify(payload) });
     return { success: true };

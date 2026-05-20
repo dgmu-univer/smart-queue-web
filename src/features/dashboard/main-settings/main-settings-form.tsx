@@ -36,7 +36,7 @@ export const formSchema = z.object({
   lunch: z.object({
     start_time: z.string().optional(),
     end_time: z.string().optional(),
-  }),
+  }).nullable(),
 });
 
 export type MainSettingsFormProps = z.infer<typeof formSchema>;
