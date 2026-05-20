@@ -1,36 +1,56 @@
 'use client';
+
 import * as React from 'react';
-import { Stepper } from '@stepperize/react';
+import { endOfDay, parseISO, startOfDay } from 'date-fns';
 
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { api } from '@/lib/api';
+import { dateAsApiString } from '@/lib/date';
 
+import { UseStepper } from '../../stepperize';
+import { type DegreeProgramsResponse } from '../../types';
 import { PhoneInputField } from '../phone-input';
 
-const educationOptions = [
-  { value: 'college', label: 'Колледж' },
-  { value: 'specialty', label: 'Специалитет' },
-  { value: 'residency', label: 'Ординатура' },
-];
-
-function generateTimeSlots() {
-  const slots: string[] = [];
-  for (let hour = 10; hour <= 17; hour++) {
-    for (const minute of [0, 15, 30, 45]) {
-      slots.push(`${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`);
-    }
-  }
-  return slots;
+interface DetailsStepProps {
+  initialData: DegreeProgramsResponse
+  stepper: UseStepper
 }
 
-const timeSlots = generateTimeSlots();
-
-export default function DetailsStep({ stepper }: { stepper: Stepper }) {
-  const [education, setEducation] = React.useState<string>('');
+export default function DetailsStep({ initialData, stepper }: DetailsStepProps) {
+  const [degreeId, setDegreeId] = React.useState<string>('');
   const [phone, setPhone] = React.useState<string | undefined>('');
+  const [allSlots, setAllSlots] = React.useState<string[]>([]);
   const [slot, setSlot] = React.useState<string>('');
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(undefined);
+
+  const disabledMatcher = {
+    before: startOfDay(parseISO(initialData.periodSettings.start_date)),
+    after: endOfDay(parseISO(initialData.periodSettings.end_date)),
+  };
+
+  React.useEffect(() => {
+    const getSlots = async (id: string, date: Date) => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`http://192.168.1.11:8080/api/public/slots?booked=false&degreeId=${id}&date=${dateAsApiString(date)}`);
+        const data = await response.json() as { slots: string[] };
+        setAllSlots(data.slots);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (degreeId && selectedDate) {
+      void getSlots(degreeId, selectedDate);
+    }
+  }, [degreeId, selectedDate]);
+
   return (
     <form
       onSubmit={(e) => {
@@ -40,14 +60,14 @@ export default function DetailsStep({ stepper }: { stepper: Stepper }) {
       <FieldGroup>
         <Field>
           <FieldLabel htmlFor="education">Уровень образования</FieldLabel>
-          <Select value={education} onValueChange={setEducation}>
+          <Select value={degreeId} onValueChange={setDegreeId}>
             <SelectTrigger id="education" className="w-full">
               <SelectValue placeholder="Выберите уровень" />
             </SelectTrigger>
             <SelectContent>
-              {educationOptions.map(option => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
+              {initialData.degreePrograms.map(option => (
+                <SelectItem key={option.id} value={option.id.toString()}>
+                  {option.name}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -67,23 +87,30 @@ export default function DetailsStep({ stepper }: { stepper: Stepper }) {
         <div className="grid gap-4 sm:grid-cols-2">
           <Field>
             <FieldLabel htmlFor="date">Дата</FieldLabel>
-            <DatePicker />
+            <DatePicker
+              value={selectedDate}
+              onChange={setSelectedDate}
+              calendarProps={{
+                disabled: disabledMatcher,
+              }} // 👈 блокировка дат вне периода
+            />
           </Field>
 
           <Field>
             <FieldLabel htmlFor="slot">Время</FieldLabel>
-            <Select value={slot} onValueChange={setSlot}>
+            <Select disabled={isLoading} value={slot} onValueChange={setSlot}>
               <SelectTrigger id="slot" className="w-full">
                 <SelectValue placeholder="Выберите слот" />
               </SelectTrigger>
               <SelectContent className="max-h-72">
-                {timeSlots.map(time => (
+                {allSlots.map(time => (
                   <SelectItem key={time} value={time}>
                     {time}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
+            {isLoading && <div>Загрузка...</div>}
           </Field>
         </div>
       </FieldGroup>
@@ -92,7 +119,7 @@ export default function DetailsStep({ stepper }: { stepper: Stepper }) {
         type="button"
         onClick={() => {
           stepper.metadata.set('id', phone);
-          void stepper.navigation.next()
+          void stepper.navigation.next();
         }}
         size="lg"
         className="mt-8 w-full"

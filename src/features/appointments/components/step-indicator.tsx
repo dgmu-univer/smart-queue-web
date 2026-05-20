@@ -1,12 +1,16 @@
 'use client';
 
+import { type Step } from '@stepperize/react';
 import { CheckIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
-import { steps } from '../steps';
+interface StepperIndicatorProps {
+  currentStepId: string
+  steps: Step<string, { title: string, description: string }>[]
+}
 
-export default function StepperIndicator({ currentStepId }: { currentStepId: string }) {
+export default function StepperIndicator({ currentStepId, steps }: StepperIndicatorProps) {
   const currentIndex = steps.findIndex(s => s.id === currentStepId);
 
   return (

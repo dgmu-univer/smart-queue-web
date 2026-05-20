@@ -1,8 +1,12 @@
 'use client';
 
-import { Stepper } from '@stepperize/react';
+import { UseStepper } from '../../stepperize';
 
-export default function OtpStep({ stepper }: { stepper: Stepper }) {
+interface OtpStepProps {
+  stepper: UseStepper
+}
+
+export default function OtpStep({ stepper }: OtpStepProps) {
   const meta = stepper.metadata.get('id');
   return (<button type="button" onClick={() => void stepper.navigation.next()}>{meta}</button>);
 }
