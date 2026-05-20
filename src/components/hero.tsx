@@ -48,7 +48,7 @@ export function Hero() {
           "
         />
         <a
-          href="/"
+          href="/a"
           className="
             inline-flex items-center gap-2.5 rounded-full bg-blue-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg ring-1 shadow-neutral-900/20 ring-black/10 transition-transform
             hover:scale-[1.02] active:scale-[0.99] sm:px-7 sm:py-4 sm:text-base

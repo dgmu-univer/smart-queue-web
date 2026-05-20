@@ -45,7 +45,7 @@ export default function SlotSettingsForm({ initialData }: { initialData: SlotSet
     values: initialData,
   });
 
-  const onUpdate: SubmitHandler<SlotSettingsFormProps> = (data) => {
+  const handleUpdate: SubmitHandler<SlotSettingsFormProps> = (data) => {
     startTransition(async () => {
       const result = await updateSlotSettingsActions(data);
       if (result.success) {
@@ -64,7 +64,12 @@ export default function SlotSettingsForm({ initialData }: { initialData: SlotSet
       <CardHeader>
         <CardTitle>Настройки слота</CardTitle>
       </CardHeader>
-      <form onSubmit={form.handleSubmit(onUpdate)} className="flex size-full flex-col gap-6">
+      <form
+        onSubmit={(e) => {
+          void form.handleSubmit(handleUpdate)(e);
+        }}
+        className="flex size-full flex-col gap-6"
+      >
         <CardContent>
           <FieldGroup className="flex flex-col md:flex-row">
             <Controller

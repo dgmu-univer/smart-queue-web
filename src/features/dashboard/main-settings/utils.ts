@@ -3,7 +3,7 @@ import { type MainSettingsFormProps } from './main-settings-form';
 import { type LunchObject, type MainSettings } from './types';
 
 function defineLunch(lunch: LunchObject): boolean {
-  return !(lunch.end_time && lunch.start_time);
+  return lunch.end_time === '' && lunch.start_time === '';
 }
 
 export function defineInitData(initialData?: MainSettings): MainSettingsFormProps | undefined {
@@ -27,12 +27,10 @@ export function defineUpdatePayload(formData: MainSettingsFormProps): MainSettin
       end_date: dateAsApiString(formData.work_date.end_date),
       start_date: dateAsApiString(formData.work_date.start_date),
     },
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
     lunch: formData.lunchOff
       ? {
-          end_time: null,
-          start_time: null,
+          end_time: '',
+          start_time: '',
         }
       : {
           end_time: formData.lunch.end_time ?? '',

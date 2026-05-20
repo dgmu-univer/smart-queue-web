@@ -1,7 +1,8 @@
+import { Metadata } from 'next';
+
 import DashboardPage from '@/components/dashboard/dashboard-page';
 import DegreeProgramsManager, { type DegreeProgramsItem } from '@/features/dashboard/degree-programs';
 import { apiServer } from '@/lib/api.server';
-import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Уровни образования — Панель управления — ДГМУ',

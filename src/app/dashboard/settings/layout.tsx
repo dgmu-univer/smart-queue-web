@@ -1,8 +1,8 @@
 import { PropsWithChildren } from 'react';
+import { Metadata } from 'next';
 
 import DashboardPage from '@/components/dashboard/dashboard-page';
 import { SettingsTabs } from '@/components/dashboard/settings-tabs';
-import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Панель управления — ДГМУ',

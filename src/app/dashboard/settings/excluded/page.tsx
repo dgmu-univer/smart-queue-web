@@ -1,6 +1,7 @@
-import ExludedSlotsManager, { ExcludeSlotItem } from '@/features/dashboard/excluded';
-import { apiServer } from '@/lib/api.server';
 import { Metadata } from 'next';
+
+import ExludedSlotsManager, { type ExcludeSlotItem } from '@/features/dashboard/excluded';
+import { apiServer } from '@/lib/api.server';
 
 export const metadata: Metadata = {
   title: 'Исключенные слоты — Панель управления — ДГМУ',
