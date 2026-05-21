@@ -4,7 +4,7 @@ import { AppIcon } from '@/components/app-icon';
 import { Gradient } from '@/components/gradient';
 import { type DegreeProgramsResponse } from '@/features/appointments';
 import AppointmentsSteps from '@/features/appointments/appointments-steps';
-import { api } from '@/lib/api';
+import { apiServer } from '@/lib/api.server';
 
 export const metadata: Metadata = {
   title: 'Приёмная комиссия ДГМУ → Запись в очередь',
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 async function getPublicDegreePrograms(): Promise<DegreeProgramsResponse> {
-  return await api<DegreeProgramsResponse>('/public/degree-programs');
+  return await apiServer<DegreeProgramsResponse>('/public/degree-programs');
 }
 
 export default async function Page() {
