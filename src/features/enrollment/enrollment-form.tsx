@@ -2,14 +2,21 @@
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
+import { GetDegreeProgramsResponse } from './api/types';
 import StepperIndicator from './components/step-indicator';
-import { DetailsStep, OtpStep, SuccessStep } from './components/steps';
+import BookingStep, { type BookingStepNextHandler } from './steps/booking-step';
+import ConfirmationStep from './steps/confirmation-step';
+import VerificationStep from './steps/verification-step';
 import { Scoped, steps, useStepper } from './stepperize';
-import { DegreeProgramsResponse } from './types';
 
-export default function AppointmentsSteps({ initialData }: { initialData: DegreeProgramsResponse }) {
+export default function EnrollmentForm({ initialData }: { initialData: GetDegreeProgramsResponse }) {
   const stepper = useStepper();
   const currentStep = stepper.state.current.data;
+
+  const onBookingStepNext: BookingStepNextHandler = ({ bookingId }) => {
+    console.log(bookingId)
+    void stepper.navigation.next();
+  };
   return (
     <Card className="w-full max-w-xl overflow-hidden rounded-2xl! border-0! bg-white shadow-xl before:hidden before:content-none after:hidden after:content-none">
       <Scoped>
@@ -18,9 +25,9 @@ export default function AppointmentsSteps({ initialData }: { initialData: Degree
         </CardHeader>
         <CardContent className="px-2 pt-4 pb-6 sm:px-12 sm:pt-6 sm:pb-16">
           {stepper.flow.switch({
-            details: () => <DetailsStep stepper={stepper} initialData={initialData} />,
-            otp: () => <OtpStep stepper={stepper} />,
-            success: () => <SuccessStep stepper={stepper} />,
+            booking: () => <BookingStep onNext={onBookingStepNext} initialData={initialData} />,
+            verification: () => <VerificationStep stepper={stepper} />,
+            confirmation: () => <ConfirmationStep stepper={stepper} />,
           })}
         </CardContent>
       </Scoped>

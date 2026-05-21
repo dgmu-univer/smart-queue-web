@@ -2,8 +2,7 @@ import { Metadata } from 'next';
 
 import { AppIcon } from '@/components/app-icon';
 import { Gradient } from '@/components/gradient';
-import { type DegreeProgramsResponse } from '@/features/appointments';
-import AppointmentsSteps from '@/features/appointments/appointments-steps';
+import EnrollmentForm, { type GetDegreeProgramsResponse } from '@/features/enrollment';
 import { api } from '@/lib/api';
 
 export const metadata: Metadata = {
@@ -11,11 +10,8 @@ export const metadata: Metadata = {
   description: 'Приёмная комиссия ДГМУ заботится о вашем времени. Выберите удобную дату — мы всё организуем',
 };
 
-// Не пререндерить — данные идут с внешнего API (недоступен на этапе билда)
-export const dynamic = 'force-dynamic';
-
-async function getPublicDegreePrograms(): Promise<DegreeProgramsResponse> {
-  return await api<DegreeProgramsResponse>('/public/degree-programs');
+async function getPublicDegreePrograms(): Promise<GetDegreeProgramsResponse> {
+  return await api<GetDegreeProgramsResponse>('/public/degree-programs');
 }
 
 export default async function Page() {
@@ -60,7 +56,7 @@ export default async function Page() {
 
         {/* Контейнер с формой/шагами */}
         <div className="w-full max-w-xl transition-all duration-300">
-          <AppointmentsSteps initialData={initialData} />
+          <EnrollmentForm initialData={initialData} />
         </div>
       </div>
     </main>

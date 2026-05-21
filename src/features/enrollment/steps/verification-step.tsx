@@ -1,12 +1,12 @@
 'use client';
 
-import { UseStepper } from '../../stepperize';
+import { UseStepper } from '../stepperize';
 
-interface OtpStepProps {
+interface VerificationStepProps {
   stepper: UseStepper
 }
 
-export default function OtpStep({ stepper }: OtpStepProps) {
+export default function VerificationStep({ stepper }: VerificationStepProps) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
   const meta = stepper.metadata.get('id');
