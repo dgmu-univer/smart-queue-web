@@ -1,10 +1,7 @@
-import { Hero } from '@/components/hero';
-import { SiteHeader } from '@/components/site-header';
-import { SocialProof } from '@/components/social-proof';
-
-export default function RootPage() {
+export function Gradient() {
   return (
-    <main className="relative min-h-svh overflow-hidden">
+    <>
+      {/* Gradient background — same vibe as landing/login */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(120%_80%_at_50%_-10%,#fde8ef_0%,#fff5e6_28%,#eef3ff_58%,#ffffff_85%)]"
@@ -30,9 +27,6 @@ export default function RootPage() {
           sm:block
         "
       />
-      <SiteHeader />
-      <Hero />
-      <SocialProof />
-    </main>
+    </>
   );
 }
