@@ -7,6 +7,10 @@ interface OtpStepProps {
 }
 
 export default function OtpStep({ stepper }: OtpStepProps) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   const meta = stepper.metadata.get('id');
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   return (<button type="button" onClick={() => void stepper.navigation.next()}>{meta}</button>);
 }

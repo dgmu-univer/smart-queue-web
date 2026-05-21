@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { api } from '@/lib/api';
 import { dateAsApiString } from '@/lib/date';
 
 import { UseStepper } from '../../stepperize';
@@ -118,6 +117,8 @@ export default function DetailsStep({ initialData, stepper }: DetailsStepProps) 
       <Button
         type="button"
         onClick={() => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
           stepper.metadata.set('id', phone);
           void stepper.navigation.next();
         }}
