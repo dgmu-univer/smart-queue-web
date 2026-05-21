@@ -11,13 +11,12 @@ export const metadata: Metadata = {
   description: 'Приёмная комиссия ДГМУ заботится о вашем времени. Выберите удобную дату — мы всё организуем',
 };
 
-export async function getPublicDegreePrograms(): Promise<DegreeProgramsResponse> {
+async function getPublicDegreePrograms(): Promise<DegreeProgramsResponse> {
   return await api<DegreeProgramsResponse>('/public/degree-programs');
 }
 
 export default async function Page() {
   const initialData = await getPublicDegreePrograms();
-  console.log(initialData);
   return (
     <main className="relative flex min-h-svh overflow-x-hidden">
       {/* Градиент снова будет виден, так как мы убрали bg-[#fafafa] с тега main */}
