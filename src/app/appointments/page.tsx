@@ -17,7 +17,7 @@ export async function getPublicDegreePrograms(): Promise<DegreeProgramsResponse>
 
 export default async function Page() {
   const initialData = await getPublicDegreePrograms();
-
+  console.log(initialData);
   return (
     <main className="relative flex min-h-svh overflow-x-hidden">
       {/* Градиент снова будет виден, так как мы убрали bg-[#fafafa] с тега main */}

@@ -8,7 +8,7 @@ export async function createDegreeProgram(formData: AddEducationLevelFormProps):
   const payload: Omit<DegreeProgramsItem, 'id'> = {
     pin: formData.pin,
     name: formData.name,
-    description: formData.description ?? null,
+    description: formData.description ?? '',
   };
   try {
     await apiServer('/degree-programs',

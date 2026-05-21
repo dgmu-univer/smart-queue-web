@@ -36,7 +36,7 @@ export default function DetailsStep({ initialData, stepper }: DetailsStepProps) 
     const getSlots = async (id: string, date: Date) => {
       try {
         setIsLoading(true);
-        const response = await fetch(`http://192.168.1.11:8080/api/public/slots?booked=false&degreeId=${id}&date=${dateAsApiString(date)}`);
+        const response = await fetch(`https://price05.ru/backend/api/public/slots?booked=false&degreeId=${id}&date=${dateAsApiString(date)}`);
         const data = await response.json() as { slots: string[] };
         setAllSlots(data.slots);
       } catch (error) {
