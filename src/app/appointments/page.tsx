@@ -4,15 +4,18 @@ import { AppIcon } from '@/components/app-icon';
 import { Gradient } from '@/components/gradient';
 import { type DegreeProgramsResponse } from '@/features/appointments';
 import AppointmentsSteps from '@/features/appointments/appointments-steps';
-import { apiServer } from '@/lib/api.server';
+import { api } from '@/lib/api';
 
 export const metadata: Metadata = {
   title: 'Приёмная комиссия ДГМУ → Запись в очередь',
   description: 'Приёмная комиссия ДГМУ заботится о вашем времени. Выберите удобную дату — мы всё организуем',
 };
 
+// Не пререндерить — данные идут с внешнего API (недоступен на этапе билда)
+export const dynamic = 'force-dynamic';
+
 async function getPublicDegreePrograms(): Promise<DegreeProgramsResponse> {
-  return await apiServer<DegreeProgramsResponse>('/public/degree-programs');
+  return await api<DegreeProgramsResponse>('/public/degree-programs');
 }
 
 export default async function Page() {
