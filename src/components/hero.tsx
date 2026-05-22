@@ -55,7 +55,7 @@ export function Hero() {
           "
         >
           <CalendarCheck className="size-5" aria-hidden="true" />
-          <span>Записаться в очередь</span>
+          <span>Записаться на приём</span>
         </a>
         <p className="text-muted-foreground mt-3 text-xs sm:text-sm">Доступно для всех категорий абитуриентов</p>
       </div>

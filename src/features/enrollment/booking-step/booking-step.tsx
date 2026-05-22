@@ -5,6 +5,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import { AlertCircleIcon } from 'lucide-react';
+import { toast } from 'sonner';
 
 import {
   Alert,
@@ -23,7 +24,6 @@ import { GetDegreeProgramsResponse } from '../api/types';
 import { useDateDisabled } from './hooks/use-disabled-date';
 import { useFreeSlots } from './hooks/use-free-slot';
 import { PhoneInputField } from './phone-input';
-import { AlertError } from './reducer';
 import { type BookingFormValues, bookingSchema } from './schema';
 
 interface EnrollmentBookingProps {
@@ -35,7 +35,6 @@ export interface BookingStepMeta { bookingId: number, phone: string }
 export type BookingStepNextHandler = ({ bookingId, phone }: BookingStepMeta) => void;
 
 export default function BookingStep({ initialData, onNext }: EnrollmentBookingProps) {
-  const [bookingError, setBookingError] = useState<AlertError | null>(null);
   const [isBookingLoading, setIsBookingLoading] = useState(false);
   const {
     control,
@@ -66,10 +65,8 @@ export default function BookingStep({ initialData, onNext }: EnrollmentBookingPr
       onNext({ bookingId, phone: data.phone });
     } catch (error) {
       const { message } = extractApiError(error);
-      setBookingError({
-        title: 'Не удалось забронировать',
+      toast.error('Не удалось забронировать', {
         description: message,
-        variant: 'destructive',
       });
       console.error(error);
     } finally {
@@ -77,7 +74,7 @@ export default function BookingStep({ initialData, onNext }: EnrollmentBookingPr
     }
   };
 
-  const error = slotError ?? bookingError;
+  const error = slotError;
   const isSubmitDisabled = !!error;
   const isSubmitLoading = isSlotLoading || isBookingLoading;
 
