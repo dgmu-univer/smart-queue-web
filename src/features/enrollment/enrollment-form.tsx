@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
-import { GetDegreeProgramsResponse } from './api/types';
+import { AppointmentVerifyResponse, GetDegreeProgramsResponse } from './api/types';
 import BookingStep, { type BookingStepMeta, type BookingStepNextHandler } from './booking-step/booking-step';
 import ConfirmationStep from './confirmation-step/confirmation-step';
 import VerificationStep, { type VerificationStepNextHandler } from './verification-step/verification-step';
@@ -19,12 +19,16 @@ export default function EnrollmentForm({ initialData }: { initialData: GetDegree
   };
 
   const onVerificationStepNext: VerificationStepNextHandler = (confirmation) => {
-    stepper.metadata.set('confirmation', { confirmation });
+    stepper.metadata.set('confirmation', confirmation);
     void stepper.navigation.next();
   };
 
   const onVerificationStepBack = () => {
     void stepper.navigation.prev();
+  };
+
+  const onConfirmationStepReset = () => {
+    stepper.navigation.reset();
   };
   return (
     <Card className="w-full max-w-xl overflow-hidden rounded-2xl! border-0! bg-white shadow-xl before:hidden before:content-none after:hidden after:content-none">
@@ -42,7 +46,12 @@ export default function EnrollmentForm({ initialData }: { initialData: GetDegree
                 onBack={onVerificationStepBack}
               />
             ),
-            confirmation: () => <ConfirmationStep stepper={stepper} />,
+            confirmation: () => (
+              <ConfirmationStep
+                onReset={onConfirmationStepReset}
+                meta={stepper.metadata.values.confirmation as AppointmentVerifyResponse}
+              />
+            ),
           })}
         </CardContent>
       </Scoped>

@@ -234,16 +234,6 @@ export default function BookingStep({ initialData, onNext }: EnrollmentBookingPr
       >
         Далее
       </Button>
-      <Button
-        type="button"
-        className="w-full"
-        onClick={(e) => {
-          e.preventDefault();
-          onNext({ bookingId: 1500, phone: '89880000000' });
-        }}
-      >
-        Далее
-      </Button>
     </form>
   );
 }
