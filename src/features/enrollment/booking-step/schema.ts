@@ -7,16 +7,16 @@ export const bookingSchema = z.object({
   degreeId: z.string().min(1, 'Выберите уровень образования'),
 
   phone: z
-    .string()
+    .string({ required_error: 'Введите номер телефона' })
     .min(1, 'Введите номер телефона')
     .refine(
       value => isValidPhoneNumber(value),
-      'Некорректный номер',
+      'Некорректный номер телефона',
     ),
 
   date: z.date({
     required_error: 'Выберите дату',
-  }).optional(),
+  }),
 
   slot: z.string().min(1, 'Выберите время'),
 });

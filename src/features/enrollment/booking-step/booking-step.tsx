@@ -1,19 +1,29 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
+import { useState } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
+import { AlertCircleIcon } from 'lucide-react';
 
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { dateAsApiString } from '@/lib/date';
+import { extractApiError } from '@/lib/extract-api-error';
 
 import { enrollmentApi } from '../api/enrollment-api';
 import { GetDegreeProgramsResponse } from '../api/types';
-import { PhoneInputField } from '../components/phone-input';
+import { useDateDisabled } from './hooks/use-disabled-date';
+import { useFreeSlots } from './hooks/use-free-slot';
+import { PhoneInputField } from './phone-input';
+import { AlertError } from './reducer';
 import { type BookingFormValues, bookingSchema } from './schema';
 
 interface EnrollmentBookingProps {
@@ -25,20 +35,14 @@ export interface BookingStepNextHandlerProps { bookingId: number }
 export type BookingStepNextHandler = ({ bookingId }: BookingStepNextHandlerProps) => void;
 
 export default function BookingStep({ initialData, onNext }: EnrollmentBookingProps) {
-  const [slots, setSlots] = useState<string[]>([]);
-  const [loadingSlots, setLoadingSlots]
-    = useState(false);
-
-  const [slotsLoaded, setSlotsLoaded]
-    = useState(false);
-
+  const [bookingError, setBookingError] = useState<AlertError | null>(null);
+  const [isBookingLoading, setIsBookingLoading] = useState(false);
   const {
     control,
     handleSubmit,
     setValue,
   } = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
-
     defaultValues: {
       degreeId: '',
       phone: '',
@@ -46,70 +50,36 @@ export default function BookingStep({ initialData, onNext }: EnrollmentBookingPr
       date: undefined,
     },
   });
+  const { slots, isSlotDisabled, isSlotLoading, slotError } = useFreeSlots(control, setValue);
+  const disabledMatcher = useDateDisabled(initialData.periodSettings);
 
-  const degreeId = useWatch({
-    control,
-    name: 'degreeId',
-  });
-
-  const selectedDate = useWatch({
-    control,
-    name: 'date',
-  });
-
-  const startDate = useMemo(
-    () =>
-      new Date(initialData.periodSettings.start_date),
-    [initialData.periodSettings.start_date],
-  );
-
-  const endDate = useMemo(
-    () =>
-      new Date(initialData.periodSettings.end_date),
-    [initialData.periodSettings.end_date],
-  );
-
-  const disabledMatcher = (date: Date) => {
-    return date < startDate || date > endDate;
-  };
-
-  useEffect(() => {
-    async function fetchSlots() {
-      if (!degreeId || !selectedDate) {
-        setSlots([]);
-        setSlotsLoaded(false);
-
-        return;
-      }
-
-      try {
-        setLoadingSlots(true);
-        setValue('slot', '');
-
-        const freeSlots = await enrollmentApi.getFreeSlot({
-          date: dateAsApiString(selectedDate),
-          degreeId,
-        });
-
-        setSlots(freeSlots.slots);
-        setSlotsLoaded(true);
-      } catch (error) {
-        console.error(error);
-        setSlots([]);
-        setSlotsLoaded(true);
-      } finally {
-        setLoadingSlots(false);
-      }
+  // TODO доработать ошибки
+  const handleBooking: SubmitHandler<BookingFormValues> = async (data) => {
+    try {
+      setIsBookingLoading(true);
+      const bookingId = await enrollmentApi.appointments({
+        degreeId: Number(data.degreeId),
+        date: dateAsApiString(data.date),
+        time: data.slot,
+        phone: data.phone,
+      });
+      onNext({ bookingId });
+    } catch (error) {
+      const { message } = extractApiError(error);
+      setBookingError({
+        title: 'Не удалось забронировать',
+        description: message,
+        variant: 'destructive',
+      });
+      console.error(error);
+    } finally {
+      setIsBookingLoading(false);
     }
-
-    void fetchSlots();
-  }, [degreeId, selectedDate, setValue]);
-
-  const handleBooking: SubmitHandler<BookingFormValues> = () => {
-    onNext({
-      bookingId: 1,
-    });
   };
+
+  const error = slotError ?? bookingError;
+  const isSubmitDisabled = !!error;
+  const isSubmitLoading = isSlotLoading || isBookingLoading;
 
   return (
     <form
@@ -123,13 +93,14 @@ export default function BookingStep({ initialData, onNext }: EnrollmentBookingPr
         control={control}
         name="degreeId"
         render={({ field, fieldState }) => (
-          <Field>
+          <Field data-invalid={fieldState.invalid}>
             <FieldLabel htmlFor="degreeId">Уровень образования</FieldLabel>
             <Select
+
               value={field.value}
               onValueChange={field.onChange}
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger aria-invalid={fieldState.invalid} className="w-full">
                 <SelectValue placeholder="Выберите уровень" />
               </SelectTrigger>
 
@@ -157,11 +128,12 @@ export default function BookingStep({ initialData, onNext }: EnrollmentBookingPr
         control={control}
         name="phone"
         render={({ field, fieldState }) => (
-          <Field>
+          <Field data-invalid={fieldState.invalid}>
             <FieldLabel htmlFor="phone">Телефон</FieldLabel>
             <PhoneInputField
+              aria-invalid={fieldState.invalid}
               id="phone"
-              international={false}
+              countrySelectProps={{ unicodeFlags: true }}
               defaultCountry="RU"
               value={field.value}
               onChange={field.onChange}
@@ -179,12 +151,14 @@ export default function BookingStep({ initialData, onNext }: EnrollmentBookingPr
           control={control}
           name="date"
           render={({ field, fieldState }) => (
-            <Field>
+            <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="date">Дата</FieldLabel>
               <DatePicker
+                aria-invalid={fieldState.invalid}
                 value={field.value}
                 onChange={field.onChange}
                 calendarProps={{
+                  id: 'date',
                   disabled:
                       disabledMatcher,
                 }}
@@ -199,29 +173,24 @@ export default function BookingStep({ initialData, onNext }: EnrollmentBookingPr
           control={control}
           name="slot"
           render={({ field, fieldState }) => (
-            <Field>
+            <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="slot">Время</FieldLabel>
               <Select
                 value={field.value}
                 onValueChange={field.onChange}
-                disabled={
-                  !degreeId
-                  || !selectedDate
-                  || loadingSlots
-                  || slots.length === 0
-                }
+                disabled={isSlotDisabled}
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger aria-invalid={fieldState.invalid} className="w-full">
                   <SelectValue
                     placeholder={
-                      loadingSlots
+                      isSlotLoading
                         ? 'Загрузка...'
                         : 'Выберите слот'
                     }
                   />
                 </SelectTrigger>
                 <SelectContent>
-                  {loadingSlots
+                  {isSlotLoading
                     ? (
                         <div className="text-muted-foreground flex items-center gap-2 px-3 py-2 text-sm">
                           <Loader2 className="size-4 animate-spin" />
@@ -246,23 +215,22 @@ export default function BookingStep({ initialData, onNext }: EnrollmentBookingPr
         />
       </FieldGroup>
 
-      {/* Нет слотов */}
-      {slotsLoaded
-        && !loadingSlots
-        && selectedDate
-        && degreeId
-        && slots.length === 0 && (
-        <div className="rounded-lg border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-800">
-          На выбранную дату нет свободных слотов.
-          Выберите другую дату.
-        </div>
-      )}
+      {
+        error && (
+          <Alert variant={error.variant} className="max-w-md">
+            <AlertCircleIcon />
+            <AlertTitle>{error.title}</AlertTitle>
+            {error.description && <AlertDescription>{error.description}</AlertDescription>}
+          </Alert>
+        )
+      }
 
       {/* Кнопка */}
       <Button
         type="submit"
         className="w-full"
-        disabled={loadingSlots}
+        disabled={isSubmitDisabled}
+        loading={isSubmitLoading}
       >
         Далее
       </Button>
