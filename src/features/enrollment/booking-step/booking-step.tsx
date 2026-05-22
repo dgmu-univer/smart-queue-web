@@ -31,8 +31,8 @@ interface EnrollmentBookingProps {
   onNext: BookingStepNextHandler
 }
 
-export interface BookingStepNextHandlerProps { bookingId: number }
-export type BookingStepNextHandler = ({ bookingId }: BookingStepNextHandlerProps) => void;
+export interface BookingStepMeta { bookingId: number, phone: string }
+export type BookingStepNextHandler = ({ bookingId, phone }: BookingStepMeta) => void;
 
 export default function BookingStep({ initialData, onNext }: EnrollmentBookingProps) {
   const [bookingError, setBookingError] = useState<AlertError | null>(null);
@@ -63,7 +63,7 @@ export default function BookingStep({ initialData, onNext }: EnrollmentBookingPr
         time: data.slot,
         phone: data.phone,
       });
-      onNext({ bookingId });
+      onNext({ bookingId, phone: data.phone });
     } catch (error) {
       const { message } = extractApiError(error);
       setBookingError({
@@ -228,9 +228,19 @@ export default function BookingStep({ initialData, onNext }: EnrollmentBookingPr
       {/* Кнопка */}
       <Button
         type="submit"
-        className="w-full"
+        className="h-11 w-full flex-1 bg-neutral-950 text-white"
         disabled={isSubmitDisabled}
         loading={isSubmitLoading}
+      >
+        Далее
+      </Button>
+      <Button
+        type="button"
+        className="w-full"
+        onClick={(e) => {
+          e.preventDefault();
+          onNext({ bookingId: 1500, phone: '89880000000' });
+        }}
       >
         Далее
       </Button>

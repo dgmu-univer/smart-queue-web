@@ -15,12 +15,7 @@ export interface AppointmentPayload {
 
 export interface AppointmentVerifyPayload {
   id: number
-  phone: string
-}
-
-export interface AppointmentVerifyPayload {
-  id: number
-  phone: string
+  verificationCode: string
 }
 
 export interface Slot {
