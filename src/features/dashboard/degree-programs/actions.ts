@@ -1,6 +1,7 @@
 'use server';
 
-import { apiServer, extractApiError, ActionPromisifyResult } from '@/lib/api.server';
+import { apiServer, ActionPromisifyResult } from '@/lib/api.server';
+import { extractApiError } from '@/lib/extract-api-error';
 import { type DegreeProgramsItem } from './types';
 import { AddEducationLevelFormProps } from './add-degree-programs';
 

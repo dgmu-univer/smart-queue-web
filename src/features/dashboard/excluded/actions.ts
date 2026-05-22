@@ -1,6 +1,7 @@
 'use server';
 
-import { apiServer, extractApiError, ActionPromisifyResult } from '@/lib/api.server';
+import { apiServer, ActionPromisifyResult } from '@/lib/api.server';
+import { extractApiError } from '@/lib/extract-api-error';
 import { type AddExcludedSlotFormProps } from './add-excluded-slot';
 import { type ExcludeSlotItem } from './types';
 import { API_DATE_FORMAT } from '@/lib/date';

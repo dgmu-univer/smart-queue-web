@@ -1,10 +1,12 @@
 'use server';
 
-import { apiServer, extractApiError, ActionPromisifyResult } from '@/lib/api.server';
+import { apiServer, ActionPromisifyResult } from '@/lib/api.server';
+import { extractApiError } from '@/lib/extract-api-error';
+
 import { MainSettingsFormProps } from './main-settings-form';
 import { defineUpdatePayload } from './utils';
 
-export async function updateMainSettingsActions(formData: MainSettingsFormProps): Promise<ActionPromisifyResult> {
+export async function updateMainSettingsActions(formData: MainSettingsFormProps): ActionPromisifyResult {
   const payload = defineUpdatePayload(formData);
   try {
     await apiServer('/admin-settings/periods', { method: 'PATCH', body: JSON.stringify(payload) });

@@ -10,7 +10,7 @@ interface StepperIndicatorProps {
   steps: Step<string, { title: string, description: string }>[]
 }
 
-export default function StepperIndicator({ currentStepId, steps }: StepperIndicatorProps) {
+export default function EnrollmentStepIndicator({ currentStepId, steps }: StepperIndicatorProps) {
   const currentIndex = steps.findIndex(s => s.id === currentStepId);
 
   return (
