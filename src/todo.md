@@ -1,3 +1,8 @@
-[browser] Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-
 Испрвить везде onCreate onDelete onUpdate
+Убрать Suspense
+
+На странице /logout поменять иконку как в Записи
+
+исправить lunch мы либо отправляем null либо объект заполненный
+
+Excluded падает с ошибком после очистки базы

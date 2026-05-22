@@ -48,14 +48,14 @@ export function Hero() {
           "
         />
         <a
-          href="/"
+          href="/enrollment"
           className="
             inline-flex items-center gap-2.5 rounded-full bg-blue-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg ring-1 shadow-neutral-900/20 ring-black/10 transition-transform
             hover:scale-[1.02] active:scale-[0.99] sm:px-7 sm:py-4 sm:text-base
           "
         >
           <CalendarCheck className="size-5" aria-hidden="true" />
-          <span>Записаться в очередь</span>
+          <span>Записаться на приём</span>
         </a>
         <p className="text-muted-foreground mt-3 text-xs sm:text-sm">Доступно для всех категорий абитуриентов</p>
       </div>

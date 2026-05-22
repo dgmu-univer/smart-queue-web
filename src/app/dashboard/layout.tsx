@@ -1,5 +1,6 @@
-import { DashboardNav } from '@/components/dashboard/dashboard-nav';
 import { Metadata } from 'next';
+
+import { DashboardNav } from '@/components/dashboard/dashboard-nav';
 
 export const metadata: Metadata = {
   title: 'Панель управления — ДГМУ',

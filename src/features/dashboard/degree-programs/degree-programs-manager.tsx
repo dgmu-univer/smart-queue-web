@@ -1,29 +1,28 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import {
+  EmptyTableGradient,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-  EmptyTableGradient
-} from '@/components/ui/table';
+  TableRow } from '@/components/ui/table';
 
 import { removeDegreeProgram } from './actions';
 import AddEducationLevel from './add-degree-programs';
 import { DegreeProgramsItem } from './types';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 
 export default function DegreeProgramsManager({ initailData }: { initailData: DegreeProgramsItem[] }) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  
+
   function handleDelete(id: number) {
     startTransition(async () => {
       const result = await removeDegreeProgram(id);
@@ -40,7 +39,7 @@ export default function DegreeProgramsManager({ initailData }: { initailData: De
   }
 
   const isEmpty = initailData.length === 0;
-  
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -58,17 +57,17 @@ export default function DegreeProgramsManager({ initailData }: { initailData: De
           </TableHeader>
           <TableBody>
             {isEmpty && <EmptyTableGradient colSpan={4} />}
-            { !isEmpty && initailData.map((degree) => (
+            { !isEmpty && initailData.map(degree => (
               <TableRow key={degree.id}>
                 <TableCell data-id={degree.id} className="font-medium">{degree.name}</TableCell>
-                <TableCell className="font-medium whitespace-normal wrap-break-word">{degree.description}</TableCell>
+                <TableCell className="font-medium wrap-break-word whitespace-normal">{degree.description}</TableCell>
                 <TableCell className="font-mono font-bold">{degree.pin}</TableCell>
                 <TableCell className="text-right">
                   <Button
                     variant="ghost"
                     loading={isPending}
                     size="icon"
-                    onClick={() => { void handleDelete(degree.id); }}
+                    onClick={() => { handleDelete(degree.id); }}
                     className="text-destructive hover:text-destructive hover:bg-destructive/10"
                   >
                     <Trash2 className="size-4" />

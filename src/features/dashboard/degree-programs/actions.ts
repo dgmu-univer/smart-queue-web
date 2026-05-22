@@ -1,6 +1,7 @@
 'use server';
 
-import { apiServer, extractApiError, ActionPromisifyResult } from '@/lib/api.server';
+import { apiServer, ActionPromisifyResult } from '@/lib/api.server';
+import { extractApiError } from '@/lib/extract-api-error';
 import { type DegreeProgramsItem } from './types';
 import { AddEducationLevelFormProps } from './add-degree-programs';
 
@@ -8,7 +9,7 @@ export async function createDegreeProgram(formData: AddEducationLevelFormProps):
   const payload: Omit<DegreeProgramsItem, 'id'> = {
     pin: formData.pin,
     name: formData.name,
-    description: formData.description ?? null,
+    description: formData.description ?? '',
   };
   try {
     await apiServer('/degree-programs',

@@ -24,7 +24,7 @@ export const AdminForm = () => {
     resolver: zodResolver(authAdminCredsSchema),
   });
 
-  const onSubmit = async (data: AdminFormData) => {
+  const handleAuth = async (data: AdminFormData) => {
     setLoading(true);
     setServerError(null);
 
@@ -57,7 +57,10 @@ export const AdminForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={(e) => {
+      void handleSubmit(handleAuth)(e);
+    }}
+    >
       {error && <div className="text-red-500">{error}</div>}
       <FieldGroup>
         <Field>

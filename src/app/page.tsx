@@ -5,12 +5,10 @@ import { SocialProof } from '@/components/social-proof';
 export default function RootPage() {
   return (
     <main className="relative min-h-svh overflow-hidden">
-      {/* Gradient background */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(120%_80%_at_50%_-10%,#fde8ef_0%,#fff5e6_28%,#eef3ff_58%,#ffffff_85%)]"
       />
-      {/* Subtle accent blobs for extra depth */}
       <div
         aria-hidden="true"
         className="
@@ -32,7 +30,6 @@ export default function RootPage() {
           sm:block
         "
       />
-
       <SiteHeader />
       <Hero />
       <SocialProof />

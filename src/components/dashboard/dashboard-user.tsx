@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -46,21 +45,10 @@ export function DashboardUser() {
             <div className="flex flex-col">
               <span className="text-sm font-medium">{data?.user.fio}</span>
               <span className="text-muted-foreground text-xs font-normal">
-                {data?.user.role}
+                {data?.user.role === 'ADMIN' ? 'АДМИНИСТРАТОР' : 'ОПЕРАТОР'}
               </span>
             </div>
           </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem disabled>
-              <User className="size-4" />
-              Профиль
-            </DropdownMenuItem>
-            {/* <DropdownMenuItem>
-              <Settings className="size-4" />
-              Settings
-            </DropdownMenuItem> */}
-          </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant="destructive" onClick={() => void signOut()}>
             <LogOut className="size-4" />

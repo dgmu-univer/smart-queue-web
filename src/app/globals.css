@@ -161,3 +161,8 @@
 .animate-shimmer {
   animation: shimmer 1.5s ease-in-out infinite;
 }
+
+/* Перебиваем дефолтный цвет описания во всех Sonner-тостах */
+[data-sonner-toast] [data-description] {
+  color: #262626 !important; /* Цвет text-neutral-800 */
+}

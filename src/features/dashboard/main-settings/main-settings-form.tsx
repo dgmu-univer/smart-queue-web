@@ -23,23 +23,20 @@ import { updateMainSettingsActions } from './actions';
 import { MainSettings } from './types';
 import { defineInitData } from './utils';
 
-// Регулярные выражения для базовой валидации формата
-const timeRegex = /^\d{2}:\d{2}:\d{2}$/;
-
 export const formSchema = z.object({
   work_date: z.object({
     start_date: z.date({ required_error: 'Поле обязательно для заполнения' }),
     end_date: z.date({ required_error: 'Поле обязательно для заполнения' }),
   }),
   work_time: z.object({
-    start_time: z.string().regex(timeRegex, 'Неверный формат времени (ожидается HH:MM)'),
-    end_time: z.string().regex(timeRegex, 'Неверный формат времени (ожидается HH:MM)'),
+    start_time: z.string({ required_error: 'Поле обязательно для заполнения' }),
+    end_time: z.string({ required_error: 'Поле обязательно для заполнения' }),
   }),
   lunchOff: z.boolean(),
   lunch: z.object({
     start_time: z.string().optional(),
     end_time: z.string().optional(),
-  }),
+  }).nullable(),
 });
 
 export type MainSettingsFormProps = z.infer<typeof formSchema>;
@@ -56,7 +53,7 @@ export default function MainSettingsForm({ initialData }: { initialData?: MainSe
     name: 'lunchOff',
   });
 
-  const onUpdate: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
+  const handleUpdate: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
     startTransition(async () => {
       const result = await updateMainSettingsActions(data);
       if (result.success) {
@@ -75,7 +72,7 @@ export default function MainSettingsForm({ initialData }: { initialData?: MainSe
       <CardHeader>
         <CardTitle>Основные настройки</CardTitle>
       </CardHeader>
-      <form className="flex size-full flex-col gap-6" onSubmit={form.handleSubmit(onUpdate)}>
+      <form className="flex size-full flex-col gap-6" onSubmit={e => void form.handleSubmit(handleUpdate)(e)}>
         <CardContent>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <FieldSet>

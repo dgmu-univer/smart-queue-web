@@ -1,6 +1,7 @@
+import { Metadata } from 'next';
+
 import WeekendsCalendar from '@/features/dashboard/weekend';
 import { apiServer } from '@/lib/api.server';
-import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Нерабочные дни — Панель управления — ДГМУ',

@@ -1,10 +1,5 @@
 /**
  * Клиентский fetch-хелпер.
- *
- * Все запросы идут на относительный путь /api/*,
- * который nginx проксирует на backend:8080.
- * Браузер автоматически отправляет куки (credentials: 'include').
- *
  * Используется в Client Components и хуках.
  */
 
@@ -31,9 +26,8 @@ async function handleResponse<T>(res: Response): Promise<T> {
 }
 
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${process.env.EXTERNAL_API_HOST}/api${path}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/backend/api${path}`, {
     ...init,
-    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
