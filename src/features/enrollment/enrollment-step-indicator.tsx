@@ -18,7 +18,7 @@ export default function EnrollmentStepIndicator({ currentStepId, steps }: Steppe
       {steps.map((step, index) => {
         const isActive = index === currentIndex;
         const isComplete = index < currentIndex;
-        const isDone = isComplete || (index === steps.length - 1 && currentStepId === 'success');
+        const isDone = isComplete || (index === steps.length - 1 && currentStepId === 'confirmation');
         const isLast = index === steps.length - 1;
 
         let status = 'Ожидание';

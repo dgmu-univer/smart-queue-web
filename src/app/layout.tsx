@@ -45,7 +45,9 @@ export default function RootLayout({
             </QueryProvider>
           </ThemeProvider>
         </SessionProvider>
-        <Toaster position="top-center" />
+        <Toaster
+          position="top-center"
+        />
       </body>
     </html>
   );
