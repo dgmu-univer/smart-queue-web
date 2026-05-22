@@ -53,3 +53,53 @@ export async function authenticate(
     backendCookies,
   };
 }
+
+
+export async function authenticateOperator(
+  pin: string,
+) {
+  console.log(pin)
+  const response = await fetch(
+    `${process.env.EXTERNAL_API_HOST}/api/operator/login`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        pin
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error('Invalid credentials');
+  }
+
+  const user = (await response.json()) as BackendLoginResponse;
+
+  /**
+   * Extract ALL backend cookies
+   */
+  const rawSetCookie
+    = response.headers.getSetCookie();
+
+  if (rawSetCookie.length === 0) {
+    throw new Error(
+      'No backend cookies received',
+    );
+  }
+
+  /**
+   * SESSION=...
+   * JSESSIONID=...
+   */
+  const backendCookies = rawSetCookie
+    .map(cookie => cookie.split(';')[0])
+    .join('; ');
+
+  return {
+    user,
+    backendCookies,
+  };
+}

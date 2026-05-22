@@ -93,6 +93,7 @@ export default function BookingCalendar() {
           day: 'День',
           week: 'Неделя',
           agenda: 'Список',
+          month: 'Месяц'
         }}
       />
     </div>

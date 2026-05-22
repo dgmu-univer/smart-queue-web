@@ -57,7 +57,10 @@ export const AdminForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={(e) => {
+      void handleSubmit(onSubmit)(e);
+    }}
+    >
       {error && <div className="text-red-500">{error}</div>}
       <FieldGroup>
         <Field>
