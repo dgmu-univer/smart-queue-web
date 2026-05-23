@@ -1,18 +1,23 @@
+// app/calendar/CalendarClient.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
-import { format, getDay, parse, startOfWeek } from 'date-fns';
-import { ru } from 'date-fns/locale/ru'; // 🔥 Импортируем русскую локаль
+import { useSearchParams } from 'next/navigation';
+import {
+  format,
+  getDay,
+  isValid,
+  parse,
+  parseISO,
+  startOfWeek } from 'date-fns';
+import { ru } from 'date-fns/locale';
 
-import { AdmissionSlot, generateTodaySlots } from './generate-data';
-import { OtherModeEventComponent } from './OtherModeEventComponent';
-import { TVDayEventComponent } from './TVEventComponent';
+import { CalendarToolbar } from './components/toolbar';
 
-import './tv-styles.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-// Настраиваем локализатор с русским языком
+// Настройка локализации для date-fns
 const locales = {
   ru: ru,
 };
@@ -20,81 +25,126 @@ const locales = {
 const localizer = dateFnsLocalizer({
   format,
   parse,
-  startOfWeek,
+  startOfWeek: date => startOfWeek(date, { weekStartsOn: 1 }),
   getDay,
   locales,
 });
 
-// Пример данных о слотах
-const myEventsList = [
-  {
-    id: 1,
-    title: 'Слот: Иванов Иван',
-    start: new Date(2026, 4, 25, 10, 0),
-    end: new Date(2026, 4, 25, 10, 30),
-  },
-  {
-    id: 2,
-    title: 'Слот: Петрова Анна',
-    start: new Date(2026, 4, 25, 11, 30),
-    end: new Date(2026, 4, 25, 12, 0),
-  },
-];
+interface CalendarEvent {
+  id: string
+  title: string
+  start: Date
+  end: Date
+  allDay?: boolean
+  description?: string
+}
 
-export default function BookingCalendar() {
-  const [slots, setSlots] = useState<AdmissionSlot[]>([]);
-  const [currentView, setCurrentView] = useState<View>('day');
-  const [currentDate, setCurrentDate] = useState(new Date());
+interface CalendarClientProps {
+  initialEvents: CalendarEvent[]
+  initialDate: Date
+  initialView: 'month' | 'week' | 'work_week' | 'day' | 'agenda'
+}
 
-  // Загружаем слоты при монтировании и каждые 5 минут
+export default function CalendarClient({
+  initialEvents,
+  initialDate,
+  initialView,
+}: CalendarClientProps) {
+  const searchParams = useSearchParams();
+  const [events] = useState(initialEvents);
+  const [currentDate, setCurrentDate] = useState(initialDate);
+  const [currentView, setCurrentView] = useState(initialView);
+
+  // Синхронизация с searchParams
   useEffect(() => {
-    loadSlots();
-    const interval = setInterval(loadSlots, 5 * 60 * 1000);
-    return () => { clearInterval(interval); };
-  }, []);
+    const mode = searchParams.get('mode') as typeof initialView | null;
+    const start = searchParams.get('start');
 
-  const loadSlots = () => {
-    const newSlots = generateTodaySlots();
-    setSlots(newSlots);
+    if (mode && mode !== currentView) {
+      setCurrentView(mode);
+    }
+
+    if (start) {
+      const newDate = parseISO(start);
+      if (isValid(newDate)) {
+        setCurrentDate(newDate);
+      }
+    }
+  }, [searchParams, currentView]);
+
+  // Маппинг режимов для react-big-calendar
+  const calendarView = useMemo(() => {
+    switch (currentView) {
+      case 'week': return 'week';
+      case 'work_week': return 'work_week';
+      case 'day': return 'day';
+      case 'agenda': return 'agenda';
+      default: return 'month';
+    }
+  }, [currentView]);
+
+  // Обработчики (пустые, т.к. управление через тулбар)
+  const handleNavigate = (date: Date) => {
+    // Навигация происходит через тулбар и searchParams
+    // Этот метод можно оставить пустым или добавить аналитику
+    console.log('Navigate requested to:', date);
   };
 
-  const events = slots.map(slot => ({
-    ...slot,
-    title: slot.title,
-  }));
-
-  // Выбираем компонент в зависимости от текущего вида
-  const getEventComponent = () => {
-    return currentView === 'day' ? TVDayEventComponent : OtherModeEventComponent;
+  const handleViewChange = (view: string) => {
+    // Смена представления через тулбар
+    console.log('View change requested to:', view);
   };
 
   return (
-    <div className="h-svh w-svw">
+    <div className="calendar-container">
       <Calendar
         localizer={localizer}
-        events={slots}
-        startAccessor="start"
-        endAccessor="end"
-        defaultView="day"
-        min={new Date(1970, 0, 1, 9, 0)} // Начинаем с 9:00
-        max={new Date(1970, 0, 1, 19, 0)} // Заканчиваем в 18:00
+        events={events}
+        date={currentDate}
+        view={calendarView}
+        onNavigate={handleNavigate}
+        onView={handleViewChange}
         components={{
-          event: getEventComponent(),
+          toolbar: () => (
+            <CalendarToolbar
+              currentDate={currentDate}
+              currentView={currentView}
+            />
+          ),
         }}
-        step={15}
-        timeslots={4}
-        culture="ru" // 🔥 Указываем культуру "ru" для локализации
-        dayLayoutAlgorithm="no-overlap"
-        // onViewChange={(view) => setCurrentView(view as View)}
+        culture="ru"
+        formats={{
+          dateFormat: 'dd',
+          dayFormat: 'dd EEE',
+          weekdayFormat: 'EEEE',
+          monthHeaderFormat: 'MMMM yyyy',
+          dayHeaderFormat: 'd MMMM yyyy',
+          agendaDateFormat: 'dd MMM yyyy',
+          agendaTimeFormat: 'HH:mm',
+          agendaTimeRangeFormat: ({ start, end }, culture, localizer) => {
+            return `${localizer.format(start, 'HH:mm', culture)} — ${localizer.format(end, 'HH:mm', culture)}`;
+          },
+        }}
         messages={{
           today: 'Сегодня',
           previous: 'Назад',
           next: 'Вперед',
-          day: 'День',
+          month: 'Месяц',
           week: 'Неделя',
+          day: 'День',
           agenda: 'Список',
-          month: 'Месяц'
+          date: 'Дата',
+          time: 'Время',
+          event: 'Событие',
+          noEventsInRange: 'Нет событий в выбранном периоде',
+          showMore: total => `+ ещё ${total}`,
         }}
+        style={{ height: 'calc(100vh - 120px)' }}
+        popup
+        selectable
+        step={30}
+        timeslots={2}
+        defaultView="month"
       />
     </div>
   );
