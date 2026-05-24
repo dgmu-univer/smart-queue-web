@@ -11,8 +11,6 @@ import { CalendarEvent } from '@/features/booking-calendar/booking-calendar';
 import { apiServer } from '@/lib/api.server';
 import { authOptions } from '@/lib/auth';
 import { dateAsApiString } from '@/lib/date';
-import { generateAppointments } from '@/lib/generate-appointments';
-
 // app/calendar/page.tsx
 
 interface PageProps {
