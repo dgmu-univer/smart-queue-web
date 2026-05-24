@@ -14,6 +14,7 @@ import {
   subMonths,
   subWeeks } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { signOut } from 'next-auth/react';
 
 type ViewMode = 'month' | 'week' | 'work_week' | 'day' | 'agenda';
 
@@ -158,6 +159,12 @@ export function CalendarToolbar({ currentDate, currentView }: CalendarToolbarPro
           onClick={() => { changeView('agenda'); }}
         >
           Список
+        </button>
+        <button
+          type="button"
+          onClick={() => void signOut()}
+        >
+          Выйти
         </button>
       </span>
     </div>

@@ -54,7 +54,7 @@ export default function CalendarClient({
   const [events] = useState(initialEvents);
   const [currentDate, setCurrentDate] = useState(initialDate);
   const [currentView, setCurrentView] = useState(initialView);
-
+  console.log(initialEvents)
   // Синхронизация с searchParams
   useEffect(() => {
     const mode = searchParams.get('mode') as typeof initialView | null;
@@ -99,7 +99,7 @@ export default function CalendarClient({
     <div className="calendar-container">
       <Calendar
         localizer={localizer}
-        events={events}
+        events={initialEvents}
         date={currentDate}
         view={calendarView}
         onNavigate={handleNavigate}

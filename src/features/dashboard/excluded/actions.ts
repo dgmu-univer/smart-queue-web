@@ -14,7 +14,7 @@ export async function updateExcludedActions(formData: AddExcludedSlotFormProps):
     start_time: formData.startTime,
   };
   try {
-    await apiServer('/admin-settings/excluede-slots',
+    await apiServer('/admin-settings/excluded-slots',
       { method: 'POST', body: JSON.stringify(payload) });
     return { success: true };
   } catch (error) {
@@ -25,7 +25,7 @@ export async function updateExcludedActions(formData: AddExcludedSlotFormProps):
 
 export async function deleteExcludedActions(slotId: number): ActionPromisifyResult {
   try {
-    await apiServer(`/admin-settings/excluede-slots/${slotId.toString()}`,
+    await apiServer(`/admin-settings/excluded-slots/${slotId.toString()}`,
       { method: 'DELETE' });
     return { success: true };
   } catch (error) {

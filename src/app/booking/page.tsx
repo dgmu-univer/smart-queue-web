@@ -11,6 +11,7 @@ import { CalendarEvent } from '@/features/booking-calendar/booking-calendar';
 import { apiServer } from '@/lib/api.server';
 import { authOptions } from '@/lib/auth';
 import { dateAsApiString } from '@/lib/date';
+import { generateAppointments } from '@/lib/generate-appointments';
 
 // app/calendar/page.tsx
 
@@ -26,7 +27,7 @@ const fetchEvents = async ({ start, end }: { start: Date, end: Date }) => {
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {
-    throw new Error('Unauthorized: User not authenticated');
+    throw new Error('Unautho rized: User not authenticated');
   }
 
   // Получаем degreeId из сессии (username)
@@ -42,6 +43,16 @@ const fetchEvents = async ({ start, end }: { start: Date, end: Date }) => {
   return await apiServer<CalendarEvent[]>(`/appointments?from=${fromDate}&to=${toDate}&degreeId=${degreeId}`, {
     method: 'GET',
   });
+  // console.log('Payload', {
+  //   from: fromDate,
+  //   to: toDate,
+  //   degreeId,
+  // })
+  // return await generateAppointments({
+  //   from: fromDate,
+  //   to: toDate,
+  //   degreeId,
+  // });
 };
 
 export default async function CalendarPage({ searchParams }: PageProps) {
@@ -59,19 +70,11 @@ export default async function CalendarPage({ searchParams }: PageProps) {
   // Определяем endDate на основе startDate и режима
   const endDate = getEndDateByMode(startDate, mode);
 
-  console.log({
-    start: startDate,
-    end: endDate,
-    mode,
-  });
   // Получаем данные с бэкенда
   const events = await fetchEvents({
     start: startDate,
     end: endDate,
   });
-
-  console.log(events);
-
   // Передаем в клиентский компонент
   return (
     <BookingCalendar
