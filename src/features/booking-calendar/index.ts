@@ -1,3 +1,3 @@
-import BookingCalendar from './booking-calendar';
+import CalendarClient from './booking-calendar';
 
-export default BookingCalendar;
+export default CalendarClient;

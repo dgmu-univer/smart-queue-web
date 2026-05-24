@@ -85,7 +85,7 @@ export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Import RBAC helpers lazily to keep edge bundle small
-  const { isPublicRoute } = await import('./lib/auth/permissions');
+  const { isPublicRoute, canAccess } = await import('./lib/auth/permissions');
 
   // 1) Allow public routes
   if (isPublicRoute(pathname)) {
@@ -99,14 +99,28 @@ export async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
+  if (token.user.role === 'OPERATOR') {
+    if (!canAccess(pathname, 'OPERATOR')) {
+      console.warn(`[PROXY] Operator access blocked → ${pathname}`);
+      return NextResponse.redirect(new URL('/booking', req.url));
+    }
+  }
+
+  if (token.user.role === 'ADMIN') {
+    if (!canAccess(pathname, 'ADMIN')) {
+      console.warn(`[PROXY] Admin access blocked → ${pathname}`);
+      return NextResponse.redirect(new URL('/booking', req.url));
+    }
+  }
+
   return applySecurityProtections();
 }
 
 export const config = {
   matcher: [
     '/dashboard/:path*',
-    '/workspace',
-    '/workspace/:path*',
+    '/booking',
+    '/booking/:path*',
     '/pages',
     '/pages/:path*',
     '/api/:path*',

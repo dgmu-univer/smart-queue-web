@@ -2,7 +2,13 @@ import NextAuth from 'next-auth';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
-import { authenticate } from '@/lib/authenticate';
+import { authenticate, authenticateOperator } from '@/lib/authenticate';
+
+interface Credentials {
+  username: string
+  password: string
+  pin?: string
+}
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -21,9 +27,19 @@ export const authOptions: NextAuthOptions = {
         password: {},
       },
 
-      async authorize(credentials) {
+      async authorize(credentials: Credentials | undefined) {
         if (!credentials) {
           return null;
+        }
+        if (credentials.pin) {
+          const result = await authenticateOperator(credentials.pin);
+          return {
+            id: result.user.username,
+            fio: result.user.fio,
+            username: result.user.username,
+            role: result.user.role,
+            backendCookies: result.backendCookies,
+          };
         }
 
         const result = await authenticate(
@@ -36,10 +52,9 @@ export const authOptions: NextAuthOptions = {
           fio: result.user.fio,
           username: result.user.username,
           role: result.user.role,
-          backendCookies:
-            result.backendCookies,
+          backendCookies: result.backendCookies,
         };
-      },
+      }
     }),
   ],
   callbacks: {
