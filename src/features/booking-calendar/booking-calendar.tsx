@@ -30,7 +30,7 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-interface CalendarEvent {
+export interface CalendarEvent {
   id: string
   title: string
   start: Date

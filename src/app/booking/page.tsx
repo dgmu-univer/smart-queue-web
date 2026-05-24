@@ -1,3 +1,4 @@
+import { getServerSession } from 'next-auth';
 import {
   addDays,
   endOfMonth,
@@ -6,6 +7,10 @@ import {
   parseISO } from 'date-fns';
 
 import BookingCalendar from '@/features/booking-calendar';
+import { CalendarEvent } from '@/features/booking-calendar/booking-calendar';
+import { apiServer } from '@/lib/api.server';
+import { authOptions } from '@/lib/auth';
+import { dateAsApiString } from '@/lib/date';
 
 // app/calendar/page.tsx
 
@@ -16,6 +21,28 @@ interface PageProps {
     mode?: 'month' | 'week' | 'work_week' | 'day' | 'agenda'
   }>
 }
+
+const fetchEvents = async ({ start, end }: { start: Date, end: Date }) => {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user) {
+    throw new Error('Unauthorized: User not authenticated');
+  }
+
+  // Получаем degreeId из сессии (username)
+  const degreeId = session.user.username;
+
+  if (!degreeId) {
+    throw new Error('DegreeId not found in user session');
+  }
+
+  // Форматируем даты для API
+  const fromDate = dateAsApiString(start);
+  const toDate = dateAsApiString(end);
+  return await apiServer<CalendarEvent[]>(`/appointments?from=${fromDate}&to=${toDate}&degreeId=${degreeId}`, {
+    method: 'GET',
+  });
+};
 
 export default async function CalendarPage({ searchParams }: PageProps) {
   const params = await searchParams;
@@ -36,18 +63,19 @@ export default async function CalendarPage({ searchParams }: PageProps) {
     start: startDate,
     end: endDate,
     mode,
-  })
+  });
   // Получаем данные с бэкенда
-  // const events = await fetchEvents({
-  //   start: startDate,
-  //   end: endDate,
-  //   mode,
-  // });
+  const events = await fetchEvents({
+    start: startDate,
+    end: endDate,
+  });
+
+  console.log(events);
 
   // Передаем в клиентский компонент
   return (
     <BookingCalendar
-      initialEvents={[]}
+      initialEvents={events}
       initialDate={startDate}
       initialView={mode}
     />
