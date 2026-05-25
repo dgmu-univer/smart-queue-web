@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
+import { formatDateRange } from '../lib/format-date-range';
+import { getViewRange } from '../lib/get-view-range';
 import { ViewMode, ViewModeToggleRecord } from '../model/types';
 
 const viewModeToggle: ViewModeToggleRecord[] = [
@@ -17,10 +19,26 @@ const viewModeToggle: ViewModeToggleRecord[] = [
 ];
 
 export function CalendarToolbar() {
-  const [activeView, setActiveView] = useState('month');
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const start = searchParams.get('start') ?? '';
+  const end = searchParams.get('end') ?? '';
+  const mode = searchParams.get('mode') ?? '';
+
+  const replace = (mode: ViewMode, start: string, end: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('mode', mode);
+    params.set('start', start);
+    params.set('end', end);
+    router.replace(`${pathname}?${params.toString()}`);
+  };
 
   const handleViewChange = (view: ViewMode) => {
-    setActiveView(view);
+    const range = getViewRange(view, start);
+    console.log(view)
+    replace(view, range.start, range.end);
   };
 
   return (
@@ -54,7 +72,7 @@ export function CalendarToolbar() {
 
       {/* ЦЕНТР: Диапазон дат */}
       <div className="text-foreground text-sm font-semibold tracking-tight">
-        18 января — 12 марта 2026 г.
+        {formatDateRange(start, end)}
       </div>
 
       {/* ПРАВАЯ ЧАСТЬ: Режимы и Профиль */}
@@ -62,7 +80,7 @@ export function CalendarToolbar() {
         {/* Группа переключателей (Месяц, Неделя, День, Список) */}
         <div className="flex -space-x-px rounded-md shadow-sm">
           {viewModeToggle.map((view) => {
-            const isActive = view.id === activeView;
+            const isActive = view.id === searchParams.get('mode')?.toString();
 
             return (
               <Button
