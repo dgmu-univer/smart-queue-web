@@ -12,6 +12,7 @@ import { ru } from 'date-fns/locale';
 import { useCalendarSettings } from '../context/context';
 import { convertToCalendarEvents, getMinMaxFromWorkTime } from '../lib/calander-tools';
 import { CalendarEvent, ViewMode } from '../model/types';
+import { CustomEventHorizontal } from './custom-event';
 
 // Создаём объект с необходимыми методами для dateFnsLocalizer
 const formats: Formats = {
@@ -22,6 +23,8 @@ const formats: Formats = {
   dayHeaderFormat: 'd MMMM yyyy',
   agendaDateFormat: 'dd MMM yyyy',
   agendaTimeFormat: 'HH:mm',
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   agendaTimeRangeFormat: ({ start, end }: { start: Date, end: Date }, culture: string, localizer: any) => {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
     return `${localizer.format(start, 'HH:mm', culture)} — ${localizer.format(end, 'HH:mm', culture)}`;
@@ -69,7 +72,7 @@ export function AdmissionsCalendar({ initialData, mode, startDate }: AdmissionsC
     if (!initialData) return [];
     return convertToCalendarEvents(initialData);
   }, [initialData]);
-
+  console.log(events);
   return (
     <Calendar
       localizer={localizer}
@@ -79,8 +82,11 @@ export function AdmissionsCalendar({ initialData, mode, startDate }: AdmissionsC
       culture="ru"
       formats={formats}
       toolbar={false}
-      selectable
+      components={{
+        event: props => <CustomEventHorizontal {...props} mode={mode} />,
+      }}
       defaultView="month"
+      dayLayoutAlgorithm="no-overlap"
       {...workTime}
       {...slotConfig}
     />

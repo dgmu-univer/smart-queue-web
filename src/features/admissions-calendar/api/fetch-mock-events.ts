@@ -1,29 +1,29 @@
-import { CalendarEvent } from "../model/types"
+import { CalendarEvent } from '../model/types';
 
 // features/admissions-calendar/api/fetchMockEvents.ts
 interface RawEvent {
   id: number
-  title: string
+  title: string // PIN-код (6 цифр)
   start: string
   end: string
 }
 
-interface FetchEventsParams {
-  start: string // "2026-05-26"
-  end: string // "2026-05-26"
+interface GenerateEventsParams {
+  start: string // "2027-03-01"
+  end: string // "2027-03-07"
 }
 
-// Генерация случайного количества человек (от 3 до 10)
-function getRandomCapacity(): number {
-  return Math.floor(Math.random() * 8) + 3; // 3-10 включительно
+// Генерация случайного PIN-кода (6 цифр)
+function generatePin(): string {
+  return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-// Форматирование числа с ведущим нулём
-function padNumber(num: number): string {
-  return num.toString().padStart(2, '0');
+// Генерация случайного количества записей для слота (от 3 до 10)
+function getRandomRecordsCount(): number {
+  return Math.floor(Math.random() * 8) + 3; // 3-10
 }
 
-export async function fetchMockEvents({ start, end }: FetchEventsParams): Promise<CalendarEvent[]> {
+export async function fetchMockEvents({ start, end }: GenerateEventsParams): Promise<CalendarEvent[]> {
   // Задержка для имитации сети
   await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -34,48 +34,44 @@ export async function fetchMockEvents({ start, end }: FetchEventsParams): Promis
   const events: RawEvent[] = [];
   let id = 1;
 
-  // Настройки рабочего дня
   const WORK_START_HOUR = 9; // 9:00
   const WORK_END_HOUR = 18; // 18:00
   const SLOT_MINUTES = 15; // 15 минут
-  const MIN_CAPACITY = 3;
-  const MAX_CAPACITY = 10;
 
-  // Количество слотов в день: 9 часов * 60 минут / 15 минут = 36 слотов
-  const slotsPerDay = ((WORK_END_HOUR - WORK_START_HOUR) * 60) / SLOT_MINUTES;
+  const slotsPerDay = ((WORK_END_HOUR - WORK_START_HOUR) * 60) / SLOT_MINUTES; // 36 слотов в день
 
   for (let day = 0; day < daysDiff; day++) {
     const currentDate = new Date(startDate);
     currentDate.setDate(startDate.getDate() + day);
+    currentDate.setHours(0, 0, 0, 0);
 
     // Пропускаем выходные (суббота = 6, воскресенье = 0)
     const dayOfWeek = currentDate.getDay();
     if (dayOfWeek === 0 || dayOfWeek === 6) continue;
 
-    // Генерируем слоты для каждого дня
     for (let slotIndex = 0; slotIndex < slotsPerDay; slotIndex++) {
       const totalMinutesFromStart = slotIndex * SLOT_MINUTES;
       const hour = WORK_START_HOUR + Math.floor(totalMinutesFromStart / 60);
       const minute = totalMinutesFromStart % 60;
 
-      const startTime = new Date(currentDate);
-      startTime.setHours(hour, minute, 0, 0);
+      const slotStart = new Date(currentDate);
+      slotStart.setHours(hour, minute, 0, 0);
 
-      const endTime = new Date(startTime);
-      endTime.setMinutes(endTime.getMinutes() + SLOT_MINUTES);
+      const slotEnd = new Date(slotStart);
+      slotEnd.setMinutes(slotEnd.getMinutes() + SLOT_MINUTES);
 
-      // Генерируем количество человек для этого слота
-      const capacity = getRandomCapacity();
+      // Генерируем случайное количество записей для этого слота (3-10)
+      const recordsCount = getRandomRecordsCount();
 
-      // Формируем заголовок: "3/10" или "7/10"
-      const title = `${capacity}/${MAX_CAPACITY}`;
-
-      events.push({
-        id: id++,
-        title,
-        start: startTime.toISOString(),
-        end: endTime.toISOString(),
-      });
+      // Создаём отдельную запись для каждого человека
+      for (let i = 0; i < recordsCount; i++) {
+        events.push({
+          id: id++,
+          title: generatePin(),
+          start: slotStart.toISOString(),
+          end: slotEnd.toISOString(),
+        });
+      }
     }
   }
 

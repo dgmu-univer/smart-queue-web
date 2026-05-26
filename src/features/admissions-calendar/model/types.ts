@@ -19,15 +19,23 @@ export interface CalendarSettingsContextType {
 }
 
 export interface CalendarEvent {
-  id: string
+  id: number
+  title: string
+  start: string // yyyy-MM-dd
+  end: string // yyyy-MM-dd
+}
+
+export interface ConvertedEvent {
+  id: number
   title: string
   start: Date
   end: Date
 }
 
-export interface ConvertedEvent {
+export interface GroupedCalendarEvent {
   id: string
-  title: string
   start: Date
   end: Date
+  pins: string[]
+  total: number
 }

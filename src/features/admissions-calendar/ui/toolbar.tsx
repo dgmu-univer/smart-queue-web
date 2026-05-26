@@ -14,6 +14,7 @@ import { getViewRange } from '../lib/get-view-range';
 import { ViewMode, ViewModeToggleRecord } from '../model/types';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import '../custom-style.css';
 
 const viewModeToggle: ViewModeToggleRecord[] = [
   { id: 'month', label: 'Месяц', isDisabled: false },
