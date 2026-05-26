@@ -1,5 +1,10 @@
 import { AdmissionsCalendar, AdmissionSearchParams, fetchMockEvents } from '@/features/admissions-calendar';
 
+// Отключаем кэширование
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
+
 // Это серверный компонент (чтобы отрабатывал Suspense)
 export async function AdmissionsAsyncCalendar({
   searchParams,

@@ -16,3 +16,38 @@
 .rbc-month-row .rbc-selected {
     background-color: transparent !important;
 }
+
+/* Переопределяем фон события в месяц-режиме */
+.rbc-month-view .rbc-event {
+  background-color: transparent !important;
+}
+
+/* Убираем фон у выделенных событий */
+.rbc-month-view .rbc-event.rbc-selected {
+  background-color: transparent !important;
+}
+
+/* Убираем синий фон у ячеек при выделении */
+.rbc-month-row .rbc-selected,
+.rbc-month-row .rbc-selecting,
+.rbc-day-bg.rbc-selected,
+.rbc-day-bg.rbc-selecting {
+  background-color: transparent !important;
+}
+
+/* Убираем фон у всего календаря при выделении */
+.rbc-selecting {
+  background-color: transparent !important;
+}
+
+/* Убираем возможный фон у контента события */
+.rbc-event-content {
+  background-color: transparent !important;
+}
+
+/* Если синий появляется при нажатии/фокусе */
+.rbc-event:focus,
+.rbc-event:active {
+  outline: none !important;
+  background-color: transparent !important;
+}

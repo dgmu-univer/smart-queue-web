@@ -173,6 +173,14 @@ export function CustomEventHorizontal({ event, mode }: EventProps<GroupedCalenda
         lineHeight: 1.2,
       }}
     >
+      {/* Время */}
+      {mode === 'month' && (
+        <div className="shrink-0 font-mono text-xs font-semibold opacity-90">
+          {formatTime(event.start)}
+          –
+          {formatTime(event.end)}
+        </div>
+      )}
       <span className="font-bold">
         {total}
         /10
