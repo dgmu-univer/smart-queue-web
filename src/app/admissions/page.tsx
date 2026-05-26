@@ -3,12 +3,18 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { format, isMatch } from 'date-fns';
 
-import { CalendarToolbar } from '@/features/admissions-calendar';
+import {
+  AdmissionSearchParams,
+  CalendarSkeletonSpinner,
+  CalendarToolbar,
+  type ViewMode,
+} from '@/features/admissions-calendar';
+
+import { AdmissionsAsyncCalendar } from './async-calendar';
 
 export const metadata: Metadata = {
   title: 'Календарь',
 };
-import { AdmissionSearchParams, type ViewMode } from '@/features/admissions-calendar';
 
 function isValidDateFormat(dateString?: string): boolean {
   if (!dateString) return false;
@@ -31,15 +37,25 @@ export default async function Page({ searchParams }: { searchParams: Promise<Par
     return redirect(`/admissions?mode=day&start=${today}&end=${today}`);
   }
 
-  return (
-    <Suspense key={params.mode} fallback={<div>Загружаем</div>}>
-      <div className="bg-background flex h-screen w-full flex-col overflow-hidden">
-        <CalendarToolbar />
-        <main className="size-full flex-1 overflow-auto bg-blue-300">
-          тут календарь
-        </main>
-      </div>
-    </Suspense>
+  const requiredParams: AdmissionSearchParams = {
+    mode: typeof mode === 'string' ? mode : 'day',
+    start: start ?? format(new Date(), 'yyyy-MM-dd'),
+    end: end ?? format(new Date(), 'yyyy-MM-dd'),
+  };
 
+  return (
+    <div className="bg-background flex h-screen w-full flex-col overflow-hidden">
+      <CalendarToolbar />
+
+      <main className="size-full flex-1 overflow-auto">
+        <Suspense
+          key={`${requiredParams.mode}-${requiredParams.start}-${requiredParams.end}`}
+          fallback={<CalendarSkeletonSpinner />}
+        >
+          <AdmissionsAsyncCalendar searchParams={requiredParams} />
+        </Suspense>
+      </main>
+
+    </div>
   );
 }

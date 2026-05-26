@@ -3,7 +3,7 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { DashboardUser } from '@/components/dashboard/dashboard-user';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -12,7 +12,8 @@ import { getNavigateRange } from '../lib/get-navigate-rande';
 import { getTodayRange } from '../lib/get-today-range';
 import { getViewRange } from '../lib/get-view-range';
 import { ViewMode, ViewModeToggleRecord } from '../model/types';
-import { DashboardUser } from '@/components/dashboard/dashboard-user';
+
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const viewModeToggle: ViewModeToggleRecord[] = [
   { id: 'month', label: 'Месяц', isDisabled: false },
