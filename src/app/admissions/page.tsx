@@ -1,7 +1,13 @@
 import { Suspense } from 'react';
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { format, isMatch } from 'date-fns';
 
+import { CalendarToolbar } from '@/features/admissions-calendar';
+
+export const metadata: Metadata = {
+  title: 'Календарь',
+};
 import { AdmissionSearchParams, type ViewMode } from '@/features/admissions-calendar';
 
 function isValidDateFormat(dateString?: string): boolean {
@@ -27,8 +33,11 @@ export default async function Page({ searchParams }: { searchParams: Promise<Par
 
   return (
     <Suspense key={params.mode} fallback={<div>Загружаем</div>}>
-      <div className="size-full bg-blue-300">
-        Тут будет календарь
+      <div className="bg-background flex h-screen w-full flex-col overflow-hidden">
+        <CalendarToolbar />
+        <main className="size-full flex-1 overflow-auto bg-blue-300">
+          тут календарь
+        </main>
       </div>
     </Suspense>
 

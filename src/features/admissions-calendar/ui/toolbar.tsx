@@ -8,8 +8,11 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 import { formatDateRange } from '../lib/format-date-range';
+import { getNavigateRange } from '../lib/get-navigate-rande';
+import { getTodayRange } from '../lib/get-today-range';
 import { getViewRange } from '../lib/get-view-range';
 import { ViewMode, ViewModeToggleRecord } from '../model/types';
+import { DashboardUser } from '@/components/dashboard/dashboard-user';
 
 const viewModeToggle: ViewModeToggleRecord[] = [
   { id: 'month', label: 'Месяц', isDisabled: false },
@@ -37,21 +40,36 @@ export function CalendarToolbar() {
 
   const handleViewChange = (view: ViewMode) => {
     const range = getViewRange(view, start);
-    console.log(view)
     replace(view, range.start, range.end);
+  };
+
+  const handleToday = () => {
+    const range = getTodayRange(mode as ViewMode);
+    replace(mode as ViewMode, range.startStr, range.endStr);
+  };
+
+  const handlePrev = () => {
+    const range = getNavigateRange(mode as ViewMode, start, 'prev');
+    replace(mode as ViewMode, range.startStr, range.endStr);
+  };
+
+  const handleNext = () => {
+    const range = getNavigateRange(mode as ViewMode, start, 'next');
+    replace(mode as ViewMode, range.startStr, range.endStr);
   };
 
   return (
     <header className="bg-background flex h-14 items-center justify-between px-4">
       {/* ЛЕВАЯ ЧАСТЬ: Навигация */}
       <div className="flex items-center gap-2">
-        <Button variant="outline" size="sm" className="h-8 px-3 font-medium">
+        <Button variant="outline" onClick={handleToday} size="sm" className="h-8 px-3 font-medium">
           Сегодня
         </Button>
 
         {/* Группа кнопок Назад/Вперед с текстом */}
         <div className="flex -space-x-px rounded-md shadow-sm">
           <Button
+            onClick={handlePrev}
             variant="outline"
             size="sm"
             className="h-8 gap-1 rounded-r-none pr-3 pl-2 font-medium"
@@ -60,6 +78,7 @@ export function CalendarToolbar() {
             Назад
           </Button>
           <Button
+            onClick={handleNext}
             variant="outline"
             size="sm"
             className="h-8 gap-1 rounded-l-none pr-2 pl-3 font-medium"
@@ -110,10 +129,7 @@ export function CalendarToolbar() {
         </div>
 
         {/* Иконка юзера (Отдельно) */}
-        <Avatar className="ring-offset-background size-8 cursor-pointer transition-colors hover:opacity-80">
-          <AvatarImage src="https://github.com" alt="User avatar" />
-          <AvatarFallback>УЗ</AvatarFallback>
-        </Avatar>
+        <DashboardUser />
       </div>
     </header>
   );

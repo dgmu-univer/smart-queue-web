@@ -7,7 +7,7 @@ export const ROLE_PERMISSIONS = {
     '/dashboard/*',
   ],
   OPERATOR: [
-    '/booking',
+    '/admissions',
   ],
 } as const;
 
@@ -17,7 +17,7 @@ export const ROLE_PERMISSIONS = {
 export const ROLE_DEFAULT_REDIRECTS = {
   SUPER_ADMIN: '/dashboard',
   ADMIN: '/dashboard',
-  OPERATOR: '/booking',
+  OPERATOR: '/admissions',
 } as const;
 
 /**

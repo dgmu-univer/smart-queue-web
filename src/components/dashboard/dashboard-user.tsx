@@ -18,15 +18,6 @@ export function DashboardUser() {
   const { data } = useSession();
   return (
     <div className="flex items-center gap-2">
-      <Button
-        variant="ghost"
-        size="icon"
-        className="hidden sm:inline-flex"
-        aria-label="Notifications"
-      >
-        <Bell className="size-4" />
-      </Button>
-
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
