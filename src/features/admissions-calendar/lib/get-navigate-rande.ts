@@ -33,10 +33,8 @@ export function getNavigateRange(
         date = isNext ? addWeeks(date, 1) : subWeeks(date, 1);
         break;
       case 'day':
-        date = isNext ? addDays(date, 1) : subDays(date, 1);
-        break;
       case 'agenda':
-        date = isNext ? addWeeks(date, 1) : subWeeks(date, 1);
+        date = isNext ? addDays(date, 1) : subDays(date, 1);
         break;
     }
   }
@@ -52,12 +50,12 @@ export function getNavigateRange(
       break;
 
     case 'week':
-    case 'agenda':
       start = startOfWeek(date, { weekStartsOn: 1 });
       end = endOfWeek(date, { weekStartsOn: 1 });
       break;
 
     case 'day':
+    case 'agenda':
       start = startOfDay(date);
       end = endOfDay(date);
       break;

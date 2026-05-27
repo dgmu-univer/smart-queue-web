@@ -15,20 +15,9 @@ function getSlotColor(percentage: number): string {
   return '#10b981'; // Зелёный
 }
 
-// Функция для получения градиента с процентом
-function getGradientBackground(percentage: number): string {
-  const color = getSlotColor(percentage);
-  return `linear-gradient(90deg, ${color} ${percentage}%, rgba(255,255,255,0.15) ${percentage}%)`;
-}
-
-// Форматирование времени
-function formatTime(date: Date): string {
-  return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-}
-
 export function CustomEventHorizontal({ event, mode }: EventProps<GroupedCalendarEvent> & { mode: ViewMode }) {
-  const { pins, total, percentage, hasPins } = useMemo(() => {
-    const pinsList = event.pins || [];
+  const { pins, total, percentage } = useMemo(() => {
+    const pinsList = event.pins;
     const totalCount = event.total || 0;
     const maxCapacity = 10;
     const percent = (totalCount / maxCapacity) * 100;
@@ -37,7 +26,6 @@ export function CustomEventHorizontal({ event, mode }: EventProps<GroupedCalenda
       pins: pinsList,
       total: totalCount,
       percentage: percent,
-      hasPins: pinsList.length > 0,
     };
   }, [event]);
 
@@ -64,32 +52,10 @@ export function CustomEventHorizontal({ event, mode }: EventProps<GroupedCalenda
         }}
       >
         {/* Заполненность */}
-        <div className="shrink-0 text-sm font-bold">
-          {total}
-          /10
-        </div>
-
+        <Total total={total} />
         {/* Прогресс-бар */}
-        <div className="h-1 w-12 shrink-0 rounded-full bg-black/20">
-          <div
-            className="h-full rounded-full bg-white/50"
-            style={{ width: `${percentage}%`, background: getGradientBackground(percentage) }}
-          />
-        </div>
-
-        {/* PIN-коды (только для day и agenda) */}
-        {isDetailedMode && hasPins && (
-          <div className="flex min-w-0 flex-1 flex-wrap gap-1">
-            {pins.map((pin, idx) => (
-              <span
-                key={idx}
-                className="shrink-0 rounded-sm border border-black/20 px-1 py-0 font-mono text-[18px]"
-              >
-                {pin}
-              </span>
-            ))}
-          </div>
-        )}
+        <ProgressBar percentage={percentage} />
+        <Pins pins={pins} />
 
         {/* Пустой слот */}
         {isDetailedMode && isEmpty && (
@@ -119,32 +85,10 @@ export function CustomEventHorizontal({ event, mode }: EventProps<GroupedCalenda
         }}
       >
         {/* Заполненность */}
-        <div className="shrink-0 text-xs font-bold">
-          {total}
-          /10
-        </div>
-
+        <Total total={total} />
         {/* Прогресс-бар */}
-        <div className="h-1 w-10 shrink-0 rounded-full bg-black/20">
-          <div
-            className="h-full rounded-full bg-white/50"
-            style={{ width: `${percentage}%`, background: getGradientBackground(percentage) }}
-          />
-        </div>
-
-        {/* PIN-коды */}
-        {hasPins && (
-          <div className="flex min-w-0 flex-1 flex-wrap gap-0.5">
-            {pins.map((pin, idx) => (
-              <span
-                key={idx}
-                className="shrink-0 rounded-sm border border-black/20 px-1 py-0 font-mono text-[12px]"
-              >
-                {pin}
-              </span>
-            ))}
-          </div>
-        )}
+        <ProgressBar percentage={percentage} />
+        <Pins pins={pins} />
 
         {/* Пустой слот */}
         {isEmpty && (
@@ -163,7 +107,6 @@ export function CustomEventHorizontal({ event, mode }: EventProps<GroupedCalenda
         borderRadius: '4px',
         padding: '0 4px',
         color: 'black',
-        width: '100%',
         height: '100%',
         display: 'flex',
         alignItems: 'center',
@@ -173,20 +116,45 @@ export function CustomEventHorizontal({ event, mode }: EventProps<GroupedCalenda
         lineHeight: 1.2,
       }}
     >
-      <span className="font-bold">
-        {total}
-        /10
-      </span>
-      <div className="h-1 w-8 rounded-full bg-black/20">
-        <div
-          className="h-full rounded-full bg-white/50"
-          style={{ width: `${percentage}%`, background: getGradientBackground(percentage) }}
-        />
-      </div>
+      <Total total={total} />
+      <ProgressBar percentage={percentage} />
       <span className="text-[12px]">
         {Math.round(percentage)}
         %
       </span>
+    </div>
+  );
+}
+
+const ProgressBar = ({ percentage }: { percentage: number }) => {
+  return (
+    <div className="h-1 w-8 rounded-full bg-black/20">
+      <div
+        className="h-full rounded-full bg-white/50"
+        style={{ width: `${percentage.toString()}%`, background: getSlotColor(percentage) }}
+      />
+    </div>
+  );
+}
+
+const Total = ({ total }: { total: number }) => {
+  return (
+    <span className="font-bold">
+      {total}
+      /10
+    </span>
+  );
+}
+
+const Pins = ({ pins }: { pins: string[] }) => {
+  if (pins.length === 0) return null;
+  return (
+    <div>
+      {pins.map((pin, index) => (
+        <span key={index} className="text-[10px]">
+          {pin}
+        </span>
+      ))}
     </div>
   );
 }

@@ -16,3 +16,7 @@
 .rbc-month-row .rbc-selected {
     background-color: transparent !important;
 }
+
+.rbc-event-label {
+    min-width: 82px;
+}
