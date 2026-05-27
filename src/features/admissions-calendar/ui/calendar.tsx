@@ -72,7 +72,7 @@ export function AdmissionsCalendar({ initialData, mode, startDate }: AdmissionsC
     if (!initialData) return [];
     return convertToCalendarEvents(initialData);
   }, [initialData]);
-  console.log(events);
+
   return (
     <Calendar
       localizer={localizer}
@@ -86,6 +86,8 @@ export function AdmissionsCalendar({ initialData, mode, startDate }: AdmissionsC
         event: props => <CustomEventHorizontal {...props} mode={mode} />,
       }}
       defaultView="month"
+      selectable
+      popup
       dayLayoutAlgorithm="no-overlap"
       {...workTime}
       {...slotConfig}

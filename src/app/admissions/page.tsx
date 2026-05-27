@@ -3,6 +3,8 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { format, isMatch } from 'date-fns';
 
+export const dynamic = 'force-dynamic';
+
 import {
   AdmissionSearchParams,
   CalendarSkeletonSpinner,

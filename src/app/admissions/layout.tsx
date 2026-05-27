@@ -2,6 +2,8 @@ import { Suspense } from 'react';
 
 import { CalendarSettingsProvider, fetchCalendarConfig } from '@/features/admissions-calendar';
 
+export const dynamic = 'force-dynamic';
+
 export default async function RootLayout({
   children,
 }: {

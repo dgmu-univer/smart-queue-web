@@ -4,14 +4,12 @@ import { WorkTimeObject } from '@/features/dashboard/main-settings';
 
 import { CalendarEvent, GroupedCalendarEvent } from '../model/types';
 
+
 export function convertToCalendarEvents(rawEvents?: CalendarEvent[]): GroupedCalendarEvent[] {
   if (!rawEvents || !Array.isArray(rawEvents)) return [];
-
   const map = new Map<string, GroupedCalendarEvent>();
-
   for (const event of rawEvents) {
     const key = `${event.start}-${event.end}`;
-
     if (!map.has(key)) {
       map.set(key, {
         id: key,
