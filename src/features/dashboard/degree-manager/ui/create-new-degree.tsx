@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import z from 'zod';
 
 import { Button } from '@/components/ui/button';
+import { DatePicker } from '@/components/ui/date-picker';
 import {
   Dialog,
   DialogContent,
@@ -27,19 +28,22 @@ import {
 } from '@/components/ui/input-otp';
 import { Textarea } from '@/components/ui/textarea';
 
-import { createDegreeProgram } from './actions';
+import { createDegree } from '../api/create-degree';
+import { createPayload } from '../lib/create-payload';
 
 export const formSchema = z.object({
   name: z.string({ required_error: 'Поле обязательно для заполнения' }).min(2, 'Имя должно содержать минимум 2 символа'),
   description: z.string().max(500, 'Описание не должно превышать 500 символов').optional(),
+  startDate: z.date({ required_error: 'Поле обязательно для заполнения' }),
+  endDate: z.date({ required_error: 'Поле обязательно для заполнения' }),
   pin: z.string({ required_error: 'Поле обязательно для заполнения' })
     .min(6, 'ПИН-код должен содержать минимум 6 цифр')
     .max(6, 'ПИН-код должен содержать максимум 6 цифр'),
 });
 
-export type AddEducationLevelFormProps = z.infer<typeof formSchema>;
+export type CreateNewDegreeFormProps = z.infer<typeof formSchema>;
 
-export default function AddEducationLevel() {
+export default function CreateNewDegree() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -51,12 +55,24 @@ export default function AddEducationLevel() {
       name: '',
       description: '',
       pin: '',
+      startDate: undefined,
+      endDate: undefined,
     },
   });
 
-  function onCreate(values: z.infer<typeof formSchema>) {
+  useEffect(() => {
+    if (!isOpen) {
+      form.reset();
+    }
+    return () => {
+      form.reset();
+    };
+  }, [form, isOpen]);
+
+  function handleCreate(values: z.infer<typeof formSchema>) {
+    const payload = createPayload(values);
     startTransition(async () => {
-      const result = await createDegreeProgram(values);
+      const result = await createDegree(payload);
       if (result.success) {
         form.reset();
         setIsOpen(false);
@@ -89,7 +105,7 @@ export default function AddEducationLevel() {
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={e => void form.handleSubmit(onCreate)(e)} className="flex flex-col gap-6">
+        <form onSubmit={e => void form.handleSubmit(handleCreate)(e)} className="flex flex-col gap-6">
           <div className="grid gap-4">
             <Controller
               control={form.control}
@@ -109,6 +125,28 @@ export default function AddEducationLevel() {
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="description">Описание</FieldLabel>
                   <Textarea {...field} id="description" placeholder="Введите описание" />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+            <Controller
+              control={form.control}
+              name="startDate"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="startDate">Дата начала</FieldLabel>
+                  <DatePicker {...field} placeholder="Выберите дату" />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+            <Controller
+              control={form.control}
+              name="endDate"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="endDate">Дата окончания</FieldLabel>
+                  <DatePicker {...field} placeholder="Выберите дату" />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}

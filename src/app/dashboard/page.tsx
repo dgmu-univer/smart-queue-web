@@ -9,6 +9,7 @@ import {
 
 import DashboardPage from '@/components/dashboard/dashboard-page';
 import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import DegreeManager, { fetchAllDegree } from '@/features/dashboard/degree-manager';
 
 export const metadata: Metadata = {
   title: 'Статистика — Панель управления — ДГМУ',
@@ -53,7 +54,9 @@ const stats = [
   },
 ];
 
-export default function Page() {
+export default async function Page() {
+  const initialDegree = await fetchAllDegree();
+
   return (
     <DashboardPage title="Статистика">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
@@ -74,6 +77,7 @@ export default function Page() {
           </Card>
         ))}
       </div>
+      <DegreeManager initialDegrees={initialDegree} />
     </DashboardPage>
   );
 }

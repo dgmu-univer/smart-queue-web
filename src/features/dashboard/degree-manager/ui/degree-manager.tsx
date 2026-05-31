@@ -2,7 +2,7 @@
 
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { Trash2 } from 'lucide-react';
+import { Settings, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -15,17 +15,17 @@ import {
   TableHeader,
   TableRow } from '@/components/ui/table';
 
-import { removeDegreeProgram } from './actions';
-import AddEducationLevel from './add-degree-programs';
-import { DegreeProgramsItem } from './types';
+import { deleteDegree } from '../api/delete-degree';
+import { GetDegreeResponseItem } from '../api/types';
+import CreateNewDegree from './create-new-degree';
 
-export default function DegreeProgramsManager({ initailData }: { initailData: DegreeProgramsItem[] }) {
+export const DegreeManager = ({ initialDegrees }: { initialDegrees: GetDegreeResponseItem[] }) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-
+  
   function handleDelete(id: number) {
     startTransition(async () => {
-      const result = await removeDegreeProgram(id);
+      const result = await deleteDegree(id);
       if (result.success) {
         router.refresh();
         toast.success('Уровень образования успешно удален!');
@@ -38,12 +38,11 @@ export default function DegreeProgramsManager({ initailData }: { initailData: De
     });
   }
 
-  const isEmpty = initailData.length === 0;
-
+  const isEmpty = initialDegrees.length === 0;
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <AddEducationLevel />
+        <CreateNewDegree />
       </div>
       <div className="rounded-md border">
         <Table>
@@ -57,12 +56,19 @@ export default function DegreeProgramsManager({ initailData }: { initailData: De
           </TableHeader>
           <TableBody>
             {isEmpty && <EmptyTableGradient colSpan={4} />}
-            { !isEmpty && initailData.map(degree => (
+            { !isEmpty && initialDegrees.map(degree => (
               <TableRow key={degree.id}>
                 <TableCell data-id={degree.id} className="font-medium">{degree.name}</TableCell>
                 <TableCell className="font-medium wrap-break-word whitespace-normal">{degree.description}</TableCell>
                 <TableCell className="font-mono font-bold">{degree.pin}</TableCell>
                 <TableCell className="text-right">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    // onClick={() => { handleDelete(degree.id); }}
+                  >
+                    <Settings className="size-4" />
+                  </Button>
                   <Button
                     variant="ghost"
                     loading={isPending}
@@ -80,4 +86,4 @@ export default function DegreeProgramsManager({ initailData }: { initailData: De
       </div>
     </div>
   );
-}
+};
