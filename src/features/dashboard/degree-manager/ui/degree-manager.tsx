@@ -1,6 +1,7 @@
 'use client';
 
 import { useTransition } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Settings, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -22,7 +23,7 @@ import CreateNewDegree from './create-new-degree';
 export const DegreeManager = ({ initialDegrees }: { initialDegrees: GetDegreeResponseItem[] }) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  
+
   function handleDelete(id: number) {
     startTransition(async () => {
       const result = await deleteDegree(id);
@@ -62,13 +63,11 @@ export const DegreeManager = ({ initialDegrees }: { initialDegrees: GetDegreeRes
                 <TableCell className="font-medium wrap-break-word whitespace-normal">{degree.description}</TableCell>
                 <TableCell className="font-mono font-bold">{degree.pin}</TableCell>
                 <TableCell className="text-right">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    // onClick={() => { handleDelete(degree.id); }}
-                  >
-                    <Settings className="size-4" />
-                  </Button>
+                  <Link href={`/dashboard/degree-manager/degree/${degree.id.toString()}/main`}>
+                    <>
+                      <Settings className="mr-2 size-4" />
+                    </>
+                  </Link>
                   <Button
                     variant="ghost"
                     loading={isPending}

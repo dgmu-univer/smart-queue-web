@@ -31,7 +31,7 @@ export function DashboardNav() {
             <span className="text-sm font-semibold tracking-tight">ДГМУ</span>
           </Link>
 
-          <NavigationMenu className="hidden md:flex">
+          {/* <NavigationMenu className="hidden md:flex">
             <NavigationMenuList>
               {navLinks.map(link => (
                 <NavigationMenuItem key={link.href}>
@@ -44,7 +44,7 @@ export function DashboardNav() {
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>
-          </NavigationMenu>
+          </NavigationMenu> */}
         </div>
 
         <DashboardUser />
