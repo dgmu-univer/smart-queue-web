@@ -1,0 +1,138 @@
+'use client';
+
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+import { DashboardUser } from '@/components/dashboard/dashboard-user';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+import { formatDateRange } from '../lib/format-date-range';
+import { getNavigateRange } from '../lib/get-navigate-rande';
+import { getTodayRange } from '../lib/get-today-range';
+import { getViewRange } from '../lib/get-view-range';
+import { ViewMode, ViewModeToggleRecord } from '../model/types';
+
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import '../custom-style.css';
+
+const viewModeToggle: ViewModeToggleRecord[] = [
+  // { id: 'month', label: 'Месяц', isDisabled: false },
+  { id: 'week', label: 'Неделя', isDisabled: false },
+  { id: 'day', label: 'День', isDisabled: false },
+  { id: 'agenda', label: 'Список', isDisabled: false },
+];
+
+export function CalendarToolbar() {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const start = searchParams.get('start') ?? '';
+  const end = searchParams.get('end') ?? '';
+  const mode = searchParams.get('mode') ?? '';
+
+  const replace = (mode: ViewMode, start: string, end: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('mode', mode);
+    params.set('start', start);
+    params.set('end', end);
+    router.replace(`${pathname}?${params.toString()}`);
+  };
+
+  const handleViewChange = (view: ViewMode) => {
+    const range = getViewRange(view, start);
+    replace(view, range.start, range.end);
+  };
+
+  const handleToday = () => {
+    const range = getTodayRange(mode as ViewMode);
+    replace(mode as ViewMode, range.startStr, range.endStr);
+  };
+
+  const handlePrev = () => {
+    const range = getNavigateRange(mode as ViewMode, start, 'prev');
+    replace(mode as ViewMode, range.startStr, range.endStr);
+  };
+
+  const handleNext = () => {
+    const range = getNavigateRange(mode as ViewMode, start, 'next');
+    replace(mode as ViewMode, range.startStr, range.endStr);
+  };
+
+  return (
+    <header className="bg-background flex h-14 items-center justify-between px-4">
+      {/* ЛЕВАЯ ЧАСТЬ: Навигация */}
+      <div className="flex items-center gap-2">
+        <Button variant="outline" onClick={handleToday} size="sm" className="h-8 px-3 font-medium">
+          Сегодня
+        </Button>
+
+        {/* Группа кнопок Назад/Вперед с текстом */}
+        <div className="flex -space-x-px rounded-md shadow-sm">
+          <Button
+            onClick={handlePrev}
+            variant="outline"
+            size="sm"
+            className="h-8 gap-1 rounded-r-none pr-3 pl-2 font-medium"
+          >
+            <ChevronLeft className="size-4" />
+            Назад
+          </Button>
+          <Button
+            onClick={handleNext}
+            variant="outline"
+            size="sm"
+            className="h-8 gap-1 rounded-l-none pr-2 pl-3 font-medium"
+          >
+            Вперед
+            <ChevronRight className="size-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* ЦЕНТР: Диапазон дат */}
+      <div className="text-foreground text-sm font-semibold tracking-tight">
+        {formatDateRange(start, end)}
+      </div>
+
+      {/* ПРАВАЯ ЧАСТЬ: Режимы и Профиль */}
+      <div className="flex items-center gap-4">
+        {/* Группа переключателей (Месяц, Неделя, День, Список) */}
+        <div className="flex -space-x-px rounded-md shadow-sm">
+          {viewModeToggle.map((view) => {
+            const isActive = view.id === searchParams.get('mode')?.toString();
+
+            return (
+              <Button
+                key={view.id}
+                type="button"
+                disabled={view.isDisabled}
+                // Меняем вариант в зависимости от активности
+                variant={isActive ? 'secondary' : 'outline'}
+                size="sm"
+                onClick={() => { handleViewChange(view.id); }}
+                className={cn(
+                  'h-8 rounded-none px-3 font-medium transition-colors focus-visible:z-20',
+                  // Скругление только внешних краев группы
+                  'first:rounded-l-md last:rounded-r-md',
+                  // Прячем двойные бордеры, накладывая кнопки друг на друга
+                  'not-first:-ml-px',
+                  // Специфичные стили для нажатой кнопки:
+                  // Включаем z-10, чтобы её границы были четко видны поверх остальных кнопок,
+                  // и отключаем клики
+                  isActive && 'pointer-events-none z-10 border-black bg-black text-white hover:bg-black/90',
+                )}
+              >
+                {view.label}
+              </Button>
+            );
+          })}
+        </div>
+
+        {/* Иконка юзера (Отдельно) */}
+        <DashboardUser />
+      </div>
+    </header>
+  );
+}

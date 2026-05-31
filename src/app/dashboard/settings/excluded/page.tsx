@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 async function getExcludedInitData(): Promise<ExcludeSlotItem[]> {
-  return await apiServer('/admin-settings/excluede-slots',
+  return await apiServer('/admin-settings/excluded-slots',
     { method: 'GET', cache: 'no-store' });
 }
 
