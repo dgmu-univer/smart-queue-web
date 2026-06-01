@@ -32,7 +32,9 @@ const tabs = [
   },
 ];
 
-export function SettingsTabs({ degreeId }: WithDegreeId) {
+type ComponentProps = WithDegreeId<unknown>
+
+export function SettingsTabs({ degreeId }: ComponentProps) {
   const pathname = usePathname();
   const router = useRouter();
 

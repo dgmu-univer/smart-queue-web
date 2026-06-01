@@ -26,7 +26,7 @@ import { createExcludedSlot } from '../api/create-excluded-slot';
 import { CreateExcludedSlotPayload } from '../api/types';
 import { type CreateExcludedSlotFormProps, createExcludedSlotSchema } from '../lib/schema';
 
-export function CreateExcludedSlot({ degreeId }: WithDegreeId) {
+export function CreateExcludedSlot({ degreeId }: WithDegreeId<unknown>) {
   const [isOpen, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 

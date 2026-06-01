@@ -1,5 +1,5 @@
-import { MainSettings } from '@/features/dashboard/main-settings';
-import { SlotSettings } from '@/features/dashboard/slot-settings';
+import { PeriodSetting } from '@/features/dashboard/api.types';
+import { SlotSettings } from '@/features/dashboard/degree-slot-settings/lib/schema';
 
 export type ViewMode = 'month' | 'week' | 'day' | 'agenda';
 export interface ViewModeToggleRecord { id: ViewMode, label: string, isDisabled: boolean }
@@ -11,7 +11,7 @@ export interface AdmissionSearchParams {
 }
 
 export interface CalendarSettingsContextType {
-  mainSettings: MainSettings | null
+  mainSettings: PeriodSetting | null
   slotSettings: SlotSettings | null
   isLoading: boolean
   error: string | null

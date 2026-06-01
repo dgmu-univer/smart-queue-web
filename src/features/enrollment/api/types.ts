@@ -1,9 +1,9 @@
-import { DegreeProgramsItem } from '@/features/dashboard/degree-programs';
-import { WorkDateObject } from '@/features/dashboard/main-settings';
+import { WorkDateSettings } from '@/features/dashboard/api.types';
+import { GetDegreeResponseItem } from '@/features/dashboard/degree-manager/api/types';
 
 export interface GetDegreeProgramsResponse {
-  degreePrograms: DegreeProgramsItem[]
-  periodSettings: WorkDateObject
+  degreePrograms: GetDegreeResponseItem[]
+  periodSettings: WorkDateSettings
 }
 
 export interface AppointmentPayload {
@@ -20,7 +20,7 @@ export interface AppointmentVerifyPayload {
 
 export interface Slot {
   id: number
-  degreeProgram: Omit<DegreeProgramsItem, 'pin'>
+  degreeProgram: Omit<GetDegreeResponseItem, 'pin'>
   startTimeAt: string // ISO date
   endTimeAt: string // ISO date
 }
