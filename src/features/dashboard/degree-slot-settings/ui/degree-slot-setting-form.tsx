@@ -4,7 +4,6 @@ import { useTransition } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import z from 'zod';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -17,37 +16,27 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 
-import FieldHint from './components/field-hint';
-import { updateSlotSettingsActions } from './actions';
+import { WithDegreeId } from '../../api.types';
+import { FetchSlotSettingsResponse } from '../api/types';
+import { updateSlotSettingsActions } from '../api/update-slot-setting';
+import FieldHint from '../components/field-hint';
+import type { SlotSettingFormProps } from '../lib/schema';
+import { slotSettingSchema } from '../lib/schema';
 
-const formSchema = z.object({
-  duration_minutes: z.coerce
-    .number({ required_error: 'Время слота обязательно' })
-    .min(5, { message: 'Минимум 5 минут' })
-    .max(60, { message: 'Максимум 60 минут' }),
+type ComponentProps = WithDegreeId<{
+  initialData: FetchSlotSettingsResponse
+}>;
 
-  capacity_per_slot: z.coerce
-    .number({ required_error: 'Вместимость слота обязательно' })
-    .min(1, { message: 'Минимум 1 человек' })
-    .max(15, { message: 'Максимум 15 человек' }),
-});
-export interface SlotSettings {
-  duration_minutes: number
-  capacity_per_slot: number
-}
-
-export type SlotSettingsFormProps = z.infer<typeof formSchema>;
-
-export default function SlotSettingsForm({ initialData }: { initialData: SlotSettings }) {
+export default function DegreeSlotSettingForm({ initialData, degreeId }: ComponentProps) {
   const [isPending, startTransition] = useTransition();
-  const form = useForm<SlotSettingsFormProps>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<SlotSettingFormProps>({
+    resolver: zodResolver(slotSettingSchema),
     values: initialData,
   });
 
-  const handleUpdate: SubmitHandler<SlotSettingsFormProps> = (data) => {
+  const handleUpdate: SubmitHandler<SlotSettingFormProps> = (data) => {
     startTransition(async () => {
-      const result = await updateSlotSettingsActions(data);
+      const result = await updateSlotSettingsActions(degreeId, data);
       if (result.success) {
         toast.success('Настройки слота успешно обновлены!');
       } else {

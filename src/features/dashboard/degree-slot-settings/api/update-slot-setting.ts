@@ -2,12 +2,12 @@
 
 import { apiServer, ActionPromisifyResult } from '@/lib/api.server';
 import { extractApiError } from '@/lib/extract-api-error';
-import { type SlotSettingsFormProps } from './slot-settings-form';
+import { UpdateSlotSettingsResponse } from './types';
 
-export async function updateSlotSettingsActions(formData: SlotSettingsFormProps): Promise<ActionPromisifyResult> {
+export async function updateSlotSettingsActions(degreeId: string, payload: UpdateSlotSettingsResponse): ActionPromisifyResult {
   try {
-    await apiServer('/admin-settings/slots',
-      { method: 'PATCH', body: JSON.stringify(formData) });
+    await apiServer(`/degree-programs/${degreeId}/admin-settings/slots`,
+      { method: 'PATCH', body: JSON.stringify(payload) });
     return { success: true };
   } catch (error) {
     const { status, message } = extractApiError(error);
