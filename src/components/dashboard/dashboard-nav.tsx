@@ -23,11 +23,8 @@ export function DashboardNav() {
     <header className="border-border/60 bg-background/70 sticky top-0 z-40 w-full border-b backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-background flex size-8 items-center justify-center rounded-lg bg-blue-600">
-              <AppIcon width={23} height={23} />
-            </span>
-            <span className="text-sm font-semibold tracking-tight">ДГМУ</span>
+          <Link href="/dashboard" className="flex items-center gap-2">
+            <span className="text-sm font-semibold tracking-tight">Панель управления</span>
           </Link>
 
           {/* <NavigationMenu className="hidden md:flex">
