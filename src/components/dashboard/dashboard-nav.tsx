@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/navigation-menu';
 
 import { AppIcon } from '../app-icon';
-import NavLink from '../ui/nav-link';
 import { DashboardUser } from './dashboard-user';
 
 const navLinks = [

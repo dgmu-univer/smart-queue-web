@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { parse } from 'date-fns';
+import { format, isValid, parse } from 'date-fns';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -15,13 +15,16 @@ import {
 } from '@/components/ui/card';
 import { API_DATE_FORMAT, disabledMonth } from '@/lib/date';
 
-import { updateWeekendActions } from './actions';
+import { WithDegreeId } from '../../api.types';
+import { updateWeekendActions } from '../api/update-weekend';
 
 const parsedDates = (initialData: string[]) => initialData.map(date =>
   parse(date, API_DATE_FORMAT, new Date()),
 );
 
-export default function WeekendsCalendar({ initialData }: { initialData: string[] }) {
+type ComponentProps = WithDegreeId<{ initialData: string[] }>;
+
+export default function WeekendsCalendar({ initialData, degreeId }: ComponentProps) {
   const [weekends, setWeekends] = useState<Date[]>(parsedDates(initialData));
   const [isPending, startTransition] = useTransition();
 
@@ -35,7 +38,11 @@ export default function WeekendsCalendar({ initialData }: { initialData: string[
 
   const handleUpdate = () => {
     startTransition(async () => {
-      const result = await updateWeekendActions(weekends);
+      const payload = weekends
+        .filter(date => isValid(date)) // Исключаем невалидные даты, чтобы format() не упал с ошибкой
+        .map(date => format(date, API_DATE_FORMAT));
+
+      const result = await updateWeekendActions(degreeId, payload);
       if (result.success) {
         toast.success('Выходные дни успешно обновлены!');
       } else {

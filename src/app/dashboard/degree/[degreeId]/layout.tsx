@@ -15,7 +15,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Deg
 
   return (
     <DashboardPage title={`Настройки — ${degreeId}`}>
-      <SettingsTabs />
+      <SettingsTabs degreeId={degreeId} />
       { children }
     </DashboardPage>
   );
