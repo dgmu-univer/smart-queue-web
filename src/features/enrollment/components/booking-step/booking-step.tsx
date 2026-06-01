@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import { AlertCircleIcon } from 'lucide-react';
@@ -19,27 +19,32 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { dateAsApiString } from '@/lib/date';
 import { extractApiError } from '@/lib/extract-api-error';
 
-import { enrollmentApi } from '../api/enrollment-api';
-import { GetDegreeProgramsResponse } from '../api/types';
+import { createEnrollment } from '../../api/create-enrollment';
+import { existingEnrollment } from '../../api/existing-enrollment';
+import { type DegreeListItem } from '../../api/types';
 import { useDateDisabled } from './hooks/use-disabled-date';
 import { useFreeSlots } from './hooks/use-free-slot';
+import { ExistingWarning } from './existing-warning';
 import { PhoneInputField } from './phone-input';
 import { type BookingFormValues, bookingSchema } from './schema';
 
 interface EnrollmentBookingProps {
-  initialData: GetDegreeProgramsResponse
+  degreeList: DegreeListItem[]
   onNext: BookingStepNextHandler
 }
 
 export interface BookingStepMeta { bookingId: number, phone: string }
 export type BookingStepNextHandler = ({ bookingId, phone }: BookingStepMeta) => void;
 
-export default function BookingStep({ initialData, onNext }: EnrollmentBookingProps) {
+export default function BookingStep({ degreeList, onNext }: EnrollmentBookingProps) {
   const [isBookingLoading, setIsBookingLoading] = useState(false);
+  const [isExistingWarningOpen, setIsExistingWarningOpen] = useState(false);
+  const [degree, setDegree] = useState<DegreeListItem | null>(null);
   const {
     control,
     handleSubmit,
     setValue,
+    getValues,
   } = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
@@ -50,13 +55,24 @@ export default function BookingStep({ initialData, onNext }: EnrollmentBookingPr
     },
   });
   const { slots, isSlotDisabled, isSlotLoading, slotError } = useFreeSlots(control, setValue);
-  const disabledMatcher = useDateDisabled(initialData.periodSettings);
+
+  const degreeId = useWatch({ control, name: 'degreeId' });
+
+  useEffect(() => {
+    const selectedDegree = degreeList.find(d => d.id.toString() === degreeId);
+    setTimeout(() => {
+      setDegree(selectedDegree ?? null);
+    }, 0);
+  }, [degreeId, degreeList]);
+
+  const disabledMatcher = useDateDisabled(degree?.periodSettings);
 
   // TODO доработать ошибки
-  const handleBooking: SubmitHandler<BookingFormValues> = async (data) => {
+  const handleCreateEnrollment: SubmitHandler<BookingFormValues> = async (data) => {
     try {
       setIsBookingLoading(true);
-      const bookingId = await enrollmentApi.appointments({
+
+      const bookingId = await createEnrollment({
         degreeId: Number(data.degreeId),
         date: dateAsApiString(data.date),
         time: data.slot,
@@ -72,6 +88,35 @@ export default function BookingStep({ initialData, onNext }: EnrollmentBookingPr
     } finally {
       setIsBookingLoading(false);
     }
+  };
+
+  const handleBooking: SubmitHandler<BookingFormValues> = async (data) => {
+    try {
+      setIsBookingLoading(true);
+      const response = await existingEnrollment({
+        degreeId: Number(data.degreeId),
+        phone: data.phone,
+      });
+      if (response.isExisting) {
+        setIsExistingWarningOpen(true);
+      } else {
+        await handleCreateEnrollment(data);
+      }
+    } catch (error) {
+      const { message } = extractApiError(error);
+      toast.error('Не удалось проверить номер', {
+        description: message,
+      });
+      console.error(error);
+    } finally {
+      setIsBookingLoading(false);
+    }
+  };
+
+  const handleExistingEnrollment = async () => {
+    setIsExistingWarningOpen(false);
+    console.log(getValues())
+    await handleCreateEnrollment(getValues());
   };
 
   const error = slotError;
@@ -102,7 +147,7 @@ export default function BookingStep({ initialData, onNext }: EnrollmentBookingPr
               </SelectTrigger>
 
               <SelectContent>
-                {initialData.degreePrograms.map(
+                {degreeList.map(
                   program => (
                     <SelectItem
                       key={program.id}
@@ -231,6 +276,13 @@ export default function BookingStep({ initialData, onNext }: EnrollmentBookingPr
       >
         Далее
       </Button>
+      <ExistingWarning
+        isOpen={isExistingWarningOpen}
+        onConfirm={() => {
+          void handleExistingEnrollment();
+        }}
+        onCancel={() => { setIsExistingWarningOpen(false); }}
+      />
     </form>
   );
 }

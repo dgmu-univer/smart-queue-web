@@ -1,10 +1,10 @@
 import { useEffect, useReducer, useRef } from 'react';
 import { Control, UseFormSetValue, useWatch } from 'react-hook-form';
 
+import { fetchFreeSlot } from '@/features/enrollment/api/fetch-free-slot';
 import { dateAsApiString } from '@/lib/date';
 import { extractApiError } from '@/lib/extract-api-error';
 
-import { enrollmentApi } from '../../api/enrollment-api';
 import { reducer } from '../reducer';
 import { BookingFormValues } from '../schema';
 
@@ -25,6 +25,7 @@ export function useFreeSlots(control: Control<BookingFormValues>, setValue: UseF
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      console.log('Timer')
       setValue('slot', '');
     }, 0);
     return () => {
@@ -51,7 +52,7 @@ export function useFreeSlots(control: Control<BookingFormValues>, setValue: UseF
       dispatch({ type: 'LOADING' });
 
       try {
-        const freeSlots = await enrollmentApi.getFreeSlot(
+        const freeSlots = await fetchFreeSlot(
           {
             date: dateAsApiString(selectedDate),
             degreeId,

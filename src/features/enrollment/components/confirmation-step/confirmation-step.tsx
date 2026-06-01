@@ -9,11 +9,12 @@ import { Download, RotateCcw } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
-import { AppointmentVerifyResponse } from '../api/types';
+import { VerifyOtpResponse } from '../../api/types';
+
 
 interface ConfirmationStepProps {
   onReset: () => void
-  meta: AppointmentVerifyResponse
+  meta: VerifyOtpResponse
 }
 
 export default function ConfirmationStep({ onReset, meta }: ConfirmationStepProps) {
@@ -93,12 +94,12 @@ export default function ConfirmationStep({ onReset, meta }: ConfirmationStepProp
 
     ctx.fillStyle = '#171717';
     ctx.font = 'bold 15px sans-serif';
-    ctx.fillText(data.slot.degreeProgram.name, 36, 178);
+    ctx.fillText(data.degree.name, 36, 178);
 
     // Описание программы (перенос строк)
     ctx.fillStyle = '#525252';
     ctx.font = '13px sans-serif';
-    const desc = data.slot.degreeProgram.description ?? 'Без описания';
+    const desc = data.degree.description ?? 'Без описания';
     if (desc.length > 42) {
       ctx.fillText(desc.slice(0, 42) + '...', 36, 205);
     } else {

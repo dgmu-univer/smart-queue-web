@@ -1,35 +1,45 @@
 import { WorkDateSettings } from '@/features/dashboard/api.types';
-import { GetDegreeResponseItem } from '@/features/dashboard/degree-manager/api/types';
 
-export interface GetDegreeProgramsResponse {
-  degreePrograms: GetDegreeResponseItem[]
+export interface Slot {
+  id: number
+  startTimeAt: string
+  endTimeAt: string
+}
+
+export interface DegreeListItem {
+  id: number
+  name: string
+  description?: string
   periodSettings: WorkDateSettings
 }
 
-export interface AppointmentPayload {
+export interface FetchDegreeListResponse {
+  degreePrograms: DegreeListItem[]
+}
+
+export interface CreateEnrollmentPayload {
   date: string
   degreeId: number
   time: string
   phone: string
 }
 
-export interface AppointmentVerifyPayload {
+export interface ExistingEnrollmentPayload {
+  degreeId: number
+  phone: string
+}
+
+export interface VerifyOtpPayload {
   id: number
   verificationCode: string
 }
 
-export interface Slot {
-  id: number
-  degreeProgram: Omit<GetDegreeResponseItem, 'pin'>
-  startTimeAt: string // ISO date
-  endTimeAt: string // ISO date
-}
-
-export interface AppointmentVerifyResponse {
+export interface VerifyOtpResponse {
   id: number
   pin: string
   phone: string
   isVerified: boolean
-  requestedAt: string // ISO date
+  requestedAt: string
   slot: Slot
+  degree: Pick<DegreeListItem, 'name' | 'description'>
 }

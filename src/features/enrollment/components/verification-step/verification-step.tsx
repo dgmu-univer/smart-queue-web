@@ -11,8 +11,8 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { extractApiError } from '@/lib/extract-api-error';
 
-import { enrollmentApi } from '../api/enrollment-api';
-import { AppointmentVerifyResponse } from '../api/types';
+import { VerifyOtpResponse } from '../../api/types';
+import { verifyOtp } from '../../api/verify-otp';
 import { type BookingStepMeta } from '../booking-step/booking-step';
 import { type OtpFormValues, otpSchema } from './shcema';
 
@@ -22,7 +22,7 @@ interface VerificationStepProps {
   meta: BookingStepMeta
 }
 
-export type VerificationStepNextHandler = (confirmData: AppointmentVerifyResponse) => void;
+export type VerificationStepNextHandler = (confirmData: VerifyOtpResponse) => void;
 
 export default function VerificationStep({ onBack, onNext, meta }: VerificationStepProps) {
   const [isPending, setIsPending] = useState(false);
@@ -35,7 +35,7 @@ export default function VerificationStep({ onBack, onNext, meta }: VerificationS
   const handleVerify: SubmitHandler<OtpFormValues> = async (data) => {
     try {
       setIsPending(true);
-      const result = await enrollmentApi.appointmentsVerify({
+      const result = await verifyOtp({
         id: meta.bookingId,
         verificationCode: data.pin,
       });
