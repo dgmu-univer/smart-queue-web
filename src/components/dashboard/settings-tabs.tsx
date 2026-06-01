@@ -7,31 +7,34 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/ui/tabs';
+import { WithDegreeId } from '@/features/dashboard/api.types';
 
 const tabs = [
   {
     value: 'main',
     label: 'Основное',
-    href: '/dashboard/settings/main',
+    href: (degreeId: string) => `/dashboard/degree/${degreeId}/main`,
   },
   {
-    value: 'slots',
+    value: 'slot',
     label: 'Настройка слота',
-    href: '/dashboard/settings/slots',
+    href: (degreeId: string) => `/dashboard/degree/${degreeId}/slot`,
   },
   {
     value: 'weekend',
     label: 'Нерабочие дни',
-    href: '/dashboard/settings/weekend',
+    href: (degreeId: string) => `/dashboard/degree/${degreeId}/weekend`,
   },
   {
     value: 'excluded',
     label: 'Исключенные слоты',
-    href: '/dashboard/settings/excluded',
+    href: (degreeId: string) => `/dashboard/degree/${degreeId}/excluded`,
   },
 ];
 
-export function SettingsTabs() {
+type ComponentProps = WithDegreeId<unknown>
+
+export function SettingsTabs({ degreeId }: ComponentProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -45,7 +48,7 @@ export function SettingsTabs() {
         const tab = tabs.find(t => t.value === value);
 
         if (tab) {
-          router.push(tab.href);
+          router.push(tab.href(degreeId));
         }
       }}
     >

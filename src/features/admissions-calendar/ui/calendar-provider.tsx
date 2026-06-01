@@ -3,14 +3,14 @@
 
 import { ReactNode, useCallback, useState } from 'react';
 
-import { MainSettings } from '@/features/dashboard/main-settings';
-import { SlotSettings } from '@/features/dashboard/slot-settings';
+import { PeriodSetting } from '@/features/dashboard/api.types';
+import { SlotSettings } from '@/features/dashboard/degree-slot-settings/lib/schema';
 
 import { CalendarSettingsContext } from '../context/context';
 
 interface CalendarSettingsProviderProps {
   children: ReactNode
-  initialMainSettings: MainSettings
+  initialMainSettings: PeriodSetting
   initialSlotSettings: SlotSettings
 }
 
@@ -19,7 +19,7 @@ export function CalendarSettingsProvider({
   initialMainSettings,
   initialSlotSettings,
 }: CalendarSettingsProviderProps) {
-  const [mainSettings] = useState<MainSettings | null>(initialMainSettings);
+  const [mainSettings] = useState<PeriodSetting | null>(initialMainSettings);
   const [slotSettings] = useState<SlotSettings | null>(initialSlotSettings);
   const [isLoading] = useState(false);
   const [error] = useState<string | null>(null);

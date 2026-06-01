@@ -1,9 +1,8 @@
 import { setHours, setMinutes, setSeconds } from 'date-fns';
 
-import { WorkTimeObject } from '@/features/dashboard/main-settings';
+import { WorkTimeSettings } from '@/features/dashboard/api.types';
 
 import { CalendarEvent, GroupedCalendarEvent } from '../model/types';
-
 
 export function convertToCalendarEvents(rawEvents?: CalendarEvent[]): GroupedCalendarEvent[] {
   if (!rawEvents || !Array.isArray(rawEvents)) return [];
@@ -30,7 +29,7 @@ export function convertToCalendarEvents(rawEvents?: CalendarEvent[]): GroupedCal
   return Array.from(map.values());
 }
 
-export function getMinMaxFromWorkTime(workTime: WorkTimeObject) {
+export function getMinMaxFromWorkTime(workTime: WorkTimeSettings) {
   const [startHours, startMinutes, startSeconds] = workTime.start_time.split(':').map(Number);
   const [endHours, endMinutes, endSeconds] = workTime.end_time.split(':').map(Number);
 
