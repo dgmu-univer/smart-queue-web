@@ -4,7 +4,6 @@ import { useTransition } from 'react';
 import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import z from 'zod';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -19,43 +18,31 @@ import { DatePicker } from '@/components/ui/date-picker';
 import { Field, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 
-import { updateMainSettingsActions } from './actions';
-import { MainSettings } from './types';
-import { defineInitData } from './utils';
+import { WithDegreeId } from '../../api.types';
+import { FetchMainSettingsResponse } from '../api/types';
+import { updateMainSettingsActions } from '../api/update-main-setting';
+import { DegreeMainSettingFormProps, degreeMainSettingSchema } from '../lib/schema';
+import { transformInitData } from '../lib/transform-init-data';
+import { transformPayload } from '../lib/transform-payload';
 
-export const formSchema = z.object({
-  work_date: z.object({
-    start_date: z.date({ required_error: 'Поле обязательно для заполнения' }),
-    end_date: z.date({ required_error: 'Поле обязательно для заполнения' }),
-  }),
-  work_time: z.object({
-    start_time: z.string({ required_error: 'Поле обязательно для заполнения' }),
-    end_time: z.string({ required_error: 'Поле обязательно для заполнения' }),
-  }),
-  lunchOff: z.boolean(),
-  lunch: z.object({
-    start_time: z.string().optional(),
-    end_time: z.string().optional(),
-  }).nullable(),
-});
+type ComponentProps = WithDegreeId<{ initialData?: FetchMainSettingsResponse }>;
 
-export type MainSettingsFormProps = z.infer<typeof formSchema>;
-
-export default function MainSettingsForm({ initialData }: { initialData?: MainSettings }) {
+export default function DegreeMainSettingForm({ initialData, degreeId }: ComponentProps) {
   const [isPending, startTransition] = useTransition();
-  const form = useForm<MainSettingsFormProps>({
-    resolver: zodResolver(formSchema),
-    values: defineInitData(initialData),
+  const form = useForm<DegreeMainSettingFormProps>({
+    resolver: zodResolver(degreeMainSettingSchema),
+    values: transformInitData(initialData),
   });
 
-  const lunchOff = useWatch<MainSettingsFormProps, 'lunchOff'>({
+  const lunchOff = useWatch<DegreeMainSettingFormProps, 'lunchOff'>({
     control: form.control,
     name: 'lunchOff',
   });
 
-  const handleUpdate: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
+  const handleUpdate: SubmitHandler<DegreeMainSettingFormProps> = (data) => {
     startTransition(async () => {
-      const result = await updateMainSettingsActions(data);
+      const payload = transformPayload(data);
+      const result = await updateMainSettingsActions(degreeId, payload);
       if (result.success) {
         toast.success('Основные настройки успешно обновлены!');
       } else {

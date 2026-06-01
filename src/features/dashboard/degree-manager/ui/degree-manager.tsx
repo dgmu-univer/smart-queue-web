@@ -63,11 +63,11 @@ export const DegreeManager = ({ initialDegrees }: { initialDegrees: GetDegreeRes
                 <TableCell className="font-medium wrap-break-word whitespace-normal">{degree.description}</TableCell>
                 <TableCell className="font-mono font-bold">{degree.pin}</TableCell>
                 <TableCell className="text-right">
-                  <Link href={`/dashboard/degree-manager/degree/${degree.id.toString()}/main`}>
-                    <>
+                  <Button size="icon" variant="ghost">
+                    <Link href={`/dashboard/degree/${degree.id.toString()}/main`}>
                       <Settings className="mr-2 size-4" />
-                    </>
-                  </Link>
+                    </Link>
+                  </Button>
                   <Button
                     variant="ghost"
                     loading={isPending}
