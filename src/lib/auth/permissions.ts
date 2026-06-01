@@ -5,9 +5,11 @@ export const ROLE_PERMISSIONS = {
   ADMIN: [
     '/dashboard',
     '/dashboard/*',
+    '/api/statistics',
   ],
   OPERATOR: [
     '/admissions',
+    '/api/statistics',
   ],
 } as const;
 

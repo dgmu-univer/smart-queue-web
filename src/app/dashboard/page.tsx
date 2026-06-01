@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import { Card } from '@radix-ui/themes';
 import {
   BookOpen,
   Calendar,
@@ -8,8 +7,8 @@ import {
   Users } from 'lucide-react';
 
 import DashboardPage from '@/components/dashboard/dashboard-page';
-import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import DegreeManager, { fetchAllDegree } from '@/features/dashboard/degree-manager';
+import Statistics from '@/features/statistics';
 
 export const metadata: Metadata = {
   title: 'Статистика — Панель управления — ДГМУ',
@@ -59,24 +58,7 @@ export default async function Page() {
 
   return (
     <DashboardPage title="Статистика">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-        {stats.map(item => (
-          <Card key={item.title}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {item.title}
-              </CardTitle>
-              <item.icon className={`size-4 ${item.color}`} />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{item.value}</div>
-              <p className="text-muted-foreground text-xs">
-                {item.description}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <Statistics />
       <DegreeManager initialDegrees={initialDegree} />
     </DashboardPage>
   );
