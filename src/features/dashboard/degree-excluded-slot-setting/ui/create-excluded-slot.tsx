@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
-import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
@@ -20,34 +19,35 @@ import {
 } from '@/components/ui/dialog';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { dateAsApiString } from '@/lib/date';
 
-import { updateExcludedActions } from './actions';
+import { WithDegreeId } from '../../api.types';
+import { createExcludedSlot } from '../api/create-excluded-slot';
+import { CreateExcludedSlotPayload } from '../api/types';
+import { type CreateExcludedSlotFormProps, createExcludedSlotSchema } from '../lib/schema';
 
-const formSchema = z.object({
-  date: z.date({ required_error: 'Выберите дату' }),
-  startTime: z.string().min(1, 'Укажите время начала'),
-  endTime: z.string().min(1, 'Укажите время окончания'),
-});
-
-export type AddExcludedSlotFormProps = z.infer<typeof formSchema>;
-
-export function AddExcludedSlot() {
+export function CreateExcludedSlot({ degreeId }: WithDegreeId) {
   const [isOpen, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<CreateExcludedSlotFormProps>({
+    resolver: zodResolver(createExcludedSlotSchema),
     defaultValues: {
       startTime: '',
       endTime: '',
     },
   });
 
-  const handleCreate = (data: z.infer<typeof formSchema>) => {
+  const handleCreate = (data: CreateExcludedSlotFormProps) => {
     startTransition(async () => {
-      const result = await updateExcludedActions(data);
+      const payload: CreateExcludedSlotPayload = {
+        date: dateAsApiString(data.date),
+        start_time: data.startTime,
+        end_time: data.endTime,
+      };
+      const result = await createExcludedSlot(degreeId, payload);
       if (result.success) {
         form.reset();
         setOpen(false);

@@ -13,19 +13,30 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { EmptyTableGradient, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  EmptyTableGradient,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
-import { deleteExcludedActions } from './actions';
-import { AddExcludedSlot } from './add-excluded-slot';
-import { ExcludeSlotItem } from './types';
+import { WithDegreeId } from '../../api.types';
+import { deleteExcludedSlot } from '../api/delete-excluded-slot';
+import { FetchExcludedSlotsResponse } from '../api/types';
+import { CreateExcludedSlot } from './create-excluded-slot';
 
-export default function ExludedSlotsManager({ initialData }: { initialData: ExcludeSlotItem[] }) {
+type ComponentProps = WithDegreeId<{ initialData: FetchExcludedSlotsResponse }>;
+
+export default function ExcludedSlotsTable({ initialData, degreeId }: ComponentProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = (slotId: number) => {
     startTransition(async () => {
-      const result = await deleteExcludedActions(slotId);
+      const result = await deleteExcludedSlot(degreeId, slotId.toString());
       if (result.success) {
         toast.success('Исключенный слот успешно удален!');
         router.refresh();
@@ -44,7 +55,7 @@ export default function ExludedSlotsManager({ initialData }: { initialData: Excl
       <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <CardTitle>Исключенные слоты</CardTitle>
         <CardDescription>
-          <AddExcludedSlot />
+          <CreateExcludedSlot degreeId={degreeId} />
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-1">

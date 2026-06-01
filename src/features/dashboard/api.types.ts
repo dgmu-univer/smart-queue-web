@@ -32,4 +32,4 @@ export interface ExcludedSlotSettings {
 }
 
 export interface DegreeIdParams { params: Promise<{ degreeId: string }> }
-export type WithDegreeId<T> = T & { degreeId: string };
+export type WithDegreeId<T = undefined> = T & { degreeId: string };
