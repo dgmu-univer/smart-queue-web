@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -21,10 +20,10 @@ export function ExistingWarning({ onConfirm, onCancel, isOpen }: ExistingWarning
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
           <DialogTitle>Найден дубликат записи</DialogTitle>
-          <DialogDescription>
-            Этот номер телефона уже используется в системе. Если вы продолжите, старая запись будет автоматически удалена, а текущие данные перезапишут новыми. Продолжить?
-          </DialogDescription>
         </DialogHeader>
+        <p className="mb-4 text-sm/normal">
+          Этот номер телефона уже используется в системе. Если вы продолжите, старая запись будет автоматически удалена, а текущие данные перезапишут новыми. Продолжить?
+        </p>
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline" onClick={onCancel}>Отмена</Button>
