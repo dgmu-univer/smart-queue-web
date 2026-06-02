@@ -6,11 +6,12 @@ export const ROLE_PERMISSIONS = {
     '/dashboard',
     '/dashboard/*',
     '/api/statistics',
+    '/api/appointments',
   ],
   OPERATOR: [
     '/schedule',
     '/schedule/*',
-    '/api/statistics',
+    '/api/appointments',
   ],
 } as const;
 

@@ -1,14 +1,16 @@
 'use client';
 
+import { formatDate } from 'date-fns';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
 
 import { DashboardUser } from '@/components/dashboard/dashboard-user';
 import { Button } from '@/components/ui/button';
 
 import { useSchedule } from '../provider/schedule-provider';
+import { ru } from 'date-fns/locale';
 
 export const Toolbar = () => {
-  const { next, prev, today, increaseFont, decreaseFont } = useSchedule();
+  const { next, prev, today, increaseFont, decreaseFont, date } = useSchedule();
 
   return (
     <header className="bg-background flex h-14 items-center justify-between px-4">
@@ -43,7 +45,7 @@ export const Toolbar = () => {
 
       {/* ЦЕНТР: Диапазон дат */}
       <div className="text-foreground text-sm font-semibold tracking-tight">
-        {/* {formatDateRange(start, end)} */}
+        { formatDate(date, 'dd MMMM yyyy', { locale: ru }) }
       </div>
 
       {/* ПРАВАЯ ЧАСТЬ: Режимы и Профиль */}

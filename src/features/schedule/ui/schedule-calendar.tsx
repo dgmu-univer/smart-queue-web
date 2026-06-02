@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 import {
   Table,
@@ -10,23 +10,46 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { SlotSettings } from '@/features/dashboard/api.types';
 
+import { FetchScheduleResponse } from '../api/types';
+import { EmptyData } from '../components/empty-data';
 import { Pin } from '../components/pin';
-import { type GroupedSlots } from '../lib/grouped-slots';
+import { ScheduleFallback } from '../components/schedule-fallback';
+import { type GroupedSlots, groupedSlots } from '../lib/grouped-slots';
 import { formatTitleDate, getSlotTime, isCurrentSlot } from '../lib/slot-date-utils';
+import { toScheduleRange } from '../lib/to-schedule-range';
 import { useSchedule } from '../provider/schedule-provider';
 
 interface ComponentProps {
-  initialGroupedSlots: GroupedSlots
-  slotsSettings: SlotSettings
+  initialData: FetchScheduleResponse
 }
 
-export function ScheduleCalendar({ initialGroupedSlots }: ComponentProps) {
-  const [groupedSlots] = useState<GroupedSlots>(initialGroupedSlots);
+export function ScheduleCalendar({ initialData }: ComponentProps) {
+  const { date } = useSchedule();
+  const params = toScheduleRange(date);
+
+  const { data, isFetching } = useQuery<FetchScheduleResponse, Error, GroupedSlots>({
+    queryKey: ['slots', params],
+    queryFn: ({ signal }) => fetch(`/api/appointments?to=${params.to}&from=${params.from}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      signal,
+    }).then(res => res.json()),
+    initialData,
+    staleTime: 0,
+    select: data => groupedSlots(data.slots),
+    refetchInterval: 60000, // 1 минута
+    refetchOnWindowFocus: true,
+  });
+
   const { fontSize } = useSchedule();
 
   const spacing = fontSize / 14; // коэффициент
+
+  if (isFetching) {
+    return <ScheduleFallback />;
+  }
 
   return (
     <Table style={{
@@ -44,7 +67,8 @@ export function ScheduleCalendar({ initialGroupedSlots }: ComponentProps) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {groupedSlots.map(([date, daySlots]) =>
+        {data.length === 0 && <EmptyData />}
+        {data.length > 0 && data.map(([date, daySlots]) =>
           daySlots.map((slot, index) => (
             <TableRow
               key={slot.start}
