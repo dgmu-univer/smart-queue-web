@@ -115,7 +115,6 @@ export default function BookingStep({ degreeList, onNext }: EnrollmentBookingPro
 
   const handleExistingEnrollment = async () => {
     setIsExistingWarningOpen(false);
-    console.log(getValues())
     await handleCreateEnrollment(getValues());
   };
 

@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/button';
 
 import { VerifyOtpResponse } from '../../api/types';
 
-
 interface ConfirmationStepProps {
   onReset: () => void
   meta: VerifyOtpResponse
@@ -99,7 +98,7 @@ export default function ConfirmationStep({ onReset, meta }: ConfirmationStepProp
     // Описание программы (перенос строк)
     ctx.fillStyle = '#525252';
     ctx.font = '13px sans-serif';
-    const desc = data.degree.description ?? 'Без описания';
+    const desc = data.degree.description ?? '';
     if (desc.length > 42) {
       ctx.fillText(desc.slice(0, 42) + '...', 36, 205);
     } else {

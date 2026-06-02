@@ -19,19 +19,11 @@ export function useFreeSlots(control: Control<BookingFormValues>, setValue: UseF
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const degreeId = useWatch({ control, name: 'degreeId' });
-  const selectedDate = useWatch({ control, name: 'date' });
+  const selectedDateWatch = useWatch({ control, name: 'date' });
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const selectedDate = selectedDateWatch ? dateAsApiString(selectedDateWatch) : undefined;
 
   const abortControllerRef = useRef<AbortController | null>(null);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log('Timer')
-      setValue('slot', '');
-    }, 0);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [degreeId, selectedDate, setValue]);
 
   useEffect(() => {
     let isActive = true;
@@ -41,6 +33,7 @@ export function useFreeSlots(control: Control<BookingFormValues>, setValue: UseF
 
     if (!degreeId || typeof selectedDate === 'undefined') {
       dispatch({ type: 'RESET' });
+      setValue('slot', '');
       return;
     }
 
@@ -50,11 +43,12 @@ export function useFreeSlots(control: Control<BookingFormValues>, setValue: UseF
 
     const loadSlots = async () => {
       dispatch({ type: 'LOADING' });
+      setValue('slot', '');
 
       try {
         const freeSlots = await fetchFreeSlot(
           {
-            date: dateAsApiString(selectedDate),
+            date: selectedDate,
             degreeId,
           },
           {
@@ -78,7 +72,6 @@ export function useFreeSlots(control: Control<BookingFormValues>, setValue: UseF
           && error instanceof Error
         ) {
           const { message } = extractApiError(error);
-
           dispatch({
             type: 'ERROR',
             payload: {
@@ -97,7 +90,7 @@ export function useFreeSlots(control: Control<BookingFormValues>, setValue: UseF
       isActive = false;
       abortController.abort();
     };
-  }, [degreeId, selectedDate]);
+  }, [degreeId, selectedDate, setValue]);
 
   return state;
 }

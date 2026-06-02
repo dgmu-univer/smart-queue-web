@@ -22,7 +22,11 @@ const initialState: SlotState = {
   slots: [],
   isSlotLoading: false,
   isSlotDisabled: true,
-  slotError: null,
+  slotError: {
+    variant: undefined,
+    title: 'Выберите уровень и дату',
+    description: 'Сначала укажите «Уровень образования» и «Дату». Время для записи станет доступно только после того, как оба этих поля будут заполнены.',
+  },
 };
 
 export function reducer(state: SlotState, action: Action): SlotState {
