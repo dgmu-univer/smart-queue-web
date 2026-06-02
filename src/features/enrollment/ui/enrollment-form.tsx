@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
-import { type FetchDegreeListResponse } from '../api/types';
+import { type FetchDegreeListResponse, VerifyOtpResponse } from '../api/types';
 import BookingStep, { type BookingStepMeta, type BookingStepNextHandler } from '../components/booking-step/booking-step';
 import ConfirmationStep from '../components/confirmation-step/confirmation-step';
 import EnrollmentStepIndicator from '../components/enrollment-step-indicator';
@@ -49,7 +49,8 @@ export default function EnrollmentForm({ initialData }: { initialData: FetchDegr
             confirmation: () => (
               <ConfirmationStep
                 onReset={onConfirmationStepReset}
-                meta={stepper.metadata.values.confirmation}
+
+                meta={stepper.metadata.values.confirmation as VerifyOtpResponse}
               />
             ),
           })}
