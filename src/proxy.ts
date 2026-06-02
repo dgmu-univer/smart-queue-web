@@ -102,14 +102,14 @@ export async function proxy(req: NextRequest) {
   if (token.user.role === 'OPERATOR') {
     if (!canAccess(pathname, 'OPERATOR')) {
       console.warn(`[PROXY] Operator access blocked → ${pathname}`);
-      return NextResponse.redirect(new URL('/admissions', req.url));
+      return NextResponse.redirect(new URL('/', req.url));
     }
   }
 
   if (token.user.role === 'ADMIN') {
     if (!canAccess(pathname, 'ADMIN')) {
       console.warn(`[PROXY] Admin access blocked → ${pathname}`);
-      return NextResponse.redirect(new URL('/booking', req.url));
+      return NextResponse.redirect(new URL('/', req.url));
     }
   }
 

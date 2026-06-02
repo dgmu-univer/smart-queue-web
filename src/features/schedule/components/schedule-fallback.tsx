@@ -1,7 +1,8 @@
-import React from 'react';
+'use client';
+
 import { Calendar, Loader2 } from 'lucide-react';
 
-export function CalendarSkeletonSpinner() {
+export function ScheduleFallback() {
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-transparent">
 

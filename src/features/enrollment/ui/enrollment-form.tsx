@@ -49,7 +49,6 @@ export default function EnrollmentForm({ initialData }: { initialData: FetchDegr
             confirmation: () => (
               <ConfirmationStep
                 onReset={onConfirmationStepReset}
-
                 meta={stepper.metadata.values.confirmation as VerifyOtpResponse}
               />
             ),
