@@ -1,16 +1,14 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
-import { getServerSession } from 'next-auth';
 
+// import { getServerSession } from 'next-auth';
 import { ScheduleFallback, ScheduleProvider, Toolbar } from '@/features/schedule';
-import { authOptions } from '@/lib/auth';
+// import { authOptions } from '@/lib/auth';
 
-export const dynamic = 'force-dynamic';
-
-const user = await getServerSession(authOptions);
+// const user = await getServerSession(authOptions);
 
 export const metadata: Metadata = {
-  title: `${(user?.user.fio ?? 'Оператор')} - Расписание`,
+  title: `- Расписание`,
   description: 'Расписание для оператора',
 };
 

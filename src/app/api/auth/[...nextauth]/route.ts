@@ -54,7 +54,7 @@ export const authOptions: NextAuthOptions = {
           role: result.user.role,
           backendCookies: result.backendCookies,
         };
-      }
+      },
     }),
   ],
   callbacks: {
