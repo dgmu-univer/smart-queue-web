@@ -8,7 +8,8 @@ export const ROLE_PERMISSIONS = {
     '/api/statistics',
   ],
   OPERATOR: [
-    '/admissions',
+    '/schedule',
+    '/schedule/*',
     '/api/statistics',
   ],
 } as const;
@@ -19,7 +20,7 @@ export const ROLE_PERMISSIONS = {
 export const ROLE_DEFAULT_REDIRECTS = {
   SUPER_ADMIN: '/dashboard',
   ADMIN: '/dashboard',
-  OPERATOR: '/admissions',
+  OPERATOR: '/schedule',
 } as const;
 
 /**
