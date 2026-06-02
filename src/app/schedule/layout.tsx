@@ -5,6 +5,8 @@ import { getServerSession } from 'next-auth';
 import { ScheduleFallback, ScheduleProvider, Toolbar } from '@/features/schedule';
 import { authOptions } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 const user = await getServerSession(authOptions);
 
 export const metadata: Metadata = {

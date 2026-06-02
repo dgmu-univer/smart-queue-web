@@ -26,7 +26,7 @@ export function UserSignLink() {
   if (session?.user.role === 'OPERATOR') {
     return (
       <Link
-        href="/admissions"
+        href="/schedule"
         className="text-foreground hover:text-foreground/70 inline-flex items-center gap-1.5 rounded-md font-medium transition-colors"
       >
         <CalendarClock className="size-4" aria-hidden="true" />
