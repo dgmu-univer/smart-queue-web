@@ -1,6 +1,8 @@
 import { FetchScheduleSlot } from '../api/types';
 
-export const groupedSlots = (slots: FetchScheduleSlot[]) => Object.entries(
+export type GroupedSlots = [string, FetchScheduleSlot[]][];
+
+export const groupedSlots = (slots: FetchScheduleSlot[]): GroupedSlots => Object.entries(
   slots.reduce<Record<string, FetchScheduleSlot[]>>((acc, slot) => {
     const date = slot.start.slice(0, 10);
 

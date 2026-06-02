@@ -10,22 +10,28 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { SlotSettings } from '@/features/dashboard/api.types';
 
-import { FetchScheduleResponse, FetchScheduleSlot } from '../api/types';
 import { Pin } from '../components/pin';
-import { groupedSlots } from '../lib/grouped-slots';
+import { type GroupedSlots } from '../lib/grouped-slots';
 import { formatTitleDate, getSlotTime, isCurrentSlot } from '../lib/slot-date-utils';
 import { useSchedule } from '../provider/schedule-provider';
 
-export function ScheduleCalendar({ initSchedule }: { initSchedule: FetchScheduleResponse }) {
-  const [schedule] = useState<FetchScheduleSlot[]>(initSchedule.slots);
+interface ComponentProps {
+  initialGroupedSlots: GroupedSlots
+  slotsSettings: SlotSettings
+}
+
+export function ScheduleCalendar({ initialGroupedSlots }: ComponentProps) {
+  const [groupedSlots] = useState<GroupedSlots>(initialGroupedSlots);
   const { fontSize } = useSchedule();
 
-  const grouped = groupedSlots(schedule);
   const spacing = fontSize / 14; // коэффициент
 
   return (
     <Table style={{
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       '--spacing': `${(0.25 * spacing).toString()}rem`, // базовый spacing 0.25rem
       'fontSize': `${fontSize.toString()}px`,
     }}
@@ -38,7 +44,7 @@ export function ScheduleCalendar({ initSchedule }: { initSchedule: FetchSchedule
         </TableRow>
       </TableHeader>
       <TableBody>
-        {grouped.map(([date, daySlots]) =>
+        {groupedSlots.map(([date, daySlots]) =>
           daySlots.map((slot, index) => (
             <TableRow
               key={slot.start}
@@ -57,7 +63,7 @@ export function ScheduleCalendar({ initSchedule }: { initSchedule: FetchSchedule
               <TableCell>
                 {getSlotTime(slot)}
               </TableCell>
-              <TableCell className="bg-amber-500">
+              <TableCell>
                 {slot.pins.map((pin, index) => (
                   <Pin key={index} pin={pin} />
                 ))}
