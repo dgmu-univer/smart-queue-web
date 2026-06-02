@@ -1,5 +1,5 @@
-import type { GetDegreeProgramsResponse } from './api/types';
-import EnrollmentForm from './enrollment-form';
+import { fetchDegreeList } from './api/fetch-degree-list';
+import EnrollmentForm from './ui/enrollment-form';
 
-export type { GetDegreeProgramsResponse };
+export { fetchDegreeList };
 export default EnrollmentForm;

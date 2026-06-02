@@ -11,9 +11,10 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { extractApiError } from '@/lib/extract-api-error';
 
-import { enrollmentApi } from '../api/enrollment-api';
-import { AppointmentVerifyResponse } from '../api/types';
+import { VerifyOtpResponse } from '../../api/types';
+import { verifyOtp } from '../../api/verify-otp';
 import { type BookingStepMeta } from '../booking-step/booking-step';
+import { AlertError } from '../booking-step/reducer';
 import { type OtpFormValues, otpSchema } from './shcema';
 
 interface VerificationStepProps {
@@ -22,11 +23,11 @@ interface VerificationStepProps {
   meta: BookingStepMeta
 }
 
-export type VerificationStepNextHandler = (confirmData: AppointmentVerifyResponse) => void;
+export type VerificationStepNextHandler = (confirmData: VerifyOtpResponse) => void;
 
 export default function VerificationStep({ onBack, onNext, meta }: VerificationStepProps) {
   const [isPending, setIsPending] = useState(false);
-  const [verificationError, setVerificationError] = useState<string | null>(null);
+  const [verificationError, setVerificationError] = useState<AlertError | null>(null);
   const form = useForm<OtpFormValues>({
     resolver: zodResolver(otpSchema),
     defaultValues: { pin: '' },
@@ -35,15 +36,19 @@ export default function VerificationStep({ onBack, onNext, meta }: VerificationS
   const handleVerify: SubmitHandler<OtpFormValues> = async (data) => {
     try {
       setIsPending(true);
-      const result = await enrollmentApi.appointmentsVerify({
+      const result = await verifyOtp({
         id: meta.bookingId,
         verificationCode: data.pin,
       });
       onNext(result);
     } catch (error) {
-      const { message } = extractApiError(error);
-      setVerificationError(message);
-      console.error(error);
+      const { message, status } = extractApiError(error);
+
+      const err: AlertError = status === 400
+        ? { variant: 'destructive', title: 'Неверный код', description: 'Введён неверный 4-значный код из SMS. Проверьте код и попробуйте снова.' }
+        : { variant: 'destructive', title: 'Ошибка', description: message };
+
+      setVerificationError(err);
     } finally {
       setIsPending(false);
     }
@@ -59,7 +64,7 @@ export default function VerificationStep({ onBack, onNext, meta }: VerificationS
           {meta.bookingId}
         </span>
         <p className="text-sm/relaxed text-neutral-500">
-          Мы отправили SMS с 6-значным кодом на номер
+          Мы отправили SMS с 4-значным кодом на номер
           {' '}
           <span className="font-medium text-neutral-950">{meta.phone}</span>
           .
@@ -74,7 +79,7 @@ export default function VerificationStep({ onBack, onNext, meta }: VerificationS
               <FieldLabel>Введите код из SMS</FieldLabel>
               <InputOTP
                 aria-invalid={fieldState.invalid}
-                maxLength={6}
+                maxLength={4}
                 {...field}
               >
                 <InputOTPGroup className="gap-2">
@@ -82,8 +87,6 @@ export default function VerificationStep({ onBack, onNext, meta }: VerificationS
                   <InputOTPSlot index={1} className="h-12 w-10 rounded-md border text-lg sm:w-12" />
                   <InputOTPSlot index={2} className="h-12 w-10 rounded-md border text-lg sm:w-12" />
                   <InputOTPSlot index={3} className="h-12 w-10 rounded-md border text-lg sm:w-12" />
-                  <InputOTPSlot index={4} className="h-12 w-10 rounded-md border text-lg sm:w-12" />
-                  <InputOTPSlot index={5} className="h-12 w-10 rounded-md border text-lg sm:w-12" />
                 </InputOTPGroup>
               </InputOTP>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -94,9 +97,9 @@ export default function VerificationStep({ onBack, onNext, meta }: VerificationS
         {verificationError && (
           <Alert variant="destructive">
             <AlertCircle className="size-4" />
-            <AlertTitle>Ошибка активации</AlertTitle>
+            <AlertTitle>{verificationError.title}</AlertTitle>
             <AlertDescription>
-              {verificationError}
+              {verificationError.description}
             </AlertDescription>
           </Alert>
         )}
@@ -116,7 +119,7 @@ export default function VerificationStep({ onBack, onNext, meta }: VerificationS
 
           <Button
             type="submit"
-            disabled={isPending}
+            disabled={isPending || !form.formState.isValid}
             className="h-11 flex-1 bg-neutral-950 text-white"
           >
             Подтвердить

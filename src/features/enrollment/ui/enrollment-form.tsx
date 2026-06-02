@@ -2,14 +2,14 @@
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
-import { AppointmentVerifyResponse, GetDegreeProgramsResponse } from './api/types';
-import BookingStep, { type BookingStepMeta, type BookingStepNextHandler } from './booking-step/booking-step';
-import ConfirmationStep from './confirmation-step/confirmation-step';
-import VerificationStep, { type VerificationStepNextHandler } from './verification-step/verification-step';
-import EnrollmentStepIndicator from './enrollment-step-indicator';
-import { Scoped, steps, useStepper } from './stepperize';
+import { type FetchDegreeListResponse } from '../api/types';
+import BookingStep, { type BookingStepMeta, type BookingStepNextHandler } from '../components/booking-step/booking-step';
+import ConfirmationStep from '../components/confirmation-step/confirmation-step';
+import EnrollmentStepIndicator from '../components/enrollment-step-indicator';
+import VerificationStep, { type VerificationStepNextHandler } from '../components/verification-step/verification-step';
+import { Scoped, steps, useStepper } from '../lib/stepperize';
 
-export default function EnrollmentForm({ initialData }: { initialData: GetDegreeProgramsResponse }) {
+export default function EnrollmentForm({ initialData }: { initialData: FetchDegreeListResponse }) {
   const stepper = useStepper();
   const currentStep = stepper.state.current.data;
 
@@ -38,7 +38,7 @@ export default function EnrollmentForm({ initialData }: { initialData: GetDegree
         </CardHeader>
         <CardContent className="px-2 pt-4 pb-6 sm:px-12 sm:pt-6 sm:pb-16">
           {stepper.flow.switch({
-            booking: () => <BookingStep onNext={onBookingStepNext} initialData={initialData} />,
+            booking: () => <BookingStep onNext={onBookingStepNext} degreeList={initialData.degreePrograms} />,
             verification: () => (
               <VerificationStep
                 meta={stepper.metadata.values.verification as BookingStepMeta}
@@ -49,7 +49,7 @@ export default function EnrollmentForm({ initialData }: { initialData: GetDegree
             confirmation: () => (
               <ConfirmationStep
                 onReset={onConfirmationStepReset}
-                meta={stepper.metadata.values.confirmation as AppointmentVerifyResponse}
+                meta={stepper.metadata.values.confirmation}
               />
             ),
           })}

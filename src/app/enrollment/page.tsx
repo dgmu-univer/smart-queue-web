@@ -2,20 +2,15 @@ import { Metadata } from 'next';
 
 import { AppIcon } from '@/components/app-icon';
 import { Gradient } from '@/components/gradient';
-import EnrollmentForm, { type GetDegreeProgramsResponse } from '@/features/enrollment';
-import { api } from '@/lib/api';
+import EnrollmentForm, { fetchDegreeList } from '@/features/enrollment';
 
 export const metadata: Metadata = {
   title: 'Приёмная комиссия ДГМУ → Запись в очередь',
   description: 'Приёмная комиссия ДГМУ заботится о вашем времени. Выберите удобную дату — мы всё организуем',
 };
 
-async function getPublicDegreePrograms(): Promise<GetDegreeProgramsResponse> {
-  return await api<GetDegreeProgramsResponse>('/public/degree-programs');
-}
-
 export default async function Page() {
-  const initialData = await getPublicDegreePrograms();
+  const initialData = await fetchDegreeList();
   return (
     <main className="relative flex min-h-svh overflow-x-hidden">
       {/* Градиент снова будет виден, так как мы убрали bg-[#fafafa] с тега main */}
