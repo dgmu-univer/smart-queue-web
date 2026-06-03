@@ -10,11 +10,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { cn } from '@/lib/utils';
 
 import { FetchScheduleResponse } from '../api/types';
 import { EmptyData } from '../components/empty-data';
 import { Pin } from '../components/pin';
-import { ScheduleFallback } from '../components/schedule-fallback';
 import { type GroupedSlots, groupedSlots } from '../lib/grouped-slots';
 import { formatTitleDate, getSlotTime, isCurrentSlot } from '../lib/slot-date-utils';
 import { toScheduleRange } from '../lib/to-schedule-range';
@@ -28,7 +28,7 @@ export function ScheduleCalendar({ initialData }: ComponentProps) {
   const { date } = useSchedule();
   const params = toScheduleRange(date);
 
-  const { data, isFetching } = useQuery<FetchScheduleResponse, Error, GroupedSlots>({
+  const { data, dataUpdatedAt } = useQuery<FetchScheduleResponse, Error, GroupedSlots>({
     queryKey: ['slots', params],
     queryFn: ({ signal }) => fetch(`/api/appointments?to=${params.to}&from=${params.from}`, {
       headers: {
@@ -47,10 +47,6 @@ export function ScheduleCalendar({ initialData }: ComponentProps) {
 
   const spacing = fontSize / 14; // коэффициент
 
-  if (isFetching) {
-    return <ScheduleFallback />;
-  }
-
   return (
     <Table style={{
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -66,15 +62,16 @@ export function ScheduleCalendar({ initialData }: ComponentProps) {
           <TableHead className="min-w-100">Коды подтверждения</TableHead>
         </TableRow>
       </TableHeader>
-      <TableBody>
+      <TableBody key={dataUpdatedAt}>
         {data.length === 0 && <EmptyData />}
         {data.length > 0 && data.map(([date, daySlots]) =>
           daySlots.map((slot, index) => (
             <TableRow
               key={slot.start}
-              style={{
-                backgroundColor: isCurrentSlot(slot) ? '#EAF8EA' : undefined,
-              }}
+              className={cn(
+                'text-gray-600',
+                isCurrentSlot(slot) && 'bg-orange-500 text-black hover:bg-orange-500',
+              )}
             >
               {index === 0 && (
                 <TableCell
@@ -85,7 +82,7 @@ export function ScheduleCalendar({ initialData }: ComponentProps) {
                 </TableCell>
               )}
               <TableCell>
-                {getSlotTime(slot)}
+                <Pin pin={getSlotTime(slot)} />
               </TableCell>
               <TableCell>
                 {slot.pins.map((pin, index) => (
