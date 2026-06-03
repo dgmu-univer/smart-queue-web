@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-export function DashboardUser() {
+export function AuthUser() {
   const { data } = useSession();
   return (
     <div className="flex items-center gap-2">
