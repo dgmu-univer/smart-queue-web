@@ -1,5 +1,5 @@
 import { DegreeManager } from './ui/education-lavel-table';
-import { fetchAllDegree } from './api/fetch-all-degree';
+import { fetchAllEducationLevels } from './api/fetch-all-edu-level';
 
-export { fetchAllDegree };
+export { fetchAllEducationLevels };
 export default DegreeManager;

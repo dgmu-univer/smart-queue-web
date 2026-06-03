@@ -1,6 +1,6 @@
 import { ExcludedSlotSettings, PeriodSetting, SlotSettings } from '../../api.types';
 
-export interface GetDegreeResponseItem {
+export interface EducationLevel {
   id: number
   name: string
   pin: string
@@ -13,4 +13,6 @@ export interface GetDegreeResponseItem {
   }
 }
 
-export type CreateDegreePayload = Omit<GetDegreeResponseItem, 'id'>;
+export type EducationLevelResponse = EducationLevel[];
+
+export type CreateEducationLevelPayload = Omit<EducationLevel, 'id'>;

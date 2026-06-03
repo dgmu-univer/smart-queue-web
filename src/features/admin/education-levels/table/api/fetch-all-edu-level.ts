@@ -1,9 +1,9 @@
 'use server';
 
 import { apiServer } from '@/lib/api.server';
-import { GetDegreeResponseItem } from './types';
+import { EducationLevel } from './types';
 
-export async function fetchAllDegree(): Promise<GetDegreeResponseItem[]> {
+export async function fetchAllEducationLevels(): Promise<EducationLevel[]> {
   return await apiServer('/degree-programs',
     { method: 'GET' });
 }
