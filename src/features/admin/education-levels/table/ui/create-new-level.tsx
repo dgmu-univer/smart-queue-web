@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/input-otp';
 import { Textarea } from '@/components/ui/textarea';
 
-import { createDegree } from '../api/create-degree';
+import { createEducationLevel } from '../api/create-edu-level';
 import { createPayload } from '../lib/create-payload';
 
 export const formSchema = z.object({
@@ -41,9 +41,9 @@ export const formSchema = z.object({
     .max(6, 'ПИН-код должен содержать максимум 6 цифр'),
 });
 
-export type CreateNewDegreeFormProps = z.infer<typeof formSchema>;
+export type CreateNewLevelFormProps = z.infer<typeof formSchema>;
 
-export default function CreateNewDegree() {
+export default function CreateNewEducationLevel() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -72,7 +72,7 @@ export default function CreateNewDegree() {
   function handleCreate(values: z.infer<typeof formSchema>) {
     const payload = createPayload(values);
     startTransition(async () => {
-      const result = await createDegree(payload);
+      const result = await createEducationLevel(payload);
       if (result.success) {
         form.reset();
         setIsOpen(false);
@@ -90,9 +90,8 @@ export default function CreateNewDegree() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2" variant="secondary">
+        <Button size="sm" variant="outline">
           <Plus className="size-4" />
-          {' '}
           Добавить уровень образования
         </Button>
       </DialogTrigger>

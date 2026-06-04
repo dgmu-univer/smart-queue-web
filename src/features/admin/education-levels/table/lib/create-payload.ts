@@ -1,8 +1,8 @@
 import { dateAsApiString } from '@/lib/date';
-import { CreateDegreePayload } from '../api/types';
-import { CreateNewDegreeFormProps } from '../ui/create-new-level';
+import { CreateEducationLevelPayload } from '../api/types';
+import { CreateNewLevelFormProps } from '../ui/create-new-level';
 
-export const createPayload = (formData: CreateNewDegreeFormProps): CreateDegreePayload => {
+export const createPayload = (formData: CreateNewLevelFormProps): CreateEducationLevelPayload => {
   return {
     name: formData.name,
     pin: formData.pin,
