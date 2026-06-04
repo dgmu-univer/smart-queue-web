@@ -1,5 +1,13 @@
+import type { Metadata } from 'next';
+
 import EducationLevelTable, { fetchAllEducationLevels } from '@/features/admin/education-levels/table';
 import AdminStats from '@/features/admin/statistics';
+
+export const metadata: Metadata = {
+  title: 'Настройки расписания приёмной комиссии',
+  description:
+    'Настройка периода работы, рабочего времени, параметров записи посетителей, нерабочих дней и исключённых слотов.'
+};
 
 export default async function AdminDashboardPage() {
   const initialLevels = await fetchAllEducationLevels();
