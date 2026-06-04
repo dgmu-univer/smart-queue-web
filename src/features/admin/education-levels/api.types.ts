@@ -31,5 +31,5 @@ export interface ExcludedSlotSettings {
   end_time: string
 }
 
-export interface DegreeIdParams { params: Promise<{ degreeId: string }> }
-export type WithDegreeId<T> = T & { degreeId: string };
+export interface LevelSettingPageParams { params: Promise<{ levelId: string }> }
+export type WithLevelId<T> = T & { levelId: string };

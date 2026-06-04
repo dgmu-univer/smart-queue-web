@@ -28,6 +28,7 @@ import {
 import { deleteEducationLevel } from '../api/delete-edu-level';
 import { EducationLevel } from '../api/types';
 import CreateNewEducationLevel from './create-new-level';
+import Link from 'next/link';
 
 export const EducationLevelTable = ({ initialLevels }: { initialLevels: EducationLevel[] }) => {
   const [isPending, startTransition] = useTransition();
@@ -80,9 +81,11 @@ export const EducationLevelTable = ({ initialLevels }: { initialLevels: Educatio
                 </TableCell>
                 <TableCell className="py-3 text-right">
                   <div className="flex items-center justify-end gap-1">
-                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground size-7">
-                      <Settings className="size-3.5" />
-                      <span className="sr-only">Настройки</span>
+                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground size-7" asChild>
+                      <Link href={`/admin/education-level/${level.id.toString()}`}>
+                        <Settings className="size-3.5" />
+                        <span className="sr-only">Настройки</span>
+                      </Link>
                     </Button>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
@@ -103,6 +106,7 @@ export const EducationLevelTable = ({ initialLevels }: { initialLevels: Educatio
                         <AlertDialogFooter>
                           <AlertDialogCancel>Отмена</AlertDialogCancel>
                           <AlertDialogAction
+                            loading={isPending}
                             onClick={() => { handleDelete(level.id); }}
                             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                           >
