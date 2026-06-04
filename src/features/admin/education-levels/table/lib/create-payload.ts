@@ -18,8 +18,8 @@ export const createPayload = (formData: CreateNewLevelFormProps): CreateEducatio
           end_time: '18:00:00',
         },
         lunch: {
-          start_time: undefined,
-          end_time: undefined,
+          start_time: null,
+          end_time: null,
         },
       },
       slots: {
