@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import { formatDate } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
@@ -12,15 +11,6 @@ import { useSchedule } from '../provider/schedule-provider';
 
 export const Toolbar = () => {
   const { next, prev, today, increaseFont, decreaseFont, date } = useSchedule();
-
-  useEffect(() => {
-    // Добавляем класс dark при монтировании страницы
-    document.documentElement.classList.add('dark');
-    // Убираем при уходе со страницы (опционально)
-    return () => {
-      document.documentElement.classList.remove('dark');
-    };
-  }, []);
 
   return (
     <header className="bg-background flex h-14 items-center justify-between px-4">

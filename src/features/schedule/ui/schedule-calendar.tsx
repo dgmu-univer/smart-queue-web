@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import {
@@ -42,6 +43,15 @@ export function ScheduleCalendar({ initialData }: ComponentProps) {
     refetchInterval: 60000, // 1 минута
     refetchOnWindowFocus: true,
   });
+
+  // useEffect(() => {
+  //   // Добавляем класс dark при монтировании страницы
+  //   document.documentElement.classList.add('dark');
+  //   // Убираем при уходе со страницы (опционально)
+  //   return () => {
+  //     document.documentElement.classList.remove('dark');
+  //   };
+  // }, []);
 
   const { fontSize } = useSchedule();
 
