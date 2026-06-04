@@ -1,4 +1,4 @@
-import { SlotSettings } from '@/features/dashboard/api.types';
+import { SlotSettings } from '@/features/admin/education-levels/api.types';
 
 export interface FetchScheduleParams {
   from: string

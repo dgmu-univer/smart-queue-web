@@ -70,16 +70,18 @@ function Button({
       disabled={disabled || loading}
       {...props}
     >
-      {loading && (
-        <Loader2Icon
-          className={cn(
-            'text-muted absolute animate-spin',
-            // Used for conditional styling when button is loading
-            'loading',
+      {loading
+        ? (
+            <Loader2Icon
+              className={cn(
+                'text-muted absolute animate-spin',
+                'loading',
+              )}
+            />
+          )
+        : (
+            children
           )}
-        />
-      )}
-      {children}
     </Comp>
   );
 }

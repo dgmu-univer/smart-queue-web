@@ -102,14 +102,14 @@ export async function proxy(req: NextRequest) {
   if (token.user.role === 'OPERATOR') {
     if (!canAccess(pathname, 'OPERATOR')) {
       console.warn(`[PROXY] Operator access blocked → ${pathname}`);
-      return NextResponse.redirect(new URL('/', req.url));
+      return NextResponse.redirect(new URL('/schedule', req.url));
     }
   }
 
   if (token.user.role === 'ADMIN') {
     if (!canAccess(pathname, 'ADMIN')) {
       console.warn(`[PROXY] Admin access blocked → ${pathname}`);
-      return NextResponse.redirect(new URL('/', req.url));
+      return NextResponse.redirect(new URL('/admin', req.url));
     }
   }
 
@@ -118,9 +118,9 @@ export async function proxy(req: NextRequest) {
 
 export const config = {
   matcher: [
-    '/dashboard/:path*',
-    '/admissions',
-    '/admissions/:path*',
+    '/admin/:path*',
+    '/schedule',
+    '/schedule/:path*',
     '/pages',
     '/pages/:path*',
     '/api/:path*',

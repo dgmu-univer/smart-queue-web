@@ -3,8 +3,8 @@ export const ROLE_PERMISSIONS = {
     '*',
   ],
   ADMIN: [
-    '/dashboard',
-    '/dashboard/*',
+    '/admin',
+    '/admin/*',
     '/api/statistics',
     '/api/appointments',
   ],
