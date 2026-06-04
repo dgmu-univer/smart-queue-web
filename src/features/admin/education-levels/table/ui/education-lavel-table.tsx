@@ -1,6 +1,7 @@
 'use client';
 
 import { useTransition } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Settings, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -28,7 +29,6 @@ import {
 import { deleteEducationLevel } from '../api/delete-edu-level';
 import { EducationLevel } from '../api/types';
 import CreateNewEducationLevel from './create-new-level';
-import Link from 'next/link';
 
 export const EducationLevelTable = ({ initialLevels }: { initialLevels: EducationLevel[] }) => {
   const [isPending, startTransition] = useTransition();
