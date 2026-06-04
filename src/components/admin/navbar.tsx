@@ -10,10 +10,6 @@ import { cn } from '@/lib/utils';
 
 const navLinks = [
   { label: 'Статистика', href: '/admin' },
-  { label: 'Абитуриенты', href: '/admin/applicants' },
-  { label: 'Заявки', href: '/admin/applications' },
-  { label: 'Уровни образования', href: '/admin/education-levels' },
-  { label: 'Настройки', href: '/admin/settings' },
 ];
 
 export function AdminNavbar() {
