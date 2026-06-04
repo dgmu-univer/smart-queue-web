@@ -46,7 +46,7 @@ export const OparatorForm = () => {
       if (result?.url) {
         router.push(result.url);
       } else {
-        router.push('/booking');
+        router.push('/schedule');
         router.refresh(); // Refresh to update session on server
       }
     } catch (error) {

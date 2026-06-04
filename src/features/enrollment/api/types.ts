@@ -1,4 +1,4 @@
-import { WorkDateSettings } from '@/features/dashboard/api.types';
+import { WorkDateSettings } from '@/features/admin/education-levels/api.types';
 
 export interface Slot {
   id: number

@@ -5,7 +5,7 @@ import { formatDate } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
 
-import { DashboardUser } from '@/components/dashboard/dashboard-user';
+import { AuthUser } from '@/components/auth-user';
 import { Button } from '@/components/ui/button';
 
 import { useSchedule } from '../provider/schedule-provider';
@@ -79,7 +79,7 @@ export const Toolbar = () => {
           </Button>
         </div>
         {/* Иконка юзера (Отдельно) */}
-        <DashboardUser />
+        <AuthUser />
       </div>
     </header>
   );

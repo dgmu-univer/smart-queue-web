@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { UserSignLink } from './dashboard/user-sign-link';
+import { UserSignIn } from './user-sign-in';
 
 export function SiteHeader() {
   return (
@@ -36,7 +36,7 @@ export function SiteHeader() {
             Контакты
           </Link>
           <span aria-hidden="true" className="bg-border hidden h-4 w-px sm:inline-block" />
-          <UserSignLink />
+          <UserSignIn />
         </nav>
       </div>
     </header>

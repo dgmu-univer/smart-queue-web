@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 
-import { WorkDateSettings } from '@/features/dashboard/api.types';
+import { WorkDateSettings } from '@/features/admin/education-levels/api.types';
 
 export function useDateDisabled(periodSettings?: WorkDateSettings) {
   const startDate = useMemo(() => new Date(periodSettings?.start_date ?? ''), [periodSettings?.start_date]);

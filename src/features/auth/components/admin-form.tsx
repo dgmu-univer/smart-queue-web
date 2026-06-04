@@ -45,7 +45,7 @@ export const AdminForm = () => {
       if (result?.url) {
         router.push(result.url);
       } else {
-        router.push('/dashboard');
+        router.push('/admin');
         router.refresh(); // Refresh to update session on server
       }
     } catch (error) {
