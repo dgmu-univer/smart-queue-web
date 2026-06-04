@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -38,6 +39,7 @@ export default function Main({ initialData, levelId }: ComponentProps) {
     control: form.control,
     name: 'lunchOff',
   });
+  console.log('initialData', initialData);
 
   const handleUpdate: SubmitHandler<DegreeMainSettingFormProps> = (data) => {
     startTransition(async () => {
@@ -58,9 +60,15 @@ export default function Main({ initialData, levelId }: ComponentProps) {
     <Card className="border-border border shadow-none">
       <CardHeader className="pb-4">
         <CardTitle className="text-foreground text-base font-semibold">Основные настройки</CardTitle>
+        <CardDescription>
+          Основные настройки используются для задания периода работы приёмной комиссии и базового расписания.
+          Укажите даты начала и окончания действия настроек, затем задайте рабочее время, в рамках которого будет доступна запись.
+          При необходимости можно настроить обеденный перерыв или отметить пункт «Не указывать обед», чтобы запись была доступна в течение всего рабочего дня.
+          После внесения изменений нажмите кнопку «Сохранить» для применения настроек.
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex">
-        <form className="flex flex-col gap-6" onSubmit={e => void form.handleSubmit(handleUpdate)(e)}>
+        <form className="flex size-full flex-col gap-6" onSubmit={e => void form.handleSubmit(handleUpdate)(e)}>
           {/* Admission committee */}
           <div className="flex flex-col gap-3">
             <p className="text-foreground text-sm font-medium">Приёмная комиссия</p>
@@ -70,7 +78,7 @@ export default function Main({ initialData, levelId }: ComponentProps) {
                   control={form.control}
                   name="work_date.start_date"
                   render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
+                    <Field data-invalid={fieldState.invalid} className="w-48">
                       <FieldLabel className="text-muted-foreground text-xs" htmlFor="work_date.start_date">Начало</FieldLabel>
                       <DatePicker
                         {...field}
@@ -90,7 +98,7 @@ export default function Main({ initialData, levelId }: ComponentProps) {
                   control={form.control}
                   name="work_date.end_date"
                   render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
+                    <Field data-invalid={fieldState.invalid} className="w-48">
                       <FieldLabel htmlFor="work_date.end_date" className="text-muted-foreground text-xs">Конец</FieldLabel>
                       <DatePicker
                         {...field}
@@ -119,7 +127,7 @@ export default function Main({ initialData, levelId }: ComponentProps) {
                   control={form.control}
                   name="work_time.start_time"
                   render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
+                    <Field data-invalid={fieldState.invalid} className="w-48">
                       <FieldLabel htmlFor="working_time.start_time" className="text-muted-foreground text-xs">Начало</FieldLabel>
                       <Input {...field} id="working_time.start_time" type="time" className="h-9 w-36 text-sm" placeholder="15" />
                       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -132,7 +140,7 @@ export default function Main({ initialData, levelId }: ComponentProps) {
                   control={form.control}
                   name="work_time.end_time"
                   render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
+                    <Field data-invalid={fieldState.invalid} className="w-48">
                       <FieldLabel htmlFor="working_time.end_time" className="text-muted-foreground text-xs">Конец</FieldLabel>
                       <Input {...field} id="working_time.end_time" type="time" className="h-9 w-36 text-sm" placeholder="15" />
                       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -178,7 +186,7 @@ export default function Main({ initialData, levelId }: ComponentProps) {
                     control={form.control}
                     name="lunch.start_time"
                     render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
+                      <Field data-invalid={fieldState.invalid} className="w-48">
                         <FieldLabel htmlFor="lunch.start_time" className="text-muted-foreground text-xs">Начало</FieldLabel>
                         <Input {...field} id="lunch.start_time" type="time" placeholder="15" className="h-9 w-36 text-sm" />
                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -191,7 +199,7 @@ export default function Main({ initialData, levelId }: ComponentProps) {
                     control={form.control}
                     name="lunch.end_time"
                     render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
+                      <Field data-invalid={fieldState.invalid} className="w-48">
                         <FieldLabel htmlFor="lunch.end_time" className="text-muted-foreground text-xs">Конец</FieldLabel>
                         <Input {...field} id="lunch.end_time" type="time" placeholder="15" className="h-9 w-36 text-sm" />
                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

@@ -6,9 +6,18 @@ export function transformInitData(initialData?: FetchMainSettingsResponse):
   if (!initialData) {
     return undefined;
   }
+
+  const lunchOff = initialData.lunch.start_time === null
+
   return {
     ...initialData,
-    lunchOff: initialData.lunch === null,
+    lunchOff,
+    lunch: {
+      // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
+      end_time: lunchOff ? '' : initialData.lunch.end_time as string,
+      // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
+      start_time: lunchOff ? '' : initialData.lunch.start_time as string,
+    },
     work_date: {
       end_date: new Date(initialData.work_date.end_date),
       start_date: new Date(initialData.work_date.start_date),

@@ -1,7 +1,7 @@
 export interface PeriodSetting {
   work_date: WorkDateSettings
   work_time: WorkTimeSettings
-  lunch: LunchSettings | null
+  lunch: LunchSettings
 }
 
 export interface WorkDateSettings {
@@ -15,8 +15,8 @@ export interface WorkTimeSettings {
 }
 
 export interface LunchSettings {
-  start_time?: string
-  end_time?: string
+  start_time: string | null
+  end_time: string | null
 }
 
 export interface SlotSettings {

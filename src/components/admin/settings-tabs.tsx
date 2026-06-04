@@ -52,7 +52,7 @@ export function SettingsTabs({ levelId }: ComponentProps) {
         }
       }}
     >
-      <TabsList className="border-border mb-6 h-auto w-full justify-start gap-1 rounded-none border-b bg-transparent p-0">
+      <TabsList className="border-border h-auto w-full justify-start gap-1 rounded-none border-b bg-transparent p-0">
         {tabs.map(tab => (
           <TabsTrigger
             className="

@@ -10,7 +10,10 @@ export function transformPayload(formData: DegreeMainSettingFormProps): UpdateMa
       start_date: dateAsApiString(formData.work_date.start_date),
     },
     lunch: formData.lunchOff
-      ? null
+      ? {
+          end_time: null,
+          start_time: null,
+        }
       : {
           end_time: formData.lunch?.end_time ?? '',
           start_time: formData.lunch?.start_time ?? '',

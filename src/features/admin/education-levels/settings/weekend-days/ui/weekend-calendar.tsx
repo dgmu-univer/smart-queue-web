@@ -9,6 +9,7 @@ import { Calendar } from '@/components/ui/calendar';
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -57,6 +58,12 @@ export default function WeekendsCalendar({ initialData, levelId }: ComponentProp
     <Card className="border-border border shadow-none">
       <CardHeader className="pb-4">
         <CardTitle className="text-foreground text-base font-semibold">Нерабочие дни</CardTitle>
+        <CardDescription>
+          Нерабочие дни используются для указания дат, в которые приём и запись посетителей недоступны.
+          Выберите в календаре один или несколько дней, которые необходимо исключить из рабочего расписания.
+          Все отмеченные даты будут считаться нерабочими, и запись на них будет автоматически заблокирована.
+          После внесения изменений нажмите кнопку «Сохранить» для применения настроек.
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-6">
         <Calendar

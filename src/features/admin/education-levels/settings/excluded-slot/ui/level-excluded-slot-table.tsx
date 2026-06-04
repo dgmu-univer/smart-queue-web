@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
 } from '@/components/ui/card';
 import {
@@ -55,6 +56,12 @@ export default function ExcludedSlotsTable({ initialData, levelId }: ComponentPr
           <h2 className="text-foreground text-base font-semibold">Исключённые слоты</h2>
           <CreateExcludedSlot levelId={levelId} />
         </div>
+        <CardDescription className="mt-4">
+          Исключённые слоты используются для временного исключения отдельных интервалов из общего расписания работы.
+          Укажите дату и время слота, который необходимо заблокировать, чтобы запись посетителей на данный интервал была недоступна.
+          Эта настройка позволяет исключать отдельные временные промежутки без изменения рабочего графика и нерабочих дней.
+          После внесения изменений нажмите кнопку «Сохранить» для применения настроек.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Table>

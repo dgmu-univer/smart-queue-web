@@ -9,16 +9,16 @@ import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 
 import { WithLevelId } from '../../../api.types';
 import { FetchSlotSettingsResponse } from '../api/types';
 import { updateSlotSettingsActions } from '../api/update-slot-setting';
-import FieldHint from '../components/field-hint';
 import type { SlotSettingFormProps } from '../lib/schema';
 import { slotSettingSchema } from '../lib/schema';
 
@@ -51,6 +51,12 @@ export default function SlotSettingForm({ initialData, levelId }: ComponentProps
     <Card className="border-border border shadow-none">
       <CardHeader className="pb-4">
         <CardTitle className="text-foreground text-base font-semibold">Настройка слота</CardTitle>
+        <CardDescription>
+          Настройка слота используется для определения параметров записи посетителей.
+          Укажите длительность одного слота и количество посетителей, которые могут быть записаны на один временной интервал.
+          На основании указанных значений система будет формировать доступные слоты для записи в рамках установленного рабочего времени.
+          После внесения изменений нажмите кнопку «Сохранить» для применения настроек.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -67,6 +73,7 @@ export default function SlotSettingForm({ initialData, levelId }: ComponentProps
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="duration_minutes" className="text-muted-foreground text-xs">Длительность слота (мин)</FieldLabel>
+                    <FieldDescription className="text-xs">от 5 до 60 минут</FieldDescription>
                     <Input {...field} id="duration_minutes" type="number" placeholder="15" className="h-9 w-36 text-sm" />
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                   </Field>
@@ -80,6 +87,7 @@ export default function SlotSettingForm({ initialData, levelId }: ComponentProps
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="capacity_per_slot" className="text-muted-foreground text-xs">Вместимость слота</FieldLabel>
+                    <FieldDescription className="text-xs">от 1 до 15 человек</FieldDescription>
                     <Input {...field} id="capacity_per_slot" type="number" placeholder="10" className="h-9 w-36 text-sm" />
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                   </Field>
