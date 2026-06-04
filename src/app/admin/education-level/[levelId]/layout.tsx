@@ -1,5 +1,6 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, Suspense } from 'react';
 
+import TabLoadingFallback from '@/components/admin/loader-fallback';
 import { SettingsTabs } from '@/components/admin/settings-tabs';
 import { LevelSettingPageParams } from '@/features/admin/education-levels/api.types';
 
@@ -12,7 +13,9 @@ export default async function SettingsLayout({ children, params }: PropsWithChil
         {levelId}
       </h1>
       <SettingsTabs levelId={levelId} />
-      {children}
+      <Suspense fallback={<TabLoadingFallback />}>
+        {children}
+      </Suspense>
     </div>
   );
 }
