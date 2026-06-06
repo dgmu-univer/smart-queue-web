@@ -11,8 +11,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  PUBLIC_API_URL: https://price05.ru
-  PUBLIC_SITE_URL: https://price05.ru
+  PUBLIC_API_URL: https://очередь.дгму.рф
+  PUBLIC_SITE_URL: https://очередь.дгму.рф
   DOCKER_IMAGE: ${{ secrets.DOCKER_FRONTEND_IMAGE }}
 
 jobs:
