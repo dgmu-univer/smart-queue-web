@@ -9,7 +9,7 @@ const CSP_DIRECTIVES = {
 
   // Добавил 'unsafe-eval' — он часто нужен Next.js в режиме разработки
   'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-  'connect-src': ["'self'", "https://очередь.дгму.рф"],
+  'connect-src': ["'self'", "https://xn--d1aba8al4b0b.xn--c1abz2a.xn--p1ai"],
   'style-src': ["'self'", "'unsafe-inline'"],
 
   'img-src': ["'self'", "data:", "blob:", "https://cdn.shadcnstudio.com"],

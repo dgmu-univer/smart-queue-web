@@ -11,8 +11,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  PUBLIC_API_URL: https://очередь.дгму.рф
-  PUBLIC_SITE_URL: https://очередь.дгму.рф
+  PUBLIC_API_URL: https://xn--d1aba8al4b0b.xn--c1abz2a.xn--p1ai
+  PUBLIC_SITE_URL: https://xn--d1aba8al4b0b.xn--c1abz2a.xn--p1ai
   DOCKER_IMAGE: ${{ secrets.DOCKER_FRONTEND_IMAGE }}
 
 jobs:
