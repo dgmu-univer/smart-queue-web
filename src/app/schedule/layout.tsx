@@ -1,11 +1,6 @@
-import { Suspense } from 'react';
 import { Metadata } from 'next';
 
-// import { getServerSession } from 'next-auth';
-import { ScheduleFallback, ScheduleProvider, Toolbar } from '@/features/schedule';
-// import { authOptions } from '@/lib/auth';
-
-// const user = await getServerSession(authOptions);
+import { ScheduleProvider } from '@/features/schedule';
 
 export const metadata: Metadata = {
   title: `- Расписание`,
@@ -15,16 +10,7 @@ export const metadata: Metadata = {
 export default function ScheduleLayout({ children }: { children: React.ReactNode }) {
   return (
     <ScheduleProvider>
-      <div className="bg-background flex h-screen w-full flex-col overflow-hidden">
-        <Toolbar />
-        <main className="size-full flex-1 overflow-auto">
-          <Suspense
-            fallback={<ScheduleFallback />}
-          >
-            {children}
-          </Suspense>
-        </main>
-      </div>
+      {children}
     </ScheduleProvider>
   );
 }

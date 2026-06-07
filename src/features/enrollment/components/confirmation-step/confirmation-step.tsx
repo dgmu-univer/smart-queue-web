@@ -5,7 +5,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { format, parseISO } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { Download, RotateCcw } from 'lucide-react';
+import { Download } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
@@ -40,103 +40,100 @@ export default function ConfirmationStep({ onReset, meta }: ConfirmationStepProp
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Включаем поддержку Retina-дисплеев (высокое разрешение картинки)
+    // Включаем поддержку Retina-дисплеев
     const dpr = 2;
     canvas.width = 400 * dpr;
-    canvas.height = 480 * dpr;
+    canvas.height = 560 * dpr; // Увеличил высоту для напоминания
     ctx.scale(dpr, dpr);
 
-    // 1. Сглаживание
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
 
-    // 2. Фон холста
+    // Белый фон
     ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, 400, 480);
+    ctx.fillRect(0, 0, 400, 560);
 
-    // 3. Рисуем карточку (основной бордер)
+    // Основная карточка
     ctx.strokeStyle = '#e5e5e5';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.roundRect(16, 16, 368, 448, 12);
+    ctx.roundRect(0, 0, 400, 560, 0);
     ctx.stroke();
-    ctx.clip(); // Ограничиваем рисование рамками карточки
+    ctx.clip();
 
-    // 4. Шапка билета (Светлый фон)
+    // Шапка билета
     ctx.fillStyle = '#ffffff';
-    ctx.fillRect(16, 16, 368, 140);
+    ctx.fillRect(0, 0, 400, 140);
 
     ctx.fillStyle = '#171717';
     ctx.font = 'bold 18px sans-serif';
-    ctx.fillText('Запись успешно создана', 36, 56);
+    ctx.fillText('🔥 Запись успешно создана', 20, 56);
 
     ctx.fillStyle = '#a3a3a3';
     ctx.font = '12px sans-serif';
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    ctx.fillText(`Заявка №${data.id}`, 36, 80);
-    ctx.fillText(`Создано: ${createdDate}`, 36, 100);
+    ctx.fillText(`Заявка №${data.id.toString()}`, 20, 80);
+    ctx.fillText(`Создано: ${createdDate}`, 20, 100);
 
     // Разделительная линия 1
     ctx.strokeStyle = '#f5f5f5';
     ctx.beginPath();
-    ctx.moveTo(16, 125);
-    ctx.lineTo(384, 125);
+    ctx.moveTo(0, 125);
+    ctx.lineTo(400, 125);
     ctx.stroke();
 
-    // 5. Тело билета: Данные обучения
+    // Тело билета
     ctx.fillStyle = '#ffffff';
-    ctx.fillRect(16, 126, 368, 140);
+    ctx.fillRect(0, 126, 400, 140);
 
     ctx.fillStyle = '#737373';
     ctx.font = '600 11px sans-serif';
-    ctx.fillText('УРОВЕНЬ ОБРАЗОВАНИЯ', 36, 155);
+    ctx.fillText('УРОВЕНЬ ОБРАЗОВАНИЯ', 20, 155);
 
     ctx.fillStyle = '#171717';
     ctx.font = 'bold 15px sans-serif';
-    ctx.fillText(data.degree.name, 36, 178);
+    ctx.fillText(data.degree.name, 20, 178);
 
-    // Описание программы (перенос строк)
+    const desc = data.degree.description ?? '';
     ctx.fillStyle = '#525252';
     ctx.font = '13px sans-serif';
-    const desc = data.degree.description ?? '';
     if (desc.length > 42) {
-      ctx.fillText(desc.slice(0, 42) + '...', 36, 205);
+      ctx.fillText(desc.slice(0, 42) + '...', 20, 205);
     } else {
-      ctx.fillText(desc, 36, 205);
+      ctx.fillText(desc, 20, 205);
     }
 
     // Разделительная линия 2
     ctx.strokeStyle = '#f5f5f5';
     ctx.beginPath();
-    ctx.moveTo(16, 235);
-    ctx.lineTo(384, 235);
+    ctx.moveTo(0, 235);
+    ctx.lineTo(400, 235);
     ctx.stroke();
 
-    // 6. Блок: Дата и время приема (Светло-серый фон подложки)
+    // Блок даты и времени
     ctx.fillStyle = '#fafafa';
-    ctx.fillRect(16, 236, 368, 100);
+    ctx.fillRect(0, 236, 400, 100);
 
     ctx.fillStyle = '#737373';
     ctx.font = '600 11px sans-serif';
-    ctx.fillText('ДАТА И ВРЕМЯ ПРИЕМА', 36, 268);
+    ctx.fillText('ДАТА И ВРЕМЯ ПРИЕМА', 20, 268);
 
     ctx.fillStyle = '#262626';
     ctx.font = '500 15px sans-serif';
-    ctx.fillText(appointmentDate, 36, 292);
+    ctx.fillText(appointmentDate, 20, 292);
 
-    // 7. Футер билета: Пин-код (Темная область)
+    // Черный блок с PIN-кодом
     ctx.fillStyle = '#0a0a0a';
-    ctx.fillRect(16, 336, 368, 128);
+    ctx.fillRect(0, 336, 400, 224); // Увеличил высоту черного блока
 
     ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
     ctx.font = '600 11px sans-serif';
-    ctx.fillText('КОД ПОДТВЕРЖДЕНИЯ', 36, 375);
+    ctx.fillText('КОД ПОДТВЕРЖДЕНИЯ', 20, 375);
 
     ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
     ctx.font = '12px sans-serif';
-    ctx.fillText('Предъявите при посещении', 36, 398);
+    ctx.fillText('Предъявите при посещении', 20, 398);
 
-    // Отрисовка плашки PIN-кода
+    // Плашка PIN-кода
     ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
     ctx.beginPath();
     ctx.roundRect(260, 362, 100, 45, 6);
@@ -147,56 +144,65 @@ export default function ConfirmationStep({ onReset, meta }: ConfirmationStepProp
     ctx.textAlign = 'center';
     ctx.fillText(data.pin, 310, 392);
 
-    // Экспорт в dataURL для тега <img />
+    // Разделительная линия перед напоминанием
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.beginPath();
+    ctx.moveTo(20, 430);
+    ctx.lineTo(380, 430);
+    ctx.stroke();
+
+    // Напоминание в черном блоке
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('⚠️ ВАЖНО: СОХРАНИТЕ БИЛЕТ', 200, 465);
+
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.font = '10px sans-serif';
+    ctx.fillText('Сделайте скриншот или нажмите "Скачать билет"', 200, 490);
+    ctx.fillText('Вы не сможете вернуться на эту страницу после закрытия', 200, 510);
+
+    // Декоративная линия внизу
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+    ctx.beginPath();
+    ctx.moveTo(20, 535);
+    ctx.lineTo(380, 535);
+    ctx.stroke();
+
     setImageSrc(canvas.toDataURL('image/png'));
   }, [data, createdDate, appointmentDate]);
 
   return (
-    <div className="animate-in fade-in-50 mx-auto w-full max-w-md space-y-6 p-2 duration-300">
-      {/* Верхний статус успеха */}
-      {/* <div className="flex flex-col items-center space-y-2 text-center">
-        <div className="flex size-12 items-center justify-center rounded-full border border-emerald-100 bg-emerald-50 text-emerald-600">
-          <CheckCircle2 className="size-6" />
-        </div>
-        <h2 className="text-xl font-semibold tracking-tight text-neutral-900">
-          Вы успешно записаны!
-        </h2>
-        <p className="text-xs text-neutral-400">
-          Билет сформирован автоматически защищенным образом.
-        </p>
-      </div> */}
-
-      {/* Скрытый холст, где генерируется картинка */}
+    <div className="w-full">
       <canvas ref={canvasRef} className="hidden" />
 
-      {/* Отображение билета в виде защищенной картинки */}
-      <div className="flex justify-center rounded-xl border border-neutral-100 bg-neutral-50/50 p-1 shadow-inner">
-        { /* // eslint-disable-next-line @stylistic/multiline-ternary */ }
+      {/* Карточка без отступов */}
+      <div className="flex justify-center">
         {imageSrc ? (
           <img
             src={imageSrc}
             alt="Билет подтверждения"
-            className="pointer-events-none h-auto w-full max-w-[400px] rounded-xl select-none"
-            onContextMenu={(e) => { e.preventDefault(); }} // Защита от контекстного меню (сохранения ссылки/копирования)
+            className="h-auto w-full select-none"
+            onContextMenu={(e) => { e.preventDefault(); }}
+            draggable={false}
           />
         ) : (
-          <div className="flex h-[480px] w-full max-w-[400px] animate-pulse items-center justify-center rounded-xl bg-neutral-100 text-sm text-neutral-400">
+          <div className="flex h-[560px] w-full animate-pulse items-center justify-center bg-neutral-100 text-sm text-neutral-400">
             Формирование билета...
           </div>
         )}
       </div>
 
       {/* Кнопки управления */}
-      <div className="flex flex-col gap-2 pt-2">
+      <div className="mt-4 space-y-3 px-2">
         {imageSrc && (
           <Button
             type="button"
             variant="outline"
-            className="h-11 w-full border-neutral-200 text-neutral-700 shadow-sm hover:bg-neutral-50"
+            className="h-12 w-full border-2 border-blue-200 bg-blue-50 font-medium text-blue-700 transition-all hover:bg-blue-100 hover:text-blue-800 hover:shadow-md"
             onClick={() => {
               const link = document.createElement('a');
-              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-              link.download = `ticket-${data.id}.png`;
+              link.download = `ticket-${data.id.toString()}.png`;
               link.href = imageSrc;
               link.click();
             }}
@@ -209,9 +215,8 @@ export default function ConfirmationStep({ onReset, meta }: ConfirmationStepProp
         <Button
           type="button"
           onClick={onReset}
-          className="flex h-11 w-full items-center justify-center gap-2 bg-neutral-950 text-white transition-all hover:bg-neutral-800"
+          className="flex h-12 w-full items-center justify-center gap-2 bg-neutral-900 font-medium text-white transition-all hover:bg-neutral-700 hover:shadow-md"
         >
-          <RotateCcw className="size-4" />
           Записаться еще раз
         </Button>
       </div>

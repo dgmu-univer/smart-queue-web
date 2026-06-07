@@ -1,45 +1,50 @@
 import { FetchScheduleSlot } from '../api/types';
+import { groupOverlappingSlots, SlotGroup } from './group-overlapping-slots';
 
-export interface ScheduleBoardData {
-  current: FetchScheduleSlot | undefined
-  next: FetchScheduleSlot[]
+export interface BoardData {
+  previous: SlotGroup | null
+  current: SlotGroup | null
+  next: SlotGroup | null
 }
 
 export function buildBoardData(
   slots: FetchScheduleSlot[],
-  nextCount = 5,
-): ScheduleBoardData {
+): BoardData {
+  const groups = groupOverlappingSlots(slots);
+
   const now = Date.now();
 
-  // const current
-  //   = slots.find((slot) => {
-  //     const start = new Date(slot.start).getTime();
-  //     const end = new Date(slot.end).getTime();
+  const currentIndex = groups.findIndex((group) => {
+    const start = Math.min(
+      ...group.slots.map(s =>
+        new Date(s.start).getTime(),
+      ),
+    );
 
-  //     return now >= start && now < end;
-  //   }) ?? null;
+    const end = Math.max(
+      ...group.slots.map(s =>
+        new Date(s.end).getTime(),
+      ),
+    );
 
-  // const next = slots
-  //   .filter(slot => new Date(slot.start).getTime() > now)
-  //   .sort(
-  //     (a, b) =>
-  //       new Date(a.start).getTime()
-  //         - new Date(b.start).getTime(),
-  //   )
-  //   .slice(0, nextCount);
-  //
-  const current = slots.find(
-    slot =>
-      now >= new Date(slot.start).getTime()
-      && now < new Date(slot.end).getTime(),
-  );
-
-  const next = slots
-    .filter(slot => new Date(slot.start).getTime() > now)
-    .slice(0, nextCount);
+    return now >= start && now < end;
+  });
 
   return {
-    current,
-    next,
+    previous:
+      currentIndex > 0
+        ? groups[currentIndex - 1]
+        : null,
+
+    current:
+      currentIndex >= 0
+        ? groups[currentIndex]
+        : null,
+
+    next:
+      currentIndex >= 0
+      && currentIndex < groups.length - 1
+        ? groups[currentIndex + 1]
+        : null,
   };
 }

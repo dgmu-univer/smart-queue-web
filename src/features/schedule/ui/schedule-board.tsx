@@ -3,9 +3,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 
-import { FetchScheduleResponse, FetchScheduleSlot } from '../api/types';
-import { buildBoardData, type ScheduleBoardData } from '../lib/build-board';
-import { getSlotTime } from '../lib/slot-date-utils';
+import { FetchScheduleResponse } from '../api/types';
+import { type BoardData, buildBoardData } from '../lib/build-board';
+import { createMockBoardData } from '../lib/create-mock-board';
 import { toScheduleRange } from '../lib/to-schedule-range';
 import { useSchedule } from '../provider/schedule-provider';
 
@@ -16,12 +16,11 @@ interface ComponentProps {
 export function formatTime(date: string) {
   return format(new Date(date), 'HH:mm');
 }
-
 export function ScheduleBoard({ initialData }: ComponentProps) {
   const { date } = useSchedule();
   const params = toScheduleRange(date);
 
-  const { data } = useQuery<FetchScheduleResponse, Error, ScheduleBoardData>({
+  const { data, dataUpdatedAt } = useQuery<FetchScheduleResponse, Error, BoardData>({
     queryKey: ['slots', params],
     queryFn: ({ signal }) => fetch(`/api/appointments?to=${params.to}&from=${params.from}`, {
       headers: {
@@ -35,75 +34,90 @@ export function ScheduleBoard({ initialData }: ComponentProps) {
     refetchInterval: 60000, // 1 минута
     refetchOnWindowFocus: true,
   });
+  const mockData = createMockBoardData();
 
   return (
-    <div className="grid h-full grid-cols-[2fr_1fr] gap-8">
-      <CurrentSlot slot={data.current} />
-      <NextSlots slots={data.next} />
+    <div key={dataUpdatedAt} className="grid h-full grid-cols-3">
+      <BoardColumn
+        variant="previous"
+        title="Предыдущие"
+        time="17:10-18:00"
+        pins={mockData.previous?.pins ?? []}
+      />
+
+      <BoardColumn
+        variant="current"
+        title="Сейчас"
+        time="17:10-18:00"
+        pins={mockData.current?.pins ?? []}
+      />
+
+      <BoardColumn
+        variant="next"
+        title="Следующие"
+        time="17:10-18:00"
+        pins={mockData.next?.pins ?? []}
+      />
     </div>
   );
 }
 
-function CurrentSlot({
-  slot,
-}: {
-  slot?: FetchScheduleSlot
-}) {
-  if (!slot) {
-    return (
-      <div className="flex h-full items-center justify-center rounded-xl border">
-        <span className="text-4xl">Нет активного слота</span>
-      </div>
-    );
+interface Props {
+  title: string
+  pins: string[]
+  variant: BoardVariant
+  time?: string
+}
+
+type BoardVariant = 'previous' | 'current' | 'next';
+
+const styles: Record<
+  BoardVariant,
+  {
+    header: string
+    text: string
   }
+> = {
+  previous: {
+    header: 'bg-slate-300 text-white',
+    text: 'text-slate-300',
+  },
+  current: {
+    header: 'bg-green-500 text-white',
+    text: 'text-green-500',
+  },
+  next: {
+    header: 'bg-blue-600 text-white',
+    text: 'text-white',
+  },
+};
 
+export function BoardColumn({
+  title,
+  pins,
+  variant,
+  time,
+}: Props) {
+  const style = styles[variant];
   return (
-    <div className="bg-card flex h-full flex-col rounded-xl border">
-      <div className="border-b py-6 text-center">
-        <div className="text-2xl font-semibold">
-          СЕЙЧАС
-        </div>
-
-        <div className="mt-2 text-4xl font-bold">
-          {getSlotTime(slot)}
-        </div>
+    <div className="flex h-full flex-col">
+      <div className={`p-4 text-center text-4xl font-bold ${style.header}`}>
+        <h3 className="text-center text-4xl font-bold">{title}</h3>
+        {time && <span className="text-center text-2xl font-bold">{time}</span>}
       </div>
 
-      <div className="flex-1 p-8">
-        <div className="grid h-full grid-cols-4 gap-x-12 gap-y-6">
-          {slot.pins.map(pin => (
-            <div
-              key={pin}
-              className="text-center text-7xl font-bold tracking-wider"
-            >
-              {pin}
-            </div>
-          ))}
-        </div>
+      <div
+        className={`flex-1 columns-3 gap-8 overflow-hidden p-6 ${variant === 'next' ? style.header : ''}`}
+      >
+        {pins.map(pin => (
+          <div
+            key={pin}
+            className={`mb-4 break-inside-avoid text-center text-6xl font-bold ${style.text}`}
+          >
+            {pin}
+          </div>
+        ))}
       </div>
-    </div>
-  );
-}
-
-function NextSlots({
-  slots,
-}: {
-  slots: FetchScheduleSlot[]
-}) {
-  return (
-    <div className="rounded-xl border">
-      <div className="border-b p-4 text-center text-xl font-semibold">
-        Следующие
-      </div>
-
-      {slots.map(slot => (
-        <div
-          key={slot.start}
-          className="border-b p-4 text-center text-3xl"
-        >
-          {getSlotTime(slot)}
-        </div>
-      ))}
     </div>
   );
 }

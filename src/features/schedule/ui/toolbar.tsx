@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { formatDate } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
@@ -9,7 +10,7 @@ import { Button } from '@/components/ui/button';
 
 import { useSchedule } from '../provider/schedule-provider';
 
-export const Toolbar = () => {
+export const Toolbar = ({ view }: { view: 'tv' | 'list' }) => {
   const { next, prev, today, increaseFont, decreaseFont, date } = useSchedule();
 
   return (
@@ -50,6 +51,16 @@ export const Toolbar = () => {
 
       {/* ПРАВАЯ ЧАСТЬ: Режимы и Профиль */}
       <div className="flex items-center gap-4">
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className="h-8 font-medium"
+        >
+          <Link href={view === 'tv' ? '/schedule' : '/schedule/board'}>
+            {view === 'tv' ? 'Список' : 'Телевизор'}
+          </Link>
+        </Button>
         <div className="flex -space-x-px rounded-md shadow-sm">
           <Button
             onClick={decreaseFont}
