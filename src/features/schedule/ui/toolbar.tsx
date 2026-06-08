@@ -1,6 +1,6 @@
 'use client';
 
-import Clock from 'react-live-clock';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { formatDate } from 'date-fns';
 import { ru } from 'date-fns/locale';
@@ -10,6 +10,11 @@ import { AuthUser } from '@/components/auth-user';
 import { Button } from '@/components/ui/button';
 
 import { useSchedule } from '../provider/schedule-provider';
+
+const Clock = dynamic(() => import('react-live-clock'), {
+  ssr: false,
+  loading: () => <span className="text-xl text-blue-400">--:--:--</span>,
+});
 
 export const Toolbar = ({ view }: { view: 'tv' | 'agenda' }) => {
   const { next, prev, today, increaseFont, decreaseFont, date } = useSchedule();
