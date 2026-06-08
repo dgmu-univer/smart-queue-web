@@ -1,5 +1,6 @@
 'use client';
 
+import Clock from 'react-live-clock';
 import Link from 'next/link';
 import { formatDate } from 'date-fns';
 import { ru } from 'date-fns/locale';
@@ -51,6 +52,11 @@ export const Toolbar = ({ view }: { view: 'tv' | 'agenda' }) => {
 
       {/* ПРАВАЯ ЧАСТЬ: Режимы и Профиль */}
       <div className="flex items-center gap-4">
+        <Clock
+          format="HH:mm:ss"
+          ticking={true}
+          className="text-xl text-blue-400"
+        />
         <Button
           asChild
           variant="outline"

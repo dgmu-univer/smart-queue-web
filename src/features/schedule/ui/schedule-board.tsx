@@ -23,14 +23,14 @@ export function ScheduleBoard({ initialData }: ComponentProps) {
     <div key={dataUpdatedAt} className="grid h-full grid-cols-3">
       <BoardColumn
         variant="previous"
-        title="Предыдущие"
+        title="Предыдущий"
         time={data.previous.timeRanges}
         pins={data.previous.pins}
       />
 
       <BoardColumn
         variant="current"
-        title="Сейчас"
+        title="Текущий слот"
         time={data.current.timeRanges}
         pins={data.current.pins}
       />
@@ -38,7 +38,7 @@ export function ScheduleBoard({ initialData }: ComponentProps) {
       <BoardColumn
         variant="next"
         dataUpdatedAt={dataUpdatedAt}
-        title="Следующие"
+        title="Следующий"
         time={data.next.timeRanges}
         pins={data.next.pins}
       />
