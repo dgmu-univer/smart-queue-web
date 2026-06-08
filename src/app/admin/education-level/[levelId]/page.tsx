@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: 'Управление расписанием работы, слотами записи и доступностью приёма посетителей.',
 };
 
-export default async function Page({ params, searchParams }: LevelSettingPageParams) {
+export default async function Page({ params, searchParams }: LevelSettingPageParams & { searchParams: Promise<{ name?: string }> }) {
   const { levelId } = await params;
   const queryParams = await searchParams;
   const name = queryParams.name ?? '';
