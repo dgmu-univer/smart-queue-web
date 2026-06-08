@@ -2,12 +2,23 @@ import { format, parse } from 'date-fns';
 import { FetchScheduleSlot } from '../api/types';
 import { ru } from 'date-fns/locale';
 
-export function isCurrentSlot(slot: FetchScheduleSlot) {
+function timeToMinutes(dateString: string): number {
+  const date = new Date(dateString);
+
+  return date.getHours() * 60 + date.getMinutes();
+}
+
+export function isCurrentSlot(slot: FetchScheduleSlot): boolean {
   const now = new Date();
 
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+  const startMinutes = timeToMinutes(slot.start);
+  const endMinutes = timeToMinutes(slot.end);
+
   return (
-    now >= new Date(slot.start)
-    && now < new Date(slot.end)
+    nowMinutes >= startMinutes
+    && nowMinutes < endMinutes
   );
 }
 

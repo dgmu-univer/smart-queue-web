@@ -55,7 +55,15 @@ export const ScheduleProvider = ({
       increaseFont,
       decreaseFont,
     }),
-    [date, decreaseFont, fontSize, increaseFont, next, prev, today],
+    [
+      date,
+      decreaseFont,
+      fontSize,
+      increaseFont,
+      next,
+      prev,
+      today,
+    ],
   );
 
   return (

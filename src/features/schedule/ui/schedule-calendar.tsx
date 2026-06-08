@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useRef } from 'react';
 
 import {
   Table,
@@ -16,9 +15,9 @@ import { cn } from '@/lib/utils';
 import { FetchScheduleResponse } from '../api/types';
 import { EmptyData } from '../components/empty-data';
 import { Pin } from '../components/pin';
+import { useQuerySchedule } from '../hooks/use-query-schedule';
 import { type GroupedSlots, groupedSlots } from '../lib/grouped-slots';
 import { formatTitleDate, getSlotTime, isCurrentSlot } from '../lib/slot-date-utils';
-import { toScheduleRange } from '../lib/to-schedule-range';
 import { useSchedule } from '../provider/schedule-provider';
 
 interface ComponentProps {
@@ -26,42 +25,47 @@ interface ComponentProps {
 }
 
 export function ScheduleCalendar({ initialData }: ComponentProps) {
-  const { date } = useSchedule();
-  const params = toScheduleRange(date);
-
-  const { data, dataUpdatedAt } = useQuery<FetchScheduleResponse, Error, GroupedSlots>({
-    queryKey: ['slots', params],
-    queryFn: ({ signal }) => fetch(`/api/appointments?to=${params.to}&from=${params.from}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      signal,
-    }).then(res => res.json()),
+  const { data, dataUpdatedAt } = useQuerySchedule<GroupedSlots>({
+    selectCallback: groupedSlots,
     initialData,
-    staleTime: 0,
-    select: data => groupedSlots(data.slots),
-    refetchInterval: 60000, // 1 минута
-    refetchOnWindowFocus: true,
   });
 
-  // useEffect(() => {
-  //   // Добавляем класс dark при монтировании страницы
-  //   document.documentElement.classList.add('dark');
-  //   // Убираем при уходе со страницы (опционально)
-  //   return () => {
-  //     document.documentElement.classList.remove('dark');
-  //   };
-  // }, []);
-
   const { fontSize } = useSchedule();
+  const currentSlotRef = useRef<HTMLTableRowElement>(null);
+  const hasScrolledRef = useRef(false);
 
-  const spacing = fontSize / 14; // коэффициент
+  const spacing = fontSize / 14;
+
+  // Функция для прокрутки к текущему слоту
+  const scrollToCurrentSlot = () => {
+    if (currentSlotRef.current) {
+      currentSlotRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  };
+
+  // Прокрутка при первой загрузке и при обновлении данных
+  useEffect(() => {
+    if (data.length > 0) {
+      // Небольшая задержка для гарантии отрисовки DOM
+      const timeoutId = setTimeout(() => {
+        scrollToCurrentSlot();
+        hasScrolledRef.current = true;
+      }, 100);
+
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+  }, [data, dataUpdatedAt]);
 
   return (
     <Table style={{
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
-      '--spacing': `${(0.25 * spacing).toString()}rem`, // базовый spacing 0.25rem
+      '--spacing': `${(0.25 * spacing).toString()}rem`,
       'fontSize': `${fontSize.toString()}px`,
     }}
     >
@@ -75,32 +79,36 @@ export function ScheduleCalendar({ initialData }: ComponentProps) {
       <TableBody key={dataUpdatedAt}>
         {data.length === 0 && <EmptyData />}
         {data.length > 0 && data.map(([date, daySlots]) =>
-          daySlots.map((slot, index) => (
-            <TableRow
-              key={slot.start}
-              className={cn(
-                'text-gray-600',
-                isCurrentSlot(slot) && 'bg-orange-500 text-black hover:bg-orange-500',
-              )}
-            >
-              {index === 0 && (
-                <TableCell
-                  style={{ verticalAlign: 'top' }}
-                  rowSpan={daySlots.length}
-                >
-                  {formatTitleDate(date)}
+          daySlots.map((slot, index) => {
+            const isCurrent = isCurrentSlot(slot);
+            return (
+              <TableRow
+                key={slot.start}
+                ref={isCurrent ? currentSlotRef : null}
+                className={cn(
+                  'text-slate-300',
+                  isCurrent && 'text-foreground bg-blue-400 hover:bg-blue-500',
+                )}
+              >
+                {index === 0 && (
+                  <TableCell
+                    style={{ verticalAlign: 'top' }}
+                    rowSpan={daySlots.length}
+                  >
+                    {formatTitleDate(date)}
+                  </TableCell>
+                )}
+                <TableCell>
+                  <Pin pin={getSlotTime(slot)} />
                 </TableCell>
-              )}
-              <TableCell>
-                <Pin pin={getSlotTime(slot)} />
-              </TableCell>
-              <TableCell>
-                {slot.pins.map((pin, index) => (
-                  <Pin key={index} pin={pin} />
-                ))}
-              </TableCell>
-            </TableRow>
-          )),
+                <TableCell>
+                  {slot.pins.map((pin, index) => (
+                    <Pin key={index} pin={pin} />
+                  ))}
+                </TableCell>
+              </TableRow>
+            );
+          }),
         )}
       </TableBody>
     </Table>

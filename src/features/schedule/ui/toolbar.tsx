@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 
 import { useSchedule } from '../provider/schedule-provider';
 
-export const Toolbar = ({ view }: { view: 'tv' | 'list' }) => {
+export const Toolbar = ({ view }: { view: 'tv' | 'agenda' }) => {
   const { next, prev, today, increaseFont, decreaseFont, date } = useSchedule();
 
   return (
