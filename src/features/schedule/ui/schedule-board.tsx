@@ -97,8 +97,13 @@ export function BoardColumn({
           {`Обновлено: ${format(new Date(dataUpdatedAt), 'HH:mm')}`}
         </span>
       )}
-      <div className={`p-2 text-center font-bold ${style.header}`} style={{ minHeight: '82px' }}>
-        <h3 className="text-center text-3xl font-bold">{title}</h3>
+      <div className={`p-2 text-center font-bold ${style.header} tv:p-4`} style={{ minHeight: '90px' }}>
+        <h3
+          className="text-center font-bold"
+          style={{ fontSize: getFontSize(1.2, 2.5) }} // Заголовок поменьше
+        >
+          {title}
+        </h3>
         {time && time.length > 0
           ? (
               <span className="ext-center font-bold" style={{ fontSize: getFontSize(1.5, 4) }}>
@@ -106,7 +111,10 @@ export function BoardColumn({
               </span>
             )
           : (
-              <span className="text-center text-2xl font-bold">
+              <span
+                className="text-center font-bold"
+                style={{ fontSize: getFontSize(1, 1.8) }} // "Записей нет" такого же размера
+              >
                 Записей нет
               </span>
             )}
