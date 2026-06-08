@@ -72,12 +72,13 @@ function Button({
     >
       {loading
         ? (
-            <Loader2Icon
-              className={cn(
-                'text-muted absolute animate-spin',
-                'loading',
-              )}
-            />
+            <div className="flex items-center gap-2 text-gray-700">
+              <Loader2Icon
+                className="loading text-muted "
+              />
+              <span className="text-muted">Подождите...</span>
+            </div>
+
           )
         : (
             children

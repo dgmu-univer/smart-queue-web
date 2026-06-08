@@ -67,7 +67,7 @@ export default function VerificationStep({ onBack, onNext, meta }: VerificationS
           Мы отправили SMS с 4-значным кодом на номер
           {' '}
           <span className="font-medium text-neutral-950">{meta.phone}</span>
-          .
+          . Код действителен в течение 5 минут.
         </p>
       </div>
       <form onSubmit={(e) => { void form.handleSubmit(handleVerify)(e); }} className="space-y-6">
@@ -120,7 +120,7 @@ export default function VerificationStep({ onBack, onNext, meta }: VerificationS
           <Button
             type="submit"
             disabled={isPending || !form.formState.isValid}
-            className="h-11 flex-1 bg-neutral-950 text-white"
+            className="h-11 flex-1 bg-blue-600 text-white transition-colors hover:bg-blue-700"
           >
             Подтвердить
           </Button>

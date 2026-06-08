@@ -43,8 +43,8 @@ export default function BookingStep({ degreeList, onNext }: EnrollmentBookingPro
   const {
     control,
     handleSubmit,
-    setValue,
     getValues,
+    resetField,
   } = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
@@ -54,7 +54,7 @@ export default function BookingStep({ degreeList, onNext }: EnrollmentBookingPro
       date: undefined,
     },
   });
-  const { slots, isSlotDisabled, isSlotLoading, slotError } = useFreeSlots(control, setValue);
+  const { slots, isSlotDisabled, isSlotLoading, slotError } = useFreeSlots(control, resetField);
 
   const degreeId = useWatch({ control, name: 'degreeId' });
 
@@ -62,8 +62,9 @@ export default function BookingStep({ degreeList, onNext }: EnrollmentBookingPro
     const selectedDegree = degreeList.find(d => d.id.toString() === degreeId);
     setTimeout(() => {
       setDegree(selectedDegree ?? null);
+      resetField('date');
     }, 0);
-  }, [degreeId, degreeList]);
+  }, [degreeId, degreeList, resetField]);
 
   const disabledMatcher = useDateDisabled(degree?.periodSettings);
 
@@ -197,6 +198,7 @@ export default function BookingStep({ degreeList, onNext }: EnrollmentBookingPro
               <DatePicker
                 aria-invalid={fieldState.invalid}
                 value={field.value}
+                disabled={!degreeId}
                 onChange={field.onChange}
                 calendarProps={{
                   id: 'date',
@@ -269,7 +271,7 @@ export default function BookingStep({ degreeList, onNext }: EnrollmentBookingPro
       {/* Кнопка */}
       <Button
         type="submit"
-        className="h-11 w-full flex-1 bg-neutral-950 text-white"
+        className="h-11 w-full flex-1 bg-blue-600 text-white transition-colors hover:bg-blue-700"
         disabled={isSubmitDisabled}
         loading={isSubmitLoading}
       >

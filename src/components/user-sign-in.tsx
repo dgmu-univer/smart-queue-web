@@ -8,7 +8,7 @@ export function UserSignIn() {
   const { data: session, status } = useSession();
 
   if (status === 'loading') {
-    return null;
+    return (<div className="h-4 w-24 animate-pulse rounded-sm bg-zinc-200 dark:bg-zinc-800" />);
   }
 
   if (session?.user.role === 'ADMIN') {

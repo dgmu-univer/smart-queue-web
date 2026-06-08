@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useRef } from 'react';
-import { Control, UseFormSetValue, useWatch } from 'react-hook-form';
+import { Control, UseFormResetField, useWatch } from 'react-hook-form';
 
 import { fetchFreeSlot } from '@/features/enrollment/api/fetch-free-slot';
 import { dateAsApiString } from '@/lib/date';
@@ -15,7 +15,7 @@ const initialState = {
   slotError: null,
 };
 
-export function useFreeSlots(control: Control<BookingFormValues>, setValue: UseFormSetValue<BookingFormValues>) {
+export function useFreeSlots(control: Control<BookingFormValues>, resetField: UseFormResetField<BookingFormValues>) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const degreeId = useWatch({ control, name: 'degreeId' });
@@ -33,7 +33,7 @@ export function useFreeSlots(control: Control<BookingFormValues>, setValue: UseF
 
     if (!degreeId || typeof selectedDate === 'undefined') {
       dispatch({ type: 'RESET' });
-      setValue('slot', '');
+      resetField('slot');
       return;
     }
 
@@ -43,7 +43,7 @@ export function useFreeSlots(control: Control<BookingFormValues>, setValue: UseF
 
     const loadSlots = async () => {
       dispatch({ type: 'LOADING' });
-      setValue('slot', '');
+      resetField('slot');
 
       try {
         const freeSlots = await fetchFreeSlot(
@@ -90,7 +90,7 @@ export function useFreeSlots(control: Control<BookingFormValues>, setValue: UseF
       isActive = false;
       abortController.abort();
     };
-  }, [degreeId, selectedDate, setValue]);
+  }, [degreeId, selectedDate, resetField]);
 
   return state;
 }
