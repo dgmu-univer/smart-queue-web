@@ -37,6 +37,7 @@ export function ScheduleBoard({ initialData }: ComponentProps) {
 
       <BoardColumn
         variant="next"
+        dataUpdatedAt={dataUpdatedAt}
         title="Следующие"
         time={data.next.timeRanges}
         pins={data.next.pins}
@@ -50,6 +51,7 @@ interface Props {
   pins: string[]
   variant: BoardVariant
   time?: string[]
+  dataUpdatedAt?: number
 }
 
 type BoardVariant = 'previous' | 'current' | 'next';
@@ -80,10 +82,16 @@ export function BoardColumn({
   pins,
   variant,
   time,
+  dataUpdatedAt,
 }: Props) {
   const style = styles[variant];
   return (
-    <div className="flex h-full flex-col">
+    <div className="relative flex h-full flex-col">
+      {dataUpdatedAt && (
+        <span className="absolute top-1 right-1 text-xs text-gray-400">
+          {`Обновлено: ${format(new Date(dataUpdatedAt), 'HH:mm')}`}
+        </span>
+      )}
       <div className={`p-4 text-center text-4xl font-bold ${style.header}`}>
         <h3 className="text-center text-4xl font-bold">{title}</h3>
         {time && time.length > 0

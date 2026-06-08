@@ -19,6 +19,7 @@ import { useQuerySchedule } from '../hooks/use-query-schedule';
 import { type GroupedSlots, groupedSlots } from '../lib/grouped-slots';
 import { formatTitleDate, getSlotTime, isCurrentSlot } from '../lib/slot-date-utils';
 import { useSchedule } from '../provider/schedule-provider';
+import { format } from 'date-fns';
 
 interface ComponentProps {
   initialData: FetchScheduleResponse
@@ -70,6 +71,11 @@ export function ScheduleCalendar({ initialData }: ComponentProps) {
     }}
     >
       <TableHeader className="bg-background sticky top-0 z-10">
+        {dataUpdatedAt && (
+          <span className="absolute top-1 right-1 text-xs text-gray-400">
+            {`Обновлено: ${format(new Date(dataUpdatedAt), 'HH:mm')}`}
+          </span>
+        )}
         <TableRow>
           <TableHead className="w-32">Дата</TableHead>
           <TableHead className="w-32">Время</TableHead>
