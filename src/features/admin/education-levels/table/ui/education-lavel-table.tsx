@@ -49,7 +49,6 @@ export const EducationLevelTable = ({ initialLevels }: { initialLevels: Educatio
     });
   }
 
-  const isEmpty = initialLevels.length === 0;
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -82,7 +81,7 @@ export const EducationLevelTable = ({ initialLevels }: { initialLevels: Educatio
                 <TableCell className="py-3 text-right">
                   <div className="flex items-center justify-end gap-1">
                     <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground size-7" asChild>
-                      <Link href={`/admin/education-level/${level.id.toString()}`}>
+                      <Link href={`/admin/education-level/${level.id.toString()}?name=${encodeURIComponent(level.name)}`}>
                         <Settings className="size-3.5" />
                         <span className="sr-only">Настройки</span>
                       </Link>

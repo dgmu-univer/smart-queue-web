@@ -8,7 +8,9 @@ export const metadata: Metadata = {
   description: 'Управление расписанием работы, слотами записи и доступностью приёма посетителей.',
 };
 
-export default async function Page({ params }: LevelSettingPageParams) {
+export default async function Page({ params, searchParams }: LevelSettingPageParams & { searchParams: Promise<{ name?: string }> }) {
   const { levelId } = await params;
-  redirect(`/admin/education-level/${levelId}/main`);
+  const queryParams = await searchParams;
+  const name = queryParams.name ?? '';
+  redirect(`/admin/education-level/${levelId}/main?name=${name}`);
 }

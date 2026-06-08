@@ -7,7 +7,7 @@ export function EmptyData() {
         colSpan={3}
         className="text-muted-foreground h-40 text-center"
       >
-        Нет данных за выбранный день
+        Нет записей за выбранный день
       </TableCell>
     </TableRow>
   );
