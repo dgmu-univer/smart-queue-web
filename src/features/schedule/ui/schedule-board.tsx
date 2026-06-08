@@ -77,6 +77,11 @@ const styles: Record<
   },
 };
 
+const getFontSize = (min: number, max: number, minScreen = 320, maxScreen = 3840) => {
+  // clamp(min, (max-min) * (100vw - minScreen)/(maxScreen - minScreen) + min, max)
+  return `clamp(${min}rem, ${(max - min) * 100}vw / ${maxScreen - minScreen} + ${min}rem, ${max}rem)`;
+};
+
 export function BoardColumn({
   title,
   pins,
@@ -92,11 +97,11 @@ export function BoardColumn({
           {`Обновлено: ${format(new Date(dataUpdatedAt), 'HH:mm')}`}
         </span>
       )}
-      <div className={`p-4 text-center text-4xl font-bold ${style.header}`}>
-        <h3 className="text-center text-4xl font-bold">{title}</h3>
+      <div className={`p-1 text-center font-bold ${style.header}`} style={{ minHeight: '82px' }}>
+        <h3 className="text-center text-3xl font-bold">{title}</h3>
         {time && time.length > 0
           ? (
-              <span className="text-center text-2xl font-bold">
+              <span className="ext-center font-bold" style={{ fontSize: getFontSize(1.5, 4) }}>
                 {time.join(', ')}
               </span>
             )
@@ -113,7 +118,7 @@ export function BoardColumn({
         {pins.map(pin => (
           <div
             key={pin}
-            className={`mb-4 break-inside-avoid text-center text-6xl font-bold ${style.text}`}
+            className={`mb-4 break-inside-avoid text-left text-3xl font-bold ${style.text}`}
           >
             {pin}
           </div>
