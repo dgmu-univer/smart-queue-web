@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import {
   Tabs,
@@ -13,22 +13,22 @@ const tabs = [
   {
     value: 'main',
     label: 'Основное',
-    href: (levelId: string) => `/admin/education-level/${levelId}/main`,
+    href: (levelId: string, name: string) => `/admin/education-level/${levelId}/main?name=${name}`,
   },
   {
     value: 'slot',
     label: 'Настройка слота',
-    href: (levelId: string) => `/admin/education-level/${levelId}/slot`,
+    href: (levelId: string, name: string) => `/admin/education-level/${levelId}/slot?name=${name}`,
   },
   {
     value: 'weekend',
     label: 'Нерабочие дни',
-    href: (levelId: string) => `/admin/education-level/${levelId}/weekend`,
+    href: (levelId: string, name: string) => `/admin/education-level/${levelId}/weekend?name=${name}`,
   },
   {
     value: 'excluded',
     label: 'Исключенные слоты',
-    href: (levelId: string) => `/admin/education-level/${levelId}/excluded`,
+    href: (levelId: string, name: string) => `/admin/education-level/${levelId}/excluded?name=${name}`,
   },
 ];
 
@@ -41,6 +41,9 @@ export function SettingsTabs({ levelId }: ComponentProps) {
   const currentTab
     = tabs.find(tab => pathname.includes(tab.value))?.value ?? 'main';
 
+  const searchParams = useSearchParams();
+  const name = searchParams.get('name') ?? '';
+
   return (
     <Tabs
       value={currentTab}
@@ -48,7 +51,7 @@ export function SettingsTabs({ levelId }: ComponentProps) {
         const tab = tabs.find(t => t.value === value);
 
         if (tab) {
-          router.push(tab.href(levelId));
+          router.push(tab.href(levelId, name));
         }
       }}
     >

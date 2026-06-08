@@ -2,8 +2,6 @@ import { Suspense } from 'react';
 
 import { fetchSchedule, ScheduleBoard, ScheduleFallback, Toolbar } from '@/features/schedule';
 
-export const dynamic = 'force-dynamic';
-
 export default async function Page() {
   const initialData = await fetchSchedule();
   return (

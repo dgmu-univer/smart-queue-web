@@ -45,7 +45,7 @@ export const Toolbar = ({ view }: { view: 'tv' | 'agenda' }) => {
       </div>
 
       {/* ЦЕНТР: Диапазон дат */}
-      <div className="text-foreground text-sm font-semibold tracking-tight">
+      <div className="text-foreground text-xl font-semibold tracking-tight">
         { formatDate(date, 'dd MMMM yyyy', { locale: ru }) }
       </div>
 
@@ -58,27 +58,29 @@ export const Toolbar = ({ view }: { view: 'tv' | 'agenda' }) => {
           className="h-8 font-medium"
         >
           <Link href={view === 'tv' ? '/schedule' : '/schedule/board'}>
-            {view === 'tv' ? 'Список' : 'Телевизор'}
+            {view === 'tv' ? 'Список' : 'Доска'}
           </Link>
         </Button>
-        <div className="flex -space-x-px rounded-md shadow-sm">
-          <Button
-            onClick={decreaseFont}
-            variant="outline"
-            size="sm"
-            className="h-8 gap-1 rounded-r-none pr-3 pl-2 font-medium"
-          >
-            <ZoomOut className="size-4" />
-          </Button>
-          <Button
-            onClick={increaseFont}
-            variant="outline"
-            size="sm"
-            className="h-8 gap-1 rounded-l-none pr-2 pl-3 font-medium"
-          >
-            <ZoomIn className="size-4" />
-          </Button>
-        </div>
+        {view === 'agenda' && (
+          <div className="flex -space-x-px rounded-md shadow-sm">
+            <Button
+              onClick={decreaseFont}
+              variant="outline"
+              size="sm"
+              className="h-8 gap-1 rounded-r-none pr-3 pl-2 font-medium"
+            >
+              <ZoomOut className="size-4" />
+            </Button>
+            <Button
+              onClick={increaseFont}
+              variant="outline"
+              size="sm"
+              className="h-8 gap-1 rounded-l-none pr-2 pl-3 font-medium"
+            >
+              <ZoomIn className="size-4" />
+            </Button>
+          </div>
+        ) }
         {/* Иконка юзера (Отдельно) */}
         <AuthUser />
       </div>

@@ -31,5 +31,5 @@ export interface ExcludedSlotSettings {
   end_time: string
 }
 
-export interface LevelSettingPageParams { params: Promise<{ levelId: string }> }
+export interface LevelSettingPageParams { params: Promise<{ levelId: string }>, searchParams: Promise<{ name?: string }> }
 export type WithLevelId<T> = T & { levelId: string };
