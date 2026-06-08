@@ -97,7 +97,7 @@ export function BoardColumn({
           {`Обновлено: ${format(new Date(dataUpdatedAt), 'HH:mm')}`}
         </span>
       )}
-      <div className={`p-1 text-center font-bold ${style.header}`} style={{ minHeight: '82px' }}>
+      <div className={`p-2 text-center font-bold ${style.header}`} style={{ minHeight: '82px' }}>
         <h3 className="text-center text-3xl font-bold">{title}</h3>
         {time && time.length > 0
           ? (
