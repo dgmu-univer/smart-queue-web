@@ -60,9 +60,6 @@ export default function VerificationStep({ onBack, onNext, meta }: VerificationS
         <h2 className="text-xl font-semibold tracking-tight text-neutral-900">
           Подтверждение номера телефона
         </h2>
-        <span className="text-xl font-semibold tracking-tight text-rose-900">
-          {meta.bookingId}
-        </span>
         <p className="text-sm/relaxed text-neutral-500">
           Мы отправили SMS с 4-значным кодом на номер
           {' '}

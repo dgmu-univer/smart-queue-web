@@ -24,7 +24,7 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
-  title: 'ДГМУ — Запись в приёмную комиссию',
+  title: 'Запись на приём в ДГМУ онлайн',
   description: 'Никаких очередей. Выберите дату и время визита за 2 минуты.',
 };
 

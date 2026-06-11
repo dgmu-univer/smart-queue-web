@@ -36,33 +36,6 @@ export default async function LoginPage() {
           pointer-events-none absolute top-72 left-[-10%] -z-10 hidden h-105 w-130 rounded-full bg-[radial-gradient(closest-side,rgba(255,225,180,0.45),rgba(255,225,180,0)_70%)] blur-2xl sm:block
         "
       />
-
-      {/* Logo */}
-      <div className="absolute top-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1 sm:top-8">
-        <div className="bg-foreground text-background flex size-12 items-center justify-center rounded-xl">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="size-7"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <circle cx="12" cy="12" r="4" />
-            <path d="M12 2v4" />
-            <path d="M12 18v4" />
-            <path d="M2 12h4" />
-            <path d="M18 12h4" />
-            <path d="M4.93 4.93l2.83 2.83" />
-            <path d="M16.24 16.24l2.83 2.83" />
-            <path d="M4.93 19.07l2.83-2.83" />
-            <path d="M16.24 7.76l2.83-2.83" />
-          </svg>
-        </div>
-        <span className="text-sm font-semibold">ДГМУ</span>
-      </div>
       <AuthModule />
     </main>
   );

@@ -5,7 +5,7 @@ import { Gradient } from '@/components/gradient';
 import EnrollmentForm, { fetchDegreeList } from '@/features/enrollment';
 
 export const metadata: Metadata = {
-  title: 'Приёмная комиссия ДГМУ → Запись в очередь',
+  title: 'Запись на приём в ДГМУ онлайн',
   description: 'Приёмная комиссия ДГМУ заботится о вашем времени. Выберите удобную дату — мы всё организуем',
 };
 

@@ -16,24 +16,20 @@ export function SiteHeader() {
           "
         >
           <span className="rounded-full bg-blue-600 px-2.5 py-1 text-[11px] font-medium text-white sm:text-xs">
-            dgmu.ru
+            ДГМУ
           </span>
-          <span className="text-foreground/80 font-medium">Официальный сайт!</span>
+          <span className="text-foreground/80 font-medium md:inline-flex">Официальный сайт!</span>
         </Link>
 
         {/* Right nav */}
         <nav className="flex items-center gap-3 text-sm sm:gap-5">
           <Link
-            href="#"
-            className="text-foreground/80 hover:text-foreground hidden font-medium transition-colors sm:inline-block"
+            href="https://xn--e1afnjf.xn--c1abz2a.xn--p1ai/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-foreground/80 hover:text-foreground inline-block font-medium transition-colors"
           >
             Документы
-          </Link>
-          <Link
-            href="#"
-            className="text-foreground/80 hover:text-foreground hidden font-medium transition-colors sm:inline-block"
-          >
-            Контакты
           </Link>
           <span aria-hidden="true" className="bg-border hidden h-4 w-px sm:inline-block" />
           <UserSignIn />
