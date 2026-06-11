@@ -19,7 +19,7 @@ export function Hero() {
 
       {/* Handwriting tagline */}
       <p className="font-handwriting mt-2 text-2xl text-blue-600 sm:text-[28px]">
-        Ваш путь в медицину начинается без очередей
+        Запись на приём в ДГМУ онлайн
       </p>
 
       {/* Headline */}
