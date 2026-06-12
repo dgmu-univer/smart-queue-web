@@ -5,22 +5,36 @@
 
 export class ApiError extends Error {
   public status: number;
+  public headers: Record<string, string>;
+
   constructor(
     public readonly statusCode: number,
     message: string,
+    headers?: Headers, // <-- добавили
   ) {
     super(message);
     this.status = statusCode;
     this.name = 'ApiError';
+
+    // Копируем Headers в plain object, иначе нельзя будет прочитать по ключу
+    this.headers = {};
+    if (headers) {
+      headers.forEach((value, key) => {
+        this.headers[key.toLowerCase()] = value;
+      });
+    }
   }
 }
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const body = await res.json().catch(() => ({}));
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
-    throw new ApiError(res.status, body.message ?? `HTTP ${res.status}`);
+    const body = await res.json().catch(() => ({})) as Record<string, unknown>;
+
+    throw new ApiError(
+      res.status,
+      typeof body.message === 'string' ? body.message : `HTTP ${res.status.toString()}`,
+      res.headers, // <-- теперь передаётся в конструктор
+    );
   }
   return res.json() as Promise<T>;
 }

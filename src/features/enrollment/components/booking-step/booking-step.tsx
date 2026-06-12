@@ -82,10 +82,9 @@ export default function BookingStep({ degreeList, onNext }: EnrollmentBookingPro
       onNext({ bookingId, phone: data.phone });
     } catch (error) {
       const { message } = extractApiError(error);
-      toast.error('Не удалось забронировать', {
+      toast.error('Не удалось забронировать слот', {
         description: message,
       });
-      console.error(error);
     } finally {
       setIsBookingLoading(false);
     }

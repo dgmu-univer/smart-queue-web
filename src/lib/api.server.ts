@@ -36,16 +36,15 @@ export type ActionPromisifyResult<T = undefined>
  */
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const body = await res.json().catch(() => ({}));
+    const body = await res.json().catch(() => ({})) as Record<string, unknown>;
     if (res.status === 403) {
       redirect('/api/auth/signout');
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      throw new ApiError(res.status, body.message ?? 'Сессия истекла. Выполняется выход...');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
-    throw new ApiError(res.status, body.message ?? `HTTP ${res.status}`);
+    throw new ApiError(
+      res.status,
+      typeof body.message === 'string' ? body.message : `HTTP ${res.status.toString()}`,
+      res.headers); // <-- теперь передаётся в конструктор);
   }
 
   // Проверяем, есть ли вообще содержимое в ответе
