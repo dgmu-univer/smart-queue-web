@@ -1,8 +1,8 @@
 import { api } from '@/lib/api';
-import { CreateEnrollmentPayload } from './types';
+import { CreateEnrollmentPayload, CreateEnrollmentResponse } from './types';
 
-export async function createEnrollment(payload: CreateEnrollmentPayload): Promise<number> {
-  return await api<number>(
+export async function createEnrollment(payload: CreateEnrollmentPayload): Promise<CreateEnrollmentResponse> {
+  return await api<CreateEnrollmentResponse>(
     `/public/appointments`,
     {
       method: 'POST',

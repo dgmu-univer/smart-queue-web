@@ -13,8 +13,8 @@ export default function EnrollmentForm({ initialData }: { initialData: FetchDegr
   const stepper = useStepper();
   const currentStep = stepper.state.current.data;
 
-  const onBookingStepNext: BookingStepNextHandler = ({ bookingId, phone }) => {
-    stepper.metadata.set('verification', { bookingId, phone });
+  const onBookingStepNext: BookingStepNextHandler = ({ record, phone }) => {
+    stepper.metadata.set('verification', { record, phone });
     void stepper.navigation.next();
   };
 

@@ -37,7 +37,7 @@ export default function VerificationStep({ onBack, onNext, meta }: VerificationS
     try {
       setIsPending(true);
       const result = await verifyOtp({
-        id: meta.bookingId,
+        id: meta.record.id,
         verificationCode: data.pin,
       });
       onNext(result);
@@ -60,12 +60,25 @@ export default function VerificationStep({ onBack, onNext, meta }: VerificationS
         <h2 className="text-xl font-semibold tracking-tight text-neutral-900">
           Подтверждение номера телефона
         </h2>
-        <p className="text-sm/relaxed text-neutral-500">
-          Мы отправили SMS с 4-значным кодом на номер
-          {' '}
-          <span className="font-medium text-neutral-950">{meta.phone}</span>
-          . Код действителен в течение 5 минут.
-        </p>
+        {meta.record.status === 'NEW' && (
+          <p className="text-sm/relaxed text-neutral-500">
+            Мы отправили SMS с 4-значным кодом на номер
+            {' '}
+            <span className="font-medium text-neutral-950">{meta.phone}</span>
+            . Код действителен в течение 30 минут.
+          </p>
+        )}
+        {meta.record.status === 'PENDING' && (
+          <p className="text-sm/relaxed text-neutral-500">
+            ⚠️ Вы ранее запрашивали код по номеру телефона и уровню образования. Используйте этот код для подтверждения новой записи.
+          </p>
+        )}
+        {meta.record.status === 'CONFIRMED' && (
+          <p className="text-sm/relaxed text-neutral-500">
+            ✅ Операция выполнена — данные обновлены и сохранены.
+            ⚠️ Пин-код от вашей карточки не изменился, он остался таким же, как и ранее. Пожалуйста, укажите его для оформления и получения карточки с актуальными данными.
+          </p>
+        )}
       </div>
       <form onSubmit={(e) => { void form.handleSubmit(handleVerify)(e); }} className="space-y-6">
         <Controller
