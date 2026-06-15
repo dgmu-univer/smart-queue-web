@@ -14,14 +14,14 @@ import {
 } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
-import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { dateAsApiString } from '@/lib/date';
 import { extractApiError } from '@/lib/extract-api-error';
 
 import { createEnrollment } from '../../api/create-enrollment';
 import { existingEnrollment } from '../../api/existing-enrollment';
-import { type DegreeListItem } from '../../api/types';
+import { CreateEnrollmentResponse, type DegreeListItem } from '../../api/types';
 import { useDateDisabled } from './hooks/use-disabled-date';
 import { useFreeSlots } from './hooks/use-free-slot';
 import { ExistingWarning } from './existing-warning';
@@ -33,8 +33,8 @@ interface EnrollmentBookingProps {
   onNext: BookingStepNextHandler
 }
 
-export interface BookingStepMeta { bookingId: number, phone: string }
-export type BookingStepNextHandler = ({ bookingId, phone }: BookingStepMeta) => void;
+export interface BookingStepMeta { record: CreateEnrollmentResponse, phone: string }
+export type BookingStepNextHandler = ({ record, phone }: BookingStepMeta) => void;
 
 export default function BookingStep({ degreeList, onNext }: EnrollmentBookingProps) {
   const [isBookingLoading, setIsBookingLoading] = useState(false);
@@ -73,13 +73,13 @@ export default function BookingStep({ degreeList, onNext }: EnrollmentBookingPro
     try {
       setIsBookingLoading(true);
 
-      const bookingId = await createEnrollment({
+      const record = await createEnrollment({
         degreeId: Number(data.degreeId),
         date: dateAsApiString(data.date),
         time: data.slot,
         phone: data.phone,
       });
-      onNext({ bookingId, phone: data.phone });
+      onNext({ record, phone: data.phone });
     } catch (error) {
       const { message } = extractApiError(error);
       toast.error('Не удалось забронировать слот', {
@@ -180,6 +180,7 @@ export default function BookingStep({ degreeList, onNext }: EnrollmentBookingPro
               onChange={field.onChange}
               className="flex items-center gap-2"
             />
+            <FieldDescription className="text-xs text-gray-500">Обратите внимание: сервис работает с номерами МТС, Мегафон, Yota и Билайн. Для остальных операторов получение кода не гарантировано.</FieldDescription>
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
         )}

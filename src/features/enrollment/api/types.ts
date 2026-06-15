@@ -24,6 +24,11 @@ export interface CreateEnrollmentPayload {
   phone: string
 }
 
+export interface CreateEnrollmentResponse {
+  id: number
+  status: 'PENDING' | 'CONFIRMED' | 'NEW'
+}
+
 export interface ExistingEnrollmentPayload {
   degreeId: number
   phone: string
