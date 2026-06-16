@@ -16,6 +16,7 @@ import { verifyOtp } from '../../api/verify-otp';
 import { type BookingStepMeta } from '../booking-step/booking-step';
 import { AlertError } from '../booking-step/reducer';
 import { type OtpFormValues, otpSchema } from './shcema';
+import GetPinButton from './get-pin-code';
 
 interface VerificationStepProps {
   onBack: () => void
@@ -113,6 +114,8 @@ export default function VerificationStep({ onBack, onNext, meta }: VerificationS
             </AlertDescription>
           </Alert>
         )}
+
+        <GetPinButton recordId={meta.record.id} />
 
         <div className="flex items-center gap-3 pt-2">
           <Button

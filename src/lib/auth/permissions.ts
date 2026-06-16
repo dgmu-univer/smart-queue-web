@@ -31,6 +31,7 @@ export const PUBLIC_ROUTES = [
   '/',
   '/login',
   '/appointments',
+  '/api/appointment-pin',
   '/api/auth/*', // NextAuth routes
 ] as const;
 
