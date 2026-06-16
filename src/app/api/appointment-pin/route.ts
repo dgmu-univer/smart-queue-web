@@ -4,13 +4,11 @@ import { NextResponse } from 'next/server';
 import { verifyAppointmentToken } from '@/lib/appointment-token';
 
 export async function POST(req: Request) {
-  console.log('FFFFFFFFFFFFFFFFFF')
   try {
     const { token } = await req.json() as { token: string };
 
     const id = verifyAppointmentToken(token);
 
-    console.log('IDDD', id)
     const response = await fetch(
       `${process.env.EXTERNAL_API_HOST}/api/public/appointments/${id.toString()}`,
       {

@@ -58,7 +58,6 @@ export async function authenticate(
 export async function authenticateOperator(
   pin: string,
 ) {
-  console.log(pin)
   const response = await fetch(
     `${process.env.EXTERNAL_API_HOST}/api/operator/login`,
     {

@@ -39,7 +39,6 @@ export default function Main({ initialData, levelId }: ComponentProps) {
     control: form.control,
     name: 'lunchOff',
   });
-  console.log('initialData', initialData);
 
   const handleUpdate: SubmitHandler<DegreeMainSettingFormProps> = (data) => {
     startTransition(async () => {
