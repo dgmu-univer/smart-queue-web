@@ -18,7 +18,7 @@ export function SiteHeader() {
           <span className="rounded-full bg-blue-600 px-2.5 py-1 text-[11px] font-medium text-white sm:text-xs">
             ДГМУ
           </span>
-          <span className="text-foreground/80 font-medium md:inline-flex">Официальный сайт!</span>
+          <span className="text-foreground/80 font-medium md:inline-flex">Официальный сайт</span>
         </Link>
 
         {/* Right nav */}
@@ -29,7 +29,7 @@ export function SiteHeader() {
             rel="noopener noreferrer"
             className="text-foreground/80 hover:text-foreground inline-block font-medium transition-colors"
           >
-            Документы
+            Приемная комиссия
           </Link>
           <span aria-hidden="true" className="bg-border hidden h-4 w-px sm:inline-block" />
           <UserSignIn />
